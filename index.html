@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacroLab Singapore — Adaptive Macro Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1923;
+    --ink-mid: #1e2d3d;
+    --ink-light: #2e4057;
+    --slate: #4a6075;
+    --muted: #8a9bb0;
+    --rule: #d4dde6;
+    --paper: #f7f5f0;
+    --white: #ffffff;
+    --teal: #1a7a6e;
+    --teal-light: #22a394;
+    --amber: #c8882a;
+    --red-signal: #c0392b;
+    --green-signal: #1a7a4a;
+    --blue-signal: #1a4a7a;
+    --col-width: 1160px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
+  .mono  { font-family: 'DM Mono', monospace; }
+
+  h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; line-height: 1.2; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: var(--col-width); margin: 0 auto; padding: 0 32px; }
+
+  /* ── TOP TICKER ── */
+  .ticker-bar {
+    background: var(--ink);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding: 7px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex;
+    gap: 0;
+    animation: ticker 40s linear infinite;
+  }
+  .ticker-item {
+    padding: 0 32px;
+    border-right: 1px solid #2a3a4a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ticker-item .label { color: #4a6075; }
+  .ticker-item .val { color: var(--white); }
+  .ticker-item .chg { font-size: 10px; }
+  .chg.up { color: #2ecc71; }
+  .chg.dn { color: #e74c3c; }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--white);
+    border-bottom: 3px solid var(--ink);
+    padding: 0;
+  }
+  .masthead-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--rule);
+    max-width: var(--col-width);
+    margin: 0 auto;
+  }
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .wordmark-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .wordmark-title span { color: var(--teal); }
+  .wordmark-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .masthead-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 22px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--teal); }
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--white); }
+
+  /* ── NAV ── */
+  .nav {
+    max-width: var(--col-width);
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slate);
+    text-decoration: none;
+    padding: 14px 18px;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+    transition: all 0.15s;
+  }
+  .nav a:hover, .nav a.active { color: var(--ink); border-bottom-color: var(--teal); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: var(--white);
+    padding: 80px 0 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 80px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 80px);
+  }
+  .hero-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-kicker::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--teal-light);
+  }
+  .hero h1 {
+    font-size: clamp(36px, 5vw, 54px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+    color: var(--white);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--teal-light);
+  }
+  .hero-body {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 36px;
+  }
+  .hero-actions { display: flex; gap: 14px; align-items: center; }
+  .hero-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  /* Signal card in hero */
+  .hero-signal-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 28px;
+    animation: fadeIn 1s ease 0.3s both;
+  }
+  .signal-card-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .signal-pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    box-shadow: 0 0 0 0 rgba(34,163,148,0.4);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34,163,148,0.4); }
+    70%  { box-shadow: 0 0 0 8px rgba(34,163,148,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,163,148,0); }
+  }
+  .signal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-size: 13px;
+  }
+  .signal-row:last-child { border-bottom: none; }
+  .signal-name { color: rgba(255,255,255,0.6); font-size: 12px; }
+  .signal-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    letter-spacing: 0.05em;
+  }
+  .badge-elevated { background: rgba(192,57,43,0.2); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+  .badge-rising   { background: rgba(200,136,42,0.2); color: #e6a020; border: 1px solid rgba(200,136,42,0.3); }
+  .badge-moderate { background: rgba(26,122,110,0.2); color: var(--teal-light); border: 1px solid rgba(26,122,110,0.3); }
+  .badge-watch    { background: rgba(74,96,117,0.3); color: #8a9bb0; border: 1px solid rgba(74,96,117,0.4); }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 72px 0; }
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 0;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 18px;
+    height: 1px;
+    background: var(--teal);
+  }
+  .section-title {
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+  .section-intro {
+    font-size: 16px;
+    color: var(--slate);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 48px;
+  }
+
+  /* ── SIGNAL DASHBOARD ── */
+  .dashboard-section { background: var(--white); }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 2px;
+  }
+  .dash-module {
+    background: var(--white);
+    padding: 28px;
+  }
+  .dash-module-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .dash-module-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  /* Mini bar chart */
+  .mini-bars { display: flex; flex-direction: column; gap: 8px; }
+  .mini-bar-row { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+  .mini-bar-label { width: 80px; color: var(--slate); font-size: 11px; flex-shrink: 0; }
+  .mini-bar-track { flex: 1; height: 4px; background: var(--rule); }
+  .mini-bar-fill { height: 100%; transition: width 1s ease; }
+  .mini-bar-val { width: 32px; text-align: right; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink); }
+
+  /* Pressure gauge grid */
+  .pressure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pressure-item {
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pressure-name { font-size: 11px; color: var(--slate); }
+  .pressure-level {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+  .lvl-high   { color: #c0392b; background: rgba(192,57,43,0.08); }
+  .lvl-med    { color: #c8882a; background: rgba(200,136,42,0.08); }
+  .lvl-low    { color: #1a7a4a; background: rgba(26,122,74,0.08); }
+
+  /* Regime status */
+  .regime-status {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .regime-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .regime-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .regime-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .regime-text { font-size: 12px; color: var(--ink); line-height: 1.5; }
+  .regime-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Sector heatmap */
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+  }
+  .heat-cell {
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+  .heat-cell .sector-name { font-size: 9px; color: rgba(0,0,0,0.5); margin-bottom: 4px; }
+  .heat-cell .sector-val  { font-weight: 500; font-size: 11px; }
+  .h-critical { background: #c0392b; color: white; }
+  .h-high     { background: #e67e22; color: white; }
+  .h-moderate { background: #f1c40f; color: #1a1a1a; }
+  .h-low      { background: #1a7a4a; color: white; }
+  .h-watch    { background: #2980b9; color: white; }
+
+  /* ── ARCHITECTURE ── */
+  .arch-section { background: var(--paper); }
+  .arch-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .arch-engine {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-bottom: none;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: background 0.2s;
+    cursor: default;
+  }
+  .arch-engine:last-child { border-bottom: 1px solid var(--rule); }
+  .arch-engine:hover { background: #f0f4f8; }
+  .arch-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .arch-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+  }
+  .arch-desc { font-size: 12px; color: var(--slate); flex: 2; }
+  .arch-arrow {
+    text-align: center;
+    color: var(--teal);
+    font-size: 13px;
+    padding: 4px 0;
+    line-height: 1;
+  }
+
+  /* ── PHILOSOPHY ── */
+  .philosophy-section { background: var(--ink); color: var(--white); }
+  .philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .philosophy-item { border-top: 1px solid rgba(255,255,255,0.15); padding-top: 24px; }
+  .philosophy-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--teal-light);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+  .philosophy-item h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .philosophy-item p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+  /* ── CHINA ENGINE ── */
+  .china-section { background: var(--white); }
+  .china-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  .china-lenses { display: flex; flex-direction: column; gap: 2px; }
+  .china-lens {
+    padding: 18px 22px;
+    border-left: 3px solid var(--rule);
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .china-lens:hover { border-left-color: var(--teal); background: var(--paper); }
+  .china-lens-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+  .china-lens-sub { font-size: 12px; color: var(--slate); }
+
+  /* ── SINGAPORE POLICY ── */
+  .policy-section { background: var(--paper); }
+  .policy-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .policy-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 24px;
+  }
+  .policy-icon {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .policy-card h3 { font-size: 15px; margin-bottom: 8px; }
+  .policy-card p  { font-size: 12px; color: var(--slate); line-height: 1.6; }
+
+  /* ── LABOUR ── */
+  .labour-section { background: var(--white); }
+  .labour-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; align-items: start; }
+  .sslo-card {
+    background: var(--ink);
+    color: var(--white);
+    padding: 32px;
+  }
+  .sslo-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 20px;
+  }
+  .sslo-metric {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    align-items: center;
+  }
+  .sslo-metric:last-child { border-bottom: none; }
+  .sslo-label { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .sslo-val   { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--white); }
+  .sslo-stress { font-size: 10px; padding: 2px 7px; }
+
+  /* ── BRIEFINGS ── */
+  .briefings-section { background: var(--paper); }
+  .briefings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .briefing-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 28px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .briefing-card:hover { border-color: var(--teal); }
+  .briefing-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .briefing-card h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .briefing-card p { font-size: 12px; color: var(--slate); line-height: 1.6; margin-bottom: 18px; }
+  .briefing-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .read-more { color: var(--teal); text-decoration: none; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ── TIPPING POINT WATCH ── */
+  .tipping-section { background: var(--white); }
+  .tipping-list { display: flex; flex-direction: column; gap: 16px; }
+  .tipping-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 24px;
+    padding: 20px 24px;
+    border: 1px solid var(--rule);
+    align-items: center;
+  }
+  .tipping-severity {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-align: center;
+    padding: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .sev-critical { background: rgba(192,57,43,0.1); color: #c0392b; border: 1px solid rgba(192,57,43,0.3); }
+  .sev-elevated { background: rgba(200,136,42,0.1); color: #c8882a; border: 1px solid rgba(200,136,42,0.3); }
+  .sev-watch    { background: rgba(26,122,74,0.1);  color: #1a7a4a;  border: 1px solid rgba(26,122,74,0.3);  }
+  .tipping-content h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; font-family: 'Playfair Display', serif; }
+  .tipping-content p  { font-size: 12px; color: var(--slate); }
+  .tipping-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); white-space: nowrap; }
+
+  /* ── TAC PORTAL ── */
+  .tac-section { background: var(--ink); color: var(--white); }
+  .tac-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .tac-features { display: flex; flex-direction: column; gap: 20px; }
+  .tac-feature {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .tac-feature:last-child { border-bottom: none; padding-bottom: 0; }
+  .tac-feature-icon {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--teal-light);
+  }
+  .tac-feature h4 { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 4px; font-family: 'DM Sans', sans-serif; }
+  .tac-feature p  { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .tac-cta-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 40px;
+  }
+  .tac-cta-box h3 { font-size: 22px; margin-bottom: 12px; color: var(--white); }
+  .tac-cta-box p  { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 28px; line-height: 1.7; }
+
+  /* ── SCENARIO SIMULATOR ── */
+  .scenario-section { background: var(--paper); }
+  .scenario-ui {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+    background: var(--white);
+  }
+  .scenario-sidebar {
+    background: var(--ink-mid);
+    padding: 28px;
+    color: var(--white);
+  }
+  .scenario-sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 20px;
+  }
+  .scenario-option {
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    transition: all 0.15s;
+  }
+  .scenario-option:hover, .scenario-option.active { border-color: var(--teal-light); color: var(--white); background: rgba(34,163,148,0.1); }
+  .scenario-option.active { border-color: var(--teal-light); }
+  .scenario-main { padding: 32px; }
+  .scenario-main-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .scenario-output {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.8;
+    padding: 20px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .scenario-implications { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .implication-card {
+    padding: 14px;
+    border: 1px solid var(--rule);
+    background: var(--white);
+  }
+  .implication-sector { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--teal); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
+  .implication-text   { font-size: 12px; color: var(--slate); line-height: 1.5; }
+
+  /* ── NEWSLETTER ── */
+  .newsletter-section { background: var(--white); border-top: 3px solid var(--ink); }
+  .newsletter-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .newsletter-form { display: flex; gap: 0; }
+  .newsletter-input {
+    flex: 1;
+    padding: 13px 18px;
+    border: 1.5px solid var(--ink);
+    border-right: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+  }
+  .newsletter-input::placeholder { color: var(--muted); }
+  .newsletter-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+  .newsletter-pillars { display: flex; flex-direction: column; gap: 16px; }
+  .pillar {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .pillar-marker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--teal);
+    padding-top: 2px;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .pillar-text { font-size: 13px; color: var(--slate); line-height: 1.6; }
+  .pillar-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    padding: 40px 0;
+    font-size: 12px;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .footer-mark span { color: var(--teal-light); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.7s ease both; }
+  .fade-in-1 { animation-delay: 0.1s; }
+  .fade-in-2 { animation-delay: 0.25s; }
+  .fade-in-3 { animation-delay: 0.4s; }
+  .fade-in-4 { animation-delay: 0.55s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-inner         { grid-template-columns: 1fr; }
+    .hero-signal-card   { display: none; }
+    .dashboard-grid     { grid-template-columns: 1fr; }
+    .philosophy-grid    { grid-template-columns: 1fr; }
+    .china-grid         { grid-template-columns: 1fr; }
+    .policy-cards       { grid-template-columns: 1fr 1fr; }
+    .labour-grid        { grid-template-columns: 1fr; }
+    .briefings-grid     { grid-template-columns: 1fr; }
+    .tac-grid           { grid-template-columns: 1fr; }
+    .scenario-ui        { grid-template-columns: 1fr; }
+    .newsletter-inner   { grid-template-columns: 1fr; }
+    .tipping-item       { grid-template-columns: 60px 1fr; }
+    .tipping-date       { display: none; }
+    .heatmap-grid       { grid-template-columns: repeat(2, 1fr); }
+    .scenario-implications { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-inner">
+    <!-- first set -->
+    <div class="ticker-item"><span class="label">SGD/USD</span><span class="val">0.7421</span><span class="chg dn">▼ 0.12%</span></div>
+    <div class="ticker-item"><span class="label">CHINA PMI</span><span class="val">49.1</span><span class="chg dn">▼ Contraction</span></div>
+    <div class="ticker-item"><span class="label">US CPI YoY</span><span class="val">3.4%</span><span class="chg up">▲ Sticky</span></div>
+    <div class="ticker-item"><span class="label">BRENT</span><span class="val">$82.40</span><span class="chg up">▲ 1.1%</span></div>
+    <div class="ticker-item"><span class="label">STI</span><span class="val">3,247</span><span class="chg dn">▼ 0.4%</span></div>
+    <div class="ticker-item"><span class="label">FED FUNDS</span><span class="val">5.25–5.50%</span><span class="chg">Held</span></div>
+    <div class="ticker-item"><span class="label">SG NON-OIL EX</span><span class="val">$14.2B</span><span class="chg dn">▼ 2.3% MoM</span></div>
+    <div class="ticker-item"><span class="label">REGIME STATUS</span><span class="val">TRANSITION</span><span class="chg" style="color:#e6a020">◆ Watch</span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item"><span class="label">SGD/USD</span><span class="val">0.7421</span><span class="chg dn">▼ 0.12%</span></div>
+    <div class="ticker-item"><span class="label">CHINA PMI</span><span class="val">49.1</span><span class="chg dn">▼ Contraction</span></div>
+    <div class="ticker-item"><span class="label">US CPI YoY</span><span class="val">3.4%</span><span class="chg up">▲ Sticky</span></div>
+    <div class="ticker-item"><span class="label">BRENT</span><span class="val">$82.40</span><span class="chg up">▲ 1.1%</span></div>
+    <div class="ticker-item"><span class="label">STI</span><span class="val">3,247</span><span class="chg dn">▼ 0.4%</span></div>
+    <div class="ticker-item"><span class="label">FED FUNDS</span><span class="val">5.25–5.50%</span><span class="chg">Held</span></div>
+    <div class="ticker-item"><span class="label">SG NON-OIL EX</span><span class="val">$14.2B</span><span class="chg dn">▼ 2.3% MoM</span></div>
+    <div class="ticker-item"><span class="label">REGIME STATUS</span><span class="val">TRANSITION</span><span class="chg" style="color:#e6a020">◆ Watch</span></div>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="wordmark">
+      <div class="wordmark-title">Macro<span>Lab</span></div>
+      <div class="wordmark-sub">Singapore — Adaptive Macro Intelligence</div>
+    </div>
+    <div class="masthead-right">
+      <a href="#briefings" class="btn-outline">Executive Briefings</a>
+      <a href="#newsletter" class="btn-primary">Subscribe</a>
+    </div>
+  </div>
+  <nav class="nav" role="navigation">
+    <a href="#signals" class="active">Signal Intelligence</a>
+    <a href="#framework">Framework</a>
+    <a href="#china">China Engine</a>
+    <a href="#policy">SG Policy Lens</a>
+    <a href="#labour">Labour Dynamics</a>
+    <a href="#briefings">Briefings</a>
+    <a href="#tipping">Tipping Points</a>
+    <a href="#tac">TAC Portal</a>
+    <a href="#scenario">Scenario Simulator</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-kicker fade-in">Singapore Decision Intelligence</div>
+        <h1 class="fade-in fade-in-1">When signals begin to <em>interact</em>, MacroLab sees it first.</h1>
+        <p class="hero-body fade-in fade-in-2">MacroLab is Singapore's adaptive macro sensemaking system. We don't forecast events — we detect when global pressures begin interacting in non-linear ways and translate them into sector-specific business intelligence before they become business pain.</p>
+        <div class="hero-actions fade-in fade-in-3">
+          <a href="#signals" class="btn-primary">Explore Signal Dashboard</a>
+          <a href="#newsletter" class="btn-outline" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.3);">Subscribe to Briefings</a>
+        </div>
+        <div class="hero-note fade-in fade-in-4" style="margin-top:24px;">For TACs · SMEs · CFOs · Strategy Leaders · Policymakers</div>
+      </div>
+
+      <!-- Signal card -->
+      <div class="hero-signal-card">
+        <div class="signal-card-header">
+          <span>Live Pressure Monitor</span>
+          <div class="signal-pulse"></div>
+        </div>
+        <div class="signal-row">
+          <span class="signal-name">Margin Pressure</span>
+          <span class="signal-badge badge-elevated">Elevated</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-name">Supply-Chain Stress</span>
+          <span class="signal-badge badge-elevated">Elevated</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-name">Labour Market</span>
+          <span class="signal-badge badge-rising">Rising</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-name">Funding Conditions</span>
+          <span class="signal-badge badge-rising">Tightening</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-name">Demand Confidence</span>
+          <span class="signal-badge badge-moderate">Moderate</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-name">FX Transmission</span>
+          <span class="signal-badge badge-watch">Watch</span>
+        </div>
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:6px;">Regime Assessment</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;">System in <strong style="color:#e6a020">transitional pressure</strong>. Three interacting feedback loops detected across trade, labour, and credit channels.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- SIGNAL DASHBOARD -->
+<section class="dashboard-section" id="signals">
+  <div class="container">
+    <div class="section-label">Signal Intelligence Overview</div>
+    <h2 class="section-title">The MacroLab Dashboard</h2>
+    <p class="section-intro">A structured view of how global signals are currently transmitting into Singapore's business environment — across pressure dimensions, sector exposures, and regime dynamics.</p>
+
+    <div class="dashboard-grid">
+
+      <!-- Module 1: Global Signals -->
+      <div class="dash-module">
+        <div class="dash-module-label">Global Signal Engine</div>
+        <div class="dash-module-title">Signal Intensity by Domain</div>
+        <div class="mini-bars">
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">Geopolitics</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:82%;background:#c0392b;"></div></div>
+            <span class="mini-bar-val">8.2</span>
+          </div>
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">China</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:76%;background:#e67e22;"></div></div>
+            <span class="mini-bar-val">7.6</span>
+          </div>
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">Trade</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:71%;background:#e67e22;"></div></div>
+            <span class="mini-bar-val">7.1</span>
+          </div>
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">Inflation</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:64%;background:#f1c40f;"></div></div>
+            <span class="mini-bar-val">6.4</span>
+          </div>
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">Energy</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:58%;background:#f1c40f;"></div></div>
+            <span class="mini-bar-val">5.8</span>
+          </div>
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">AI Disruption</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:89%;background:#1a7a6e;"></div></div>
+            <span class="mini-bar-val">8.9</span>
+          </div>
+          <div class="mini-bar-row">
+            <span class="mini-bar-label">FX</span>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:52%;background:#2980b9;"></div></div>
+            <span class="mini-bar-val">5.2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 2: Pressure Engine -->
+      <div class="dash-module">
+        <div class="dash-module-label">System Pressure Engine</div>
+        <div class="dash-module-title">Singapore Business Pressure Map</div>
+        <div class="pressure-grid">
+          <div class="pressure-item"><span class="pressure-name">Margin</span><span class="pressure-level lvl-high">HIGH</span></div>
+          <div class="pressure-item"><span class="pressure-name">Demand</span><span class="pressure-level lvl-med">MED</span></div>
+          <div class="pressure-item"><span class="pressure-name">Cost</span><span class="pressure-level lvl-high">HIGH</span></div>
+          <div class="pressure-item"><span class="pressure-name">Labour</span><span class="pressure-level lvl-high">HIGH</span></div>
+          <div class="pressure-item"><span class="pressure-name">Supply Chain</span><span class="pressure-level lvl-high">HIGH</span></div>
+          <div class="pressure-item"><span class="pressure-name">Funding</span><span class="pressure-level lvl-med">MED</span></div>
+          <div class="pressure-item"><span class="pressure-name">Confidence</span><span class="pressure-level lvl-med">MED</span></div>
+          <div class="pressure-item"><span class="pressure-name">FX Exposure</span><span class="pressure-level lvl-low">LOW</span></div>
+        </div>
+      </div>
+
+      <!-- Module 3: Regime -->
+      <div class="dash-module">
+        <div class="dash-module-label">Regime Shift Engine</div>
+        <div class="dash-module-title">Current Structural Assessment</div>
+        <div class="regime-status">
+          <div class="regime-row">
+            <div class="regime-dot" style="background:#e67e22;"></div>
+            <div>
+              <div class="regime-text">Transitional Pressure Regime</div>
+              <div class="regime-sub">Three interacting loops detected · Geopolitics × Trade × Labour</div>
+            </div>
+          </div>
+          <div class="regime-row">
+            <div class="regime-dot" style="background:#c0392b;"></div>
+            <div>
+              <div class="regime-text">China Overcapacity Loop Active</div>
+              <div class="regime-sub">Export deflation transmitting into SG manufacturing margins</div>
+            </div>
+          </div>
+          <div class="regime-row">
+            <div class="regime-dot" style="background:#f1c40f;"></div>
+            <div>
+              <div class="regime-text">AI Displacement Signal Rising</div>
+              <div class="regime-sub">Professional services & BPO sectors showing early manpower stress</div>
+            </div>
+          </div>
+          <div class="regime-row">
+            <div class="regime-dot" style="background:#1a7a4a;"></div>
+            <div>
+              <div class="regime-text">MAS FX Buffer Active</div>
+              <div class="regime-sub">SGD NEER providing structural inflation hedge</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 4: Sector Heatmap -->
+      <div class="dash-module" style="grid-column:1/-1;">
+        <div class="dash-module-label">Sector Translation Layer — Singapore Exposure Heatmap</div>
+        <div class="dash-module-title" style="margin-bottom:20px;">Macro Transmission Intensity by Sector</div>
+        <div class="heatmap-grid">
+          <div class="heat-cell h-critical"><div class="sector-name">Manufacturing</div><div class="sector-val">Critical</div></div>
+          <div class="heat-cell h-high"><div class="sector-name">Logistics & Shipping</div><div class="sector-val">High</div></div>
+          <div class="heat-cell h-high"><div class="sector-name">Precision Eng.</div><div class="sector-val">High</div></div>
+          <div class="heat-cell h-moderate"><div class="sector-name">Financial Services</div><div class="sector-val">Moderate</div></div>
+          <div class="heat-cell h-high"><div class="sector-name">Retail & F&B</div><div class="sector-val">High</div></div>
+          <div class="heat-cell h-moderate"><div class="sector-name">Professional Svcs</div><div class="sector-val">Moderate</div></div>
+          <div class="heat-cell h-watch"><div class="sector-name">InfoComm</div><div class="sector-val">Watch</div></div>
+          <div class="heat-cell h-low"><div class="sector-name">Healthcare</div><div class="sector-val">Low</div></div>
+          <div class="heat-cell h-critical"><div class="sector-name">Construction</div><div class="sector-val">Critical</div></div>
+          <div class="heat-cell h-high"><div class="sector-name">Food Manufacturing</div><div class="sector-val">High</div></div>
+          <div class="heat-cell h-moderate"><div class="sector-name">Biomedical</div><div class="sector-val">Moderate</div></div>
+          <div class="heat-cell h-watch"><div class="sector-name">Aerospace MRO</div><div class="sector-val">Watch</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- FRAMEWORK / ARCHITECTURE -->
+<section class="arch-section" id="framework">
+  <div class="container">
+    <div class="section-label">The MacroLab Framework</div>
+    <h2 class="section-title">A Non-Linear Architecture for Macro Intelligence</h2>
+    <p class="section-intro">MacroLab does not model the world as a series of independent variables. It treats global signals as interacting system pressures — and tracks when feedback loops, thresholds, and regime shifts begin to emerge.</p>
+
+    <div class="arch-flow">
+      <div class="arch-engine">
+        <div class="arch-num">01</div>
+        <div class="arch-name">Global Signal Engine</div>
+        <div class="arch-desc">Geopolitics · China · Trade · Inflation · Energy · FX · AI · Markets</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">02</div>
+        <div class="arch-name">System Pressure Engine</div>
+        <div class="arch-desc">Translates signals into margin, demand, cost, labour, supply-chain, funding & confidence pressures</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">03</div>
+        <div class="arch-name">Feedback Loop Engine</div>
+        <div class="arch-desc">Maps reinforcing, balancing, delay, and contagion loops across pressure dimensions</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">04</div>
+        <div class="arch-name">Threshold & Tipping Point Engine</div>
+        <div class="arch-desc">Detects non-linear transitions before they become visible in conventional data</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">05</div>
+        <div class="arch-name">Regime Shift Engine</div>
+        <div class="arch-desc">Identifies structural transitions in the macro operating environment</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">06</div>
+        <div class="arch-name">Singapore Policy Lens</div>
+        <div class="arch-desc">FX · Labour · Industrial · Fiscal buffering · Strategic positioning</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">07</div>
+        <div class="arch-name">Labour Market Dynamics Layer</div>
+        <div class="arch-desc">Wage pressure · Talent scarcity · AI displacement · Manpower stress · SSLO signals</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">08</div>
+        <div class="arch-name">China Political-Economy Engine</div>
+        <div class="arch-desc">Overcapacity · Export pressure · Industrial policy · Geoeconomic friction</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">09</div>
+        <div class="arch-name">Sector Translation Layer</div>
+        <div class="arch-desc">Converts macro transmission into sector-specific Singapore business implications</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">10</div>
+        <div class="arch-name">Business Decision Layer</div>
+        <div class="arch-desc">Pricing · Hiring · Inventory · Procurement · Capital allocation · Risk management</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-engine">
+        <div class="arch-num">11</div>
+        <div class="arch-name">TAC Dissemination Layer</div>
+        <div class="arch-desc">Member briefings · Sector intelligence packs · Board reports · Executive explainers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- PHILOSOPHY -->
+<section class="philosophy-section">
+  <div class="container">
+    <div class="section-label" style="color:var(--teal-light);">Core Design Philosophy</div>
+    <h2 class="section-title" style="color:var(--white);margin-bottom:48px;">What makes MacroLab different</h2>
+    <div class="philosophy-grid">
+      <div class="philosophy-item">
+        <div class="philosophy-num">01 —</div>
+        <h3>Interactions, not isolated signals</h3>
+        <p>Most intelligence platforms track macro signals independently. MacroLab maps how they interact — and watches for the moments when those interactions amplify into non-linear pressures.</p>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-num">02 —</div>
+        <h3>Thresholds matter more than levels</h3>
+        <p>A signal at 6 is not simply worse than a signal at 4. MacroLab monitors the boundaries where gradual pressure becomes structural shift — and flags when systems approach those thresholds.</p>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-num">03 —</div>
+        <h3>Narratives over point estimates</h3>
+        <p>Precise forecasts create false confidence. MacroLab generates structured narratives — coherent interpretations of how macro forces are evolving and what they mean for business decisions.</p>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-num">04 —</div>
+        <h3>Singapore policy mediates everything</h3>
+        <p>Singapore's industrial, FX, labour, and fiscal policy levers fundamentally alter how global shocks transmit into the domestic economy. MacroLab keeps the policy layer central.</p>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-num">05 —</div>
+        <h3>Labour as a structural regime variable</h3>
+        <p>Labour dynamics are not merely a downstream business metric. Wage pressure, AI displacement, and talent scarcity are now macro variables that interact with trade and industrial policy.</p>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-num">06 —</div>
+        <h3>China as a political-economy OS</h3>
+        <p>China is not a single macro variable. MacroLab models China as a political-economy operating system — where overcapacity, export strategy, and industrial policy interact with geoeconomic friction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- CHINA ENGINE -->
+<section class="china-section" id="china">
+  <div class="container">
+    <div class="section-label">Unpacking China</div>
+    <h2 class="section-title">The China Political-Economy Engine</h2>
+    <p class="section-intro">China is modelled as a political-economy operating system rather than a single macro variable. MacroLab tracks five analytical lenses simultaneously — and watches for when they begin to interact.</p>
+    <div class="china-grid">
+      <div class="china-lenses">
+        <div class="china-lens">
+          <div class="china-lens-title">Overcapacity Dynamics</div>
+          <div class="china-lens-sub">Steel, solar, EV, and electronics overcapacity creating structural export deflation pressure. Transmits into Singapore manufacturing sector margins.</div>
+        </div>
+        <div class="china-lens">
+          <div class="china-lens-title">Export Pressure & Trade Routing</div>
+          <div class="china-lens-sub">Chinese exporters rerouting through ASEAN, including Singapore. Dual exposure: competitive displacement and trade flow opportunity.</div>
+        </div>
+        <div class="china-lens">
+          <div class="china-lens-title">Industrial Policy Architecture</div>
+          <div class="china-lens-sub">Made in China 2025 and successor strategies driving structural shifts in global supply chain positioning relevant to Singapore's value proposition.</div>
+        </div>
+        <div class="china-lens">
+          <div class="china-lens-title">Geoeconomic Friction & Decoupling</div>
+          <div class="china-lens-sub">US-China strategic competition creating bifurcation dynamics. Singapore as potential connector node — or caught in the middle of opposing supply chain architectures.</div>
+        </div>
+        <div class="china-lens">
+          <div class="china-lens-title">Regime Behaviour & Policy Signals</div>
+          <div class="china-lens-sub">Reading Xi-era policy signals for economic-nationalist turns that generate downstream macro effects in Singapore's trade-dependent sectors.</div>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--paper);border:1px solid var(--rule);padding:28px;margin-bottom:20px;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--teal);text-transform:uppercase;margin-bottom:16px;">Current China Signal Assessment</div>
+          <div class="mini-bars">
+            <div class="mini-bar-row"><span class="mini-bar-label">Overcapacity</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:84%;background:#c0392b;"></div></div><span class="mini-bar-val" style="color:#c0392b;">8.4</span></div>
+            <div class="mini-bar-row"><span class="mini-bar-label">Export Press.</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:78%;background:#e67e22;"></div></div><span class="mini-bar-val" style="color:#e67e22;">7.8</span></div>
+            <div class="mini-bar-row"><span class="mini-bar-label">Indus. Policy</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:72%;background:#e67e22;"></div></div><span class="mini-bar-val" style="color:#e67e22;">7.2</span></div>
+            <div class="mini-bar-row"><span class="mini-bar-label">Decoupling</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:68%;background:#f1c40f;"></div></div><span class="mini-bar-val" style="color:#c8882a;">6.8</span></div>
+            <div class="mini-bar-row"><span class="mini-bar-label">Regime Risk</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:55%;background:#2980b9;"></div></div><span class="mini-bar-val" style="color:#2980b9;">5.5</span></div>
+          </div>
+        </div>
+        <div style="background:var(--ink);color:var(--white);padding:24px;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--teal-light);text-transform:uppercase;margin-bottom:12px;">MacroLab Interpretation</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;">China's overcapacity-export-industrial policy loop is in a <strong style="color:#e6a020;">reinforcing phase</strong>. Singapore manufacturers face dual pressure: upstream cost advantage erosion and downstream demand competition. The loop is not self-correcting without external policy intervention.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- SINGAPORE POLICY LENS -->
+<section class="policy-section" id="policy">
+  <div class="container">
+    <div class="section-label">Singapore Policy Lens</div>
+    <h2 class="section-title">How Singapore Policy Mediates Macro Transmission</h2>
+    <p class="section-intro">Singapore's policy architecture is not passive. FX management, labour frameworks, industrial strategy, and fiscal buffers actively reshape how global shocks transmit into the domestic economy.</p>
+    <div class="policy-cards">
+      <div class="policy-card">
+        <div class="policy-icon">FX Policy</div>
+        <h3>MAS Exchange Rate Framework</h3>
+        <p>SGD NEER management provides structural inflation buffering. MacroLab tracks band positioning, slope adjustments, and their downstream effects on import cost transmission.</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">Labour Policy</div>
+        <h3>Fair Consideration & Manpower Frameworks</h3>
+        <p>COMPASS, PMET policies, and EP/S-Pass quota shifts interact with global AI displacement to reshape Singapore's talent cost structure across sectors.</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">Industrial Policy</div>
+        <h3>EDB, ITM, and Sector Roadmaps</h3>
+        <p>Industry Transformation Maps and EDB investment mandates define which sectors receive structural policy support — shaping resilience differentials across the economy.</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">Fiscal Buffering</div>
+        <h3>Reserves, GST Vouchers & Support Schemes</h3>
+        <p>Singapore's deep fiscal reserves enable counter-cyclical interventions. MacroLab tracks when fiscal space is deployed and how it reshapes the business operating environment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- LABOUR MARKET DYNAMICS -->
+<section class="labour-section" id="labour">
+  <div class="container">
+    <div class="section-label">Labour Market Dynamics</div>
+    <h2 class="section-title">The Singapore Sector Labour Outlook (SSLO)</h2>
+    <p class="section-intro">Labour is no longer just a cost line — it is a macro regime variable. MacroLab's SSLO tracks wage pressure, talent scarcity, AI displacement, and sector manpower stress as interacting structural forces.</p>
+    <div class="labour-grid">
+      <div>
+        <div class="china-lenses" style="margin-bottom:32px;">
+          <div class="china-lens"><div class="china-lens-title">Wage Pressure Dynamics</div><div class="china-lens-sub">Progressive Wage Model expansion, tight PMET market, and inflationary cost-of-living feeding into wage negotiation cycles across sectors.</div></div>
+          <div class="china-lens"><div class="china-lens-title">AI Displacement Signals</div><div class="china-lens-sub">Early displacement indicators in professional services, BPO, and administrative functions. Not yet visible in aggregate employment data but detectable in hiring pattern shifts.</div></div>
+          <div class="china-lens"><div class="china-lens-title">Talent Scarcity Architecture</div><div class="china-lens-sub">Structural shortages in semiconductor, cybersecurity, and advanced manufacturing skills creating sector-specific bottlenecks that constrain growth despite strong demand signals.</div></div>
+          <div class="china-lens"><div class="china-lens-title">Sector Manpower Stress</div><div class="china-lens-sub">Construction, F&B, and logistics operating under chronic manpower stress that amplifies any upstream cost or demand pressure into accelerated margin deterioration.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sslo-card">
+          <div class="sslo-header">SSLO — Sector Labour Stress Monitor</div>
+          <div class="sslo-metric"><span class="sslo-label">Construction</span><span class="sslo-val"><span class="sslo-stress badge-elevated">Critical</span></span></div>
+          <div class="sslo-metric"><span class="sslo-label">F&B & Retail</span><span class="sslo-val"><span class="sslo-stress badge-elevated">High</span></span></div>
+          <div class="sslo-metric"><span class="sslo-label">Logistics</span><span class="sslo-val"><span class="sslo-stress badge-elevated">High</span></span></div>
+          <div class="sslo-metric"><span class="sslo-label">Manufacturing</span><span class="sslo-val"><span class="sslo-stress badge-rising">Moderate</span></span></div>
+          <div class="sslo-metric"><span class="sslo-label">Professional Svcs</span><span class="sslo-val"><span class="sslo-stress badge-rising">Rising</span></span></div>
+          <div class="sslo-metric"><span class="sslo-label">Financial Services</span><span class="sslo-val"><span class="sslo-stress badge-moderate">Stable</span></span></div>
+          <div class="sslo-metric"><span class="sslo-label">Biomedical</span><span class="sslo-val"><span class="sslo-stress badge-moderate">Stable</span></span></div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:rgba(255,255,255,0.4);">SSLO updated weekly · Based on MacroLab proprietary framework</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- EXECUTIVE BRIEFINGS -->
+<section class="briefings-section" id="briefings">
+  <div class="container">
+    <div class="section-label">Executive Briefings</div>
+    <h2 class="section-title">MacroLab Intelligence Reports</h2>
+    <p class="section-intro">Structured intelligence for Singapore's business leadership — translating macro signals into decision-relevant analysis for boards, C-suites, and trade association leadership.</p>
+    <div class="briefings-grid">
+      <div class="briefing-card">
+        <div class="briefing-tag">Regime Monitor · May 2025</div>
+        <h3>When Three Loops Interact: Reading Singapore's Current Macro Regime</h3>
+        <p>An analysis of how geopolitical fragmentation, China overcapacity, and Singapore's labour market tightening are creating a compounding pressure regime unlike previous cycles.</p>
+        <div class="briefing-meta">
+          <span>MacroLab Singapore</span>
+          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
+        </div>
+      </div>
+      <div class="briefing-card">
+        <div class="briefing-tag">China Engine · April 2025</div>
+        <h3>China's Overcapacity Loop: What Singapore Manufacturers Need to Know</h3>
+        <p>A deep-dive into the structural dynamics of Chinese industrial overcapacity and its transmission pathway into Singapore's manufacturing and precision engineering sectors.</p>
+        <div class="briefing-meta">
+          <span>MacroLab Singapore</span>
+          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
+        </div>
+      </div>
+      <div class="briefing-card">
+        <div class="briefing-tag">Labour Dynamics · April 2025</div>
+        <h3>The SSLO Signal: AI Displacement and Wage Pressure as Interacting Forces</h3>
+        <p>MacroLab's inaugural Singapore Sector Labour Outlook — tracking the early signals of AI-driven role displacement alongside the continuing tightness of Singapore's PMET labour market.</p>
+        <div class="briefing-meta">
+          <span>MacroLab Singapore</span>
+          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
+        </div>
+      </div>
+      <div class="briefing-card">
+        <div class="briefing-tag">Policy Lens · March 2025</div>
+        <h3>MAS and the Transmission Filter: How FX Policy Shapes Business Exposure</h3>
+        <p>An examination of how MAS's exchange rate framework mediates global inflationary pressure — and what the current SGD NEER positioning means for import-dependent businesses.</p>
+        <div class="briefing-meta">
+          <span>MacroLab Singapore</span>
+          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
+        </div>
+      </div>
+      <div class="briefing-card">
+        <div class="briefing-tag">Tipping Points · March 2025</div>
+        <h3>Non-Linear Thinking for Singapore Business Leaders</h3>
+        <p>A primer on why conventional forecasting fails at inflection points — and how MacroLab's threshold-based approach to macro interpretation provides earlier, more actionable signals.</p>
+        <div class="briefing-meta">
+          <span>MacroLab Singapore</span>
+          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
+        </div>
+      </div>
+      <div class="briefing-card">
+        <div class="briefing-tag">Sector Intelligence · February 2025</div>
+        <h3>Logistics Under Compound Stress: A Sector Intelligence Pack</h3>
+        <p>Comprehensive sector analysis for Singapore's logistics industry — covering the interacting pressures of energy volatility, Red Sea rerouting, labour shortages, and AI-driven efficiency transformation.</p>
+        <div class="briefing-meta">
+          <span>MacroLab Singapore</span>
+          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- TIPPING POINT WATCH -->
+<section class="tipping-section" id="tipping">
+  <div class="container">
+    <div class="section-label">Tipping Point Watch</div>
+    <h2 class="section-title">Macro Regime Threshold Monitor</h2>
+    <p class="section-intro">MacroLab continuously monitors the system for conditions where gradual pressure is approaching non-linear transition. These are not predictions — they are structural watch conditions requiring elevated vigilance.</p>
+    <div class="tipping-list">
+      <div class="tipping-item">
+        <div class="tipping-severity sev-critical">Critical</div>
+        <div class="tipping-content">
+          <h4>China Export Deflation Threshold</h4>
+          <p>Chinese manufacturing export prices approaching level where Singapore sector price competition becomes structurally untenable. Threshold condition: 3 consecutive months of >5% YoY decline in Chinese industrial export prices.</p>
+        </div>
+        <div class="tipping-date">Active · Since Mar 2025</div>
+      </div>
+      <div class="tipping-item">
+        <div class="tipping-severity sev-critical">Critical</div>
+        <div class="tipping-content">
+          <h4>Construction Sector Labour Collapse</h4>
+          <p>Singapore construction sector operating at chronic manpower deficit. Any additional demand shock (infrastructure pipeline acceleration) combined with current foreign worker quota constraints creates compounding delivery risk.</p>
+        </div>
+        <div class="tipping-date">Active · Since Jan 2025</div>
+      </div>
+      <div class="tipping-item">
+        <div class="tipping-severity sev-elevated">Elevated</div>
+        <div class="tipping-content">
+          <h4>US-China Tariff Escalation Loop</h4>
+          <p>Current tariff ratchet trajectory approaching threshold where Singapore's role as neutral trade corridor is structurally challenged by US secondary tariff pressure on ASEAN trade intermediation.</p>
+        </div>
+        <div class="tipping-date">Watch · Since Feb 2025</div>
+      </div>
+      <div class="tipping-item">
+        <div class="tipping-severity sev-elevated">Elevated</div>
+        <div class="tipping-content">
+          <h4>PMET Market Wage Spiral Risk</h4>
+          <p>Singapore PMET talent scarcity combined with AI-driven productivity differentiation creating conditions for wage bifurcation — AI-augmented roles versus non-augmented roles diverging structurally.</p>
+        </div>
+        <div class="tipping-date">Watch · Since Apr 2025</div>
+      </div>
+      <div class="tipping-item">
+        <div class="tipping-severity sev-watch">Watch</div>
+        <div class="tipping-content">
+          <h4>Fed Rate Persistence & SGD Carry Pressure</h4>
+          <p>Prolonged US rate elevation maintaining carry trade dynamics that create intermittent SGD pressure. Not yet at threshold for MAS policy response but warrants monitoring as global rate differential persists.</p>
+        </div>
+        <div class="tipping-date">Monitor · Since Oct 2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- TAC MEMBER PORTAL -->
+<section class="tac-section" id="tac">
+  <div class="container">
+    <div class="tac-grid">
+      <div>
+        <div class="section-label" style="color:var(--teal-light);">TAC Member Portal</div>
+        <h2 class="section-title" style="color:var(--white);">Intelligence designed for trade associations and their members</h2>
+        <p class="section-intro" style="color:rgba(255,255,255,0.55);">MacroLab's institutional offering gives trade associations the macro intelligence infrastructure to brief their boards, inform their members, and engage government with evidence-based positioning.</p>
+        <div class="tac-features">
+          <div class="tac-feature">
+            <div class="tac-feature-icon">01</div>
+            <div><h4>Sector Intelligence Packs</h4><p>Monthly deep-dive briefings specific to your sector — translating macro signals into operational and strategic implications for your members.</p></div>
+          </div>
+          <div class="tac-feature">
+            <div class="tac-feature-icon">02</div>
+            <div><h4>Board-Ready Executive Reports</h4><p>Formatted for TAC board consumption — concise, authoritative, actionable. Designed to inform board-level strategic discussion without requiring macro expertise.</p></div>
+          </div>
+          <div class="tac-feature">
+            <div class="tac-feature-icon">03</div>
+            <div><h4>Member Briefing Support</h4><p>MacroLab provides TAC secretariats with briefing materials, talking points, and Q&A support for member education sessions on macro-business developments.</p></div>
+          </div>
+          <div class="tac-feature">
+            <div class="tac-feature-icon">04</div>
+            <div><h4>Policy Engagement Intelligence</h4><p>Evidence-based macro analysis to support TAC representations to government — grounding advocacy in structured intelligence rather than anecdote.</p></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="tac-cta-box">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--teal-light);text-transform:uppercase;margin-bottom:16px;">Institutional Enquiries</div>
+          <h3>Request a Sector Intelligence Briefing</h3>
+          <p>MacroLab is currently onboarding Singapore trade association partners for sector intelligence subscriptions. Request a complimentary briefing session for your leadership team.</p>
+          <a href="#newsletter" class="btn-primary" style="display:inline-block;margin-bottom:16px;">Request a Briefing</a>
+          <div style="font-size:11px;color:rgba(255,255,255,0.3);font-family:'DM Mono',monospace;letter-spacing:0.05em;">Targeting: Singapore TACs · Enterprise Strategy Teams · CFO Offices · Policy Units</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- SCENARIO SIMULATOR -->
+<section class="scenario-section" id="scenario">
+  <div class="container">
+    <div class="section-label">Scenario Simulator</div>
+    <h2 class="section-title">What-If Intelligence for Singapore Business</h2>
+    <p class="section-intro">MacroLab's scenario framework maps how specific macro shocks would transmit through Singapore's economy — across pressure dimensions, policy responses, and sector exposures.</p>
+
+    <div class="scenario-ui">
+      <div class="scenario-sidebar">
+        <div class="scenario-sidebar-label">Select Scenario</div>
+        <div class="scenario-option active" onclick="selectScenario(this,'A')">US-China Tariff Escalation to 145%+</div>
+        <div class="scenario-option" onclick="selectScenario(this,'B')">China Overcapacity Shock — Manufacturing</div>
+        <div class="scenario-option" onclick="selectScenario(this,'C')">Fed Rate Hold — Prolonged High-for-Longer</div>
+        <div class="scenario-option" onclick="selectScenario(this,'D')">Red Sea Crisis — Logistics Disruption</div>
+        <div class="scenario-option" onclick="selectScenario(this,'E')">AI Displacement — Professional Services Wave</div>
+      </div>
+      <div class="scenario-main">
+        <div class="scenario-main-label">MacroLab Scenario Analysis</div>
+        <div class="scenario-output" id="scenario-output">
+          <strong style="color:var(--ink);">Scenario: US-China Tariff Escalation to 145%+</strong><br><br>
+          A further escalation in US-China tariffs beyond current levels would activate three simultaneous transmission pathways into Singapore's economy. First, trade flow disruption: Singapore's role as an ASEAN trade hub creates direct exposure as Chinese exporters accelerate ASEAN rerouting, creating both opportunity (higher port throughput) and risk (secondary tariff scrutiny). Second, manufacturing margin compression: Singapore's precision engineering and electronics manufacturing sectors face accelerating upstream cost pressure as Chinese component suppliers adjust pricing structures. Third, demand-side deceleration in Singapore's financial services sector as regional corporate investment decisions are deferred pending trade policy clarity.
+        </div>
+        <div class="scenario-implications" id="scenario-implications">
+          <div class="implication-card"><div class="implication-sector">Manufacturing</div><div class="implication-text">Review China-origin procurement. Accelerate supplier diversification to Malaysia, Vietnam, India.</div></div>
+          <div class="implication-card"><div class="implication-sector">Logistics</div><div class="implication-text">Port throughput opportunity. Monitor for US secondary tariff risk on ASEAN-origin goods.</div></div>
+          <div class="implication-card"><div class="implication-sector">Financial Svcs</div><div class="implication-text">Capital allocation decisions likely deferred. Pipeline risk for corporate advisory business.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section" id="newsletter">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div>
+        <div class="section-label">MacroLab Briefings</div>
+        <h2 class="section-title">Stay ahead of the macro regime</h2>
+        <p style="font-size:14px;color:var(--slate);margin-bottom:24px;line-height:1.7;">Weekly intelligence for Singapore business leaders — when global pressures begin to interact in non-linear ways, MacroLab subscribers receive structured analysis before it becomes news.</p>
+        <div class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="Your business email address">
+          <button class="btn-primary" onclick="handleSubscribe()">Subscribe</button>
+        </div>
+        <div class="newsletter-note">For TAC leadership · CFOs · Strategy executives · Business owners · Policymakers</div>
+      </div>
+      <div>
+        <div class="newsletter-pillars">
+          <div class="pillar">
+            <div class="pillar-marker">W01</div>
+            <div class="pillar-text"><strong>Signal Intelligence Digest</strong> — Weekly synthesis of global macro signals and their Singapore transmission pathways.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-marker">W02</div>
+            <div class="pillar-text"><strong>Pressure Monitor Update</strong> — Bi-weekly update to the MacroLab pressure dashboard — what has moved and why it matters.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-marker">W03</div>
+            <div class="pillar-text"><strong>Tipping Point Watch</strong> — Alerts when a monitored threshold condition changes in severity or classification.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-marker">W04</div>
+            <div class="pillar-text"><strong>Monthly Regime Briefing</strong> — Full executive briefing on Singapore's current macro operating environment — suitable for board distribution.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-mark">Macro<span>Lab</span> Singapore</div>
+        <div style="margin-top:6px;">© 2025 GlobaSense Pte Ltd · Adaptive Macro Intelligence for Singapore Business</div>
+      </div>
+      <div class="footer-links">
+        <a href="#signals">Dashboard</a>
+        <a href="#framework">Framework</a>
+        <a href="#briefings">Briefings</a>
+        <a href="#tac">TAC Portal</a>
+        <a href="#newsletter">Subscribe</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scenario simulator
+  const scenarios = {
+    A: {
+      title: 'US-China Tariff Escalation to 145%+',
+      body: 'A further escalation in US-China tariffs beyond current levels would activate three simultaneous transmission pathways into Singapore\'s economy. First, trade flow disruption: Singapore\'s role as an ASEAN trade hub creates direct exposure as Chinese exporters accelerate ASEAN rerouting, creating both opportunity (higher port throughput) and risk (secondary tariff scrutiny). Second, manufacturing margin compression: Singapore\'s precision engineering and electronics manufacturing sectors face accelerating upstream cost pressure as Chinese component suppliers adjust pricing structures. Third, demand-side deceleration in Singapore\'s financial services sector as regional corporate investment decisions are deferred pending trade policy clarity.',
+      implications: [
+        { sector: 'Manufacturing', text: 'Review China-origin procurement. Accelerate supplier diversification to Malaysia, Vietnam, India.' },
+        { sector: 'Logistics', text: 'Port throughput opportunity. Monitor for US secondary tariff risk on ASEAN-origin goods.' },
+        { sector: 'Financial Svcs', text: 'Capital allocation decisions likely deferred. Pipeline risk for corporate advisory business.' }
+      ]
+    },
+    B: {
+      title: 'China Overcapacity Shock — Manufacturing Sector',
+      body: 'A sharp acceleration in Chinese overcapacity-driven export dumping would create structural margin compression across Singapore\'s manufacturing base. Chinese producers in steel, solar panels, electronics, and precision components — operating below cost — would systematically undercut Singapore-based manufacturers in regional and global markets. The shock would be non-linear: once a critical threshold of margin compression is reached, Singapore manufacturers would face simultaneous pressure to reduce capacity, defer capital investment, and restructure workforces. The SSLO would register elevated stress across manufacturing, logistics, and precision engineering simultaneously.',
+      implications: [
+        { sector: 'Precision Eng.', text: 'Immediate margin review required. Identify segments where differentiation insulates from price competition.' },
+        { sector: 'Manufacturing', text: 'Accelerate transition to higher-value segments. Map exposure to Chinese import competition by product line.' },
+        { sector: 'Workforce', text: 'Prepare for workforce restructuring cycles. Engage SNEF and NTUC on retraining pipeline.' }
+      ]
+    },
+    C: {
+      title: 'Fed Rate Hold — Prolonged High-for-Longer',
+      body: 'A prolonged Federal Reserve high-rate environment extending beyond Q4 2025 would sustain several structural pressures on Singapore\'s business environment. Singapore\'s property and construction sectors face extended financing cost elevation. Corporate refinancing cycles for Singapore-listed companies with USD debt expose balance sheets to sustained cost pressure. SME credit conditions — already tightening — would remain constrained. The MAS SGD NEER framework partially insulates Singapore from imported inflation, but cannot offset the business credit cost transmission pathway. Financial services firms with regional deal pipelines would continue to experience subdued M&A and capital markets activity.',
+      implications: [
+        { sector: 'Real Estate', text: 'Defer non-essential capital projects. Lock in fixed-rate financing where available.' },
+        { sector: 'SME Finance', text: 'Monitor credit line accessibility. Enterprise Singapore support schemes likely to expand.' },
+        { sector: 'Capital Mkts', text: 'Regional deal pipeline likely suppressed through H1 2026. Restructuring advisory in demand.' }
+      ]
+    },
+    D: {
+      title: 'Red Sea Crisis — Logistics Disruption',
+      body: 'A sustained Red Sea navigation crisis forcing continued Cape of Good Hope rerouting would create compound stress on Singapore\'s logistics and trade ecosystem. Rerouting adds 10-14 days to Europe-Asia shipping times, inflating freight costs and creating supply chain timing misalignments. Singapore\'s port throughput may benefit from increased ASEAN hub demand, but Singapore-based importers face elevated landed cost structures. Sectors with thin inventory buffers — retail, F&B manufacturing, pharmaceutical distribution — face the highest acute exposure. The feedback loop: elevated logistics costs transmit into margin pressure, which transmits into constrained reinvestment, which transmits into reduced resilience for subsequent shocks.',
+      implications: [
+        { sector: 'Logistics', text: 'Port throughput uplift likely. Freight forwarding margins under pressure from capacity reallocation.' },
+        { sector: 'Retail & F&B', text: 'Build 45-60 day inventory buffers for European-origin inputs. Accelerate supplier diversification.' },
+        { sector: 'Manufacturing', text: 'Review just-in-time assumptions. Extended lead times require buffer stock strategy revision.' }
+      ]
+    },
+    E: {
+      title: 'AI Displacement — Professional Services Wave',
+      body: 'A rapid acceleration of AI capability deployment in professional services would create structural manpower stress across Singapore\'s legal, accounting, financial advisory, and management consulting sectors. Unlike previous technology transitions, AI displacement in professional services is occurring at graduate and experienced professional levels simultaneously — compressing the traditional career ladder. Singapore\'s PMET labour market would experience bifurcation: AI-augmented roles commanding significant wage premiums, non-augmented roles facing displacement or commoditisation. The TAC-relevant implication: member associations for professional services sectors will face simultaneous member concerns about competitive displacement, workforce transition costs, and regulatory uncertainty around AI-generated professional outputs.',
+      implications: [
+        { sector: 'Legal & Acctg', text: 'Map AI exposure by service line. Identify differentiation through judgment-intensive, relationship-dependent work.' },
+        { sector: 'HR & Talent', text: 'Accelerate AI-augmentation reskilling programmes. SSLO signals early career role compression.' },
+        { sector: 'TACs', text: 'Professional services TACs should prepare member briefings on AI disruption scenarios specific to their sector.' }
+      ]
+    }
+  };
+
+  function selectScenario(el, key) {
+    document.querySelectorAll('.scenario-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    const s = scenarios[key];
+    document.getElementById('scenario-output').innerHTML =
+      `<strong style="color:var(--ink);">Scenario: ${s.title}</strong><br><br>${s.body}`;
+    document.getElementById('scenario-implications').innerHTML =
+      s.implications.map(i => `<div class="implication-card"><div class="implication-sector">${i.sector}</div><div class="implication-text">${i.text}</div></div>`).join('');
+  }
+
+  // Subscribe handler
+  function handleSubscribe() {
+    const input = document.querySelector('.newsletter-input');
+    const val = input.value.trim();
+    if (!val || !val.includes('@')) {
+      input.style.borderColor = '#c0392b';
+      setTimeout(() => input.style.borderColor = 'var(--ink)', 1500);
+      return;
+    }
+    input.value = '';
+    input.placeholder = '✓ Subscribed — first briefing coming soon.';
+    input.style.background = '#f0f7f5';
+  }
+
+  // Smooth scroll for nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  // Nav active state on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY + 120;
+    sections.forEach(s => {
+      if (scrollY >= s.offsetTop && scrollY < s.offsetTop + s.offsetHeight) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + s.id);
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>

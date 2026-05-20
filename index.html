@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacroLab.sg – Business Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1923;
+    --ink-mid: #1e2d3d;
+    --ink-light: #2e4057;
+    --teal: #1a7a6e;
+    --teal-light: #22a394;
+    --paper: #f7f5f0;
+    --white: #ffffff;
+    --amber: #c8882a;
+    --red-signal: #c0392b;
+    --green-signal: #1a7a4a;
+    --blue-signal: #1a4a7a;
+    --slate: #4a6075;
+    --muted: #8a9bb0;
+    --rule: #d4dde6;
+    --nav-bg: rgba(10,20,30,0.97);
+    --col-width: 1160px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+  h1,h2,h3 { font-family: 'Playfair Display', serif; }
+
+  /* NAV */
+  nav {
+    background: var(--nav-bg);
+    position: sticky; top: 0; z-index: 100;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { color: white; font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 600; text-decoration: none; }
+  .nav-logo span { color: var(--teal-light); }
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-right a { color: rgba(255,255,255,0.75); font-size: 0.85rem; text-decoration: none; }
+  .nav-portal-link {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    background: var(--teal);
+    border-radius: 999px;
+    padding: 0.32rem 0.95rem;
+    font-size: 0.82rem; color: white !important;
+    font-weight: 600; text-decoration: none !important;
+    transition: background 0.18s, transform 0.1s;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .nav-portal-link:hover { background: var(--teal-light) !important; transform: translateY(-1px); }
+  .nav-portal-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.85); display: inline-block; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:0.5} 50%{opacity:1} }
+  .nav-profile { 
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.82rem; color: white; cursor: pointer;
+  }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal-light); display: inline-block; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ONBOARDING SCREEN */
+  .onboard-hero {
+    background: linear-gradient(160deg, #0a141e 60%, #0f2535 100%);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    color: white;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
+    color: var(--teal-light);
+    border: 1px solid rgba(34,163,148,0.35);
+    border-radius: 4px;
+    padding: 0.3rem 0.8rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+  .onboard-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: white;
+    line-height: 1.2;
+    max-width: 640px;
+    margin: 0 auto 1rem;
+  }
+  .onboard-hero p {
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* FORM */
+  .form-container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  .form-section {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .form-section-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .form-section h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .form-section > p {
+    font-size: 0.88rem;
+    color: var(--slate);
+    margin-bottom: 1.5rem;
+    line-height: 1.55;
+  }
+
+  /* INDUSTRY GRID */
+  .industry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .industry-card {
+    border: 2px solid var(--rule);
+    border-radius: 8px;
+    padding: 1rem 0.85rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+    background: white;
+  }
+  .industry-card:hover { border-color: var(--teal-light); background: #f0fafa; }
+  .industry-card.selected { border-color: var(--teal); background: #e8f5f3; }
+  .industry-icon { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .industry-label { font-size: 0.82rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .industry-sub { font-size: 0.72rem; color: var(--slate); margin-top: 0.2rem; }
+
+  /* FORM FIELDS */
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field-group label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-mid);
+  }
+  .field-group .field-hint {
+    font-size: 0.75rem;
+    color: var(--slate);
+    line-height: 1.4;
+  }
+  .field-group input, .field-group select {
+    border: 1.5px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: white;
+    transition: border-color 0.15s;
+    outline: none;
+    width: 100%;
+  }
+  .field-group input:focus, .field-group select:focus { border-color: var(--teal-light); }
+  .field-unit {
+    position: relative;
+  }
+  .field-unit input { padding-left: 2.2rem; }
+  .field-unit .unit-label {
+    position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+    font-size: 0.88rem; color: var(--slate);
+  }
+
+  /* SUBMIT */
+  .submit-area { text-align: center; padding-top: 0.5rem; }
+  .btn-primary {
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 0.85rem 2.5rem;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.1s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+  .submit-note { font-size: 0.78rem; color: var(--slate); margin-top: 0.75rem; }
+
+  /* LOADING SCREEN */
+  .loading-screen {
+    background: linear-gradient(160deg, #0a141e 60%, #0f2535 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    color: white;
+  }
+  .loading-logo { font-family: 'DM Sans', sans-serif; font-size: 1.4rem; font-weight: 600; margin-bottom: 3rem; }
+  .loading-logo span { color: var(--teal-light); }
+  .signal-bars {
+    display: flex; gap: 0.4rem; align-items: flex-end;
+    margin-bottom: 2rem; height: 40px;
+  }
+  .bar {
+    width: 8px; background: var(--teal-light); border-radius: 3px;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .bar:nth-child(1) { height: 20px; animation-delay: 0s; }
+  .bar:nth-child(2) { height: 30px; animation-delay: 0.15s; }
+  .bar:nth-child(3) { height: 40px; animation-delay: 0.3s; }
+  .bar:nth-child(4) { height: 25px; animation-delay: 0.45s; }
+  .bar:nth-child(5) { height: 35px; animation-delay: 0.6s; }
+  .bar:nth-child(6) { height: 20px; animation-delay: 0.75s; }
+  @keyframes pulse {
+    0%,100% { opacity: 0.35; }
+    50% { opacity: 1; }
+  }
+  .loading-h { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.75rem; }
+  .loading-steps { list-style: none; padding: 0; }
+  .loading-steps li {
+    font-size: 0.85rem; color: rgba(255,255,255,0.55);
+    padding: 0.4rem 0;
+    display: flex; align-items: center; gap: 0.6rem;
+    justify-content: center;
+  }
+  .loading-steps li.done { color: var(--teal-light); }
+  .check { font-size: 0.9rem; }
+
+
+  /* DASHBOARD */
+  .dash-header {
+    background: linear-gradient(160deg, #0a141e 55%, #0f2535 100%);
+    padding: 2rem 2rem 1.8rem;
+    color: white;
+  }
+  .dash-inner { max-width: var(--col-width); margin: 0 auto; }
+  .dash-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .dash-greeting .eyebrow-dash {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--teal-light); margin-bottom: 0.5rem;
+  }
+  .dash-greeting h1 {
+    font-size: 1.75rem; color: white; line-height: 1.2; margin-bottom: 0.35rem;
+  }
+  .dash-greeting p { font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+  .macro-pulse {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    min-width: 280px;
+  }
+  .pulse-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 0.35rem; }
+  .pulse-status { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .pulse-badge { font-size: 1.1rem; font-weight: 700; color: var(--amber); font-family: 'DM Sans'; }
+  .pulse-desc { font-size: 0.82rem; color: rgba(255,255,255,0.75); }
+  .pulse-signals { font-size: 0.75rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+  /* LENS GRID */
+  .dash-body { max-width: var(--col-width); margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .section-intro { margin-bottom: 1.75rem; }
+  .section-intro h2 { font-size: 1.35rem; color: var(--ink); margin-bottom: 0.3rem; }
+  .section-intro p { font-size: 0.88rem; color: var(--slate); }
+  .lens-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .lens-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,25,35,0.04);
+  }
+  .lens-top {
+    padding: 1.25rem 1.4rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .lens-number { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 0.25rem; }
+  .lens-name { font-size: 1.1rem; font-weight: 700; color: var(--ink); font-family: 'Playfair Display', serif; }
+  .status-badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge-high { background: #fdf0ee; color: var(--red-signal); border: 1px solid #f5c6c0; }
+  .badge-watch { background: #fdf6e8; color: var(--amber); border: 1px solid #f0dbb0; }
+  .badge-stable { background: #e8f5ed; color: var(--green-signal); border: 1px solid #b8dfc5; }
+  .badge-mixed { background: #edf2f8; color: var(--blue-signal); border: 1px solid #c0d0e8; }
+
+  .lens-body { padding: 1.25rem 1.4rem; }
+  .lens-metrics { margin-bottom: 1.25rem; }
+  .metric-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.84rem;
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { color: var(--slate); }
+  .metric-value { font-weight: 600; color: var(--ink); }
+  .metric-value.up { color: var(--red-signal); }
+  .metric-value.down { color: var(--green-signal); }
+  .metric-value.neutral { color: var(--amber); }
+
+  .lens-analysis {
+    background: #f7f9fb;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+    font-size: 0.84rem;
+    color: var(--ink-light);
+    line-height: 1.6;
+  }
+
+  .first-action {
+    border-left: 3px solid var(--teal);
+    padding: 0.7rem 1rem;
+    background: #eef7f5;
+    border-radius: 0 6px 6px 0;
+  }
+  .first-action-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 0.25rem; }
+  .first-action-text { font-size: 0.85rem; font-weight: 500; color: var(--ink); line-height: 1.5; }
+
+  /* PERSONAL BUFFER BOX */
+  .buffer-alert {
+    background: white;
+    border: 1.5px solid var(--amber);
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .buffer-alert-header {
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+  }
+  .buffer-icon { font-size: 1.4rem; }
+  .buffer-alert-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--ink); font-family: 'DM Sans'; }
+  .buffer-alert-header .badge-watch { align-self: flex-start; }
+  .buffer-scenario-text { font-size: 0.88rem; color: var(--ink-light); line-height: 1.65; margin-bottom: 1.1rem; }
+  .buffer-scenario-text strong { color: var(--ink); }
+  .buffer-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    margin-bottom: 1.1rem;
+  }
+  .buffer-stat {
+    background: #fffbf2;
+    border: 1px solid #f0dbb0;
+    border-radius: 7px;
+    padding: 0.85rem 1rem;
+    text-align: center;
+  }
+  .buffer-stat-value { font-size: 1.5rem; font-weight: 700; color: var(--ink); font-family: 'DM Sans'; }
+  .buffer-stat-label { font-size: 0.72rem; color: var(--slate); margin-top: 0.2rem; line-height: 1.3; }
+  .buffer-recommend {
+    background: #fdf6e8;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.84rem;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .buffer-recommend strong { color: var(--amber); }
+
+  /* WEEKLY BRIEF CTA */
+  .brief-cta {
+    background: linear-gradient(135deg, var(--teal) 0%, #0f5c54 100%);
+    border-radius: 10px;
+    padding: 2rem 2.5rem;
+    color: white;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1.5rem;
+  }
+  .brief-cta h3 { font-size: 1.25rem; margin-bottom: 0.35rem; color: white; }
+  .brief-cta p { font-size: 0.88rem; color: rgba(255,255,255,0.75); max-width: 460px; line-height: 1.55; }
+  .btn-white {
+    background: white;
+    color: var(--teal);
+    border: none;
+    border-radius: 7px;
+    padding: 0.8rem 1.75rem;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s;
+  }
+  .btn-white:hover { transform: translateY(-1px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--nav-bg);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 1.25rem 2rem;
+    font-size: 0.78rem;
+  }
+  footer a { color: var(--teal-light); text-decoration: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .lens-grid { grid-template-columns: 1fr; }
+    .industry-grid { grid-template-columns: repeat(2, 1fr); }
+    .fields-grid { grid-template-columns: 1fr; }
+    .buffer-stats { grid-template-columns: 1fr; }
+    .brief-cta { text-align: center; }
+    .dash-top { flex-direction: column; }
+    .macro-pulse { min-width: unset; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">MacroLab<span>.sg</span></a>
+  <div class="nav-right">
+    <a href="#">SME Monitor</a>
+    <a href="#">Sector Playbooks</a>
+    <a href="/portal/" class="nav-portal-link"><span class="nav-portal-dot"></span>Firm Intelligence</a>
+    <div class="nav-profile" id="navProfile"><span class="nav-dot"></span><span id="navProfileLabel">Set up profile</span></div>
+  </div>
+</nav>
+
+<!-- SCREEN 1: ONBOARDING -->
+<div class="screen active" id="screen-onboard">
+  <div class="onboard-hero">
+    <div class="eyebrow">Business Intelligence Profile</div>
+    <h1>Personalise your four-lens dashboard</h1>
+    <p>Tell MacroLab about your business. We'll map this week's 47 macro signals directly to your operational reality — in under 60 seconds.</p>
+  </div>
+
+  <div class="form-container">
+    <!-- STEP 1: INDUSTRY -->
+    <div class="form-section">
+      <div class="form-section-title">Step 1 of 2</div>
+      <h2>Select your industry</h2>
+      <p>This determines which metrics populate each of your four decision lenses and how macro signals are translated to your sector.</p>
+
+      <div class="industry-grid" id="industryGrid">
+        <div class="industry-card" data-industry="fb" onclick="selectIndustry(this)">
+          <div class="industry-icon">🍴</div>
+          <div class="industry-label">F&B / Retail</div>
+          <div class="industry-sub">Consumer Facing</div>
+        </div>
+        <div class="industry-card" data-industry="mfg" onclick="selectIndustry(this)">
+          <div class="industry-icon">🛠</div>
+          <div class="industry-label">Manufacturing & Engineering</div>
+          <div class="industry-sub">B2B / Industrial</div>
+        </div>
+        <div class="industry-card" data-industry="tech" onclick="selectIndustry(this)">
+          <div class="industry-icon">💻</div>
+          <div class="industry-label">Tech & Professional Services</div>
+          <div class="industry-sub">Knowledge Economy</div>
+        </div>
+        <div class="industry-card" data-industry="hospitality" onclick="selectIndustry(this)">
+          <div class="industry-icon">🏨</div>
+          <div class="industry-label">Hospitality & Tourism</div>
+          <div class="industry-sub">Consumer Facing</div>
+        </div>
+        <div class="industry-card" data-industry="logistics" onclick="selectIndustry(this)">
+          <div class="industry-icon">🚚</div>
+          <div class="industry-label">Logistics & Trade</div>
+          <div class="industry-sub">Industrial / B2B</div>
+        </div>
+        <div class="industry-card" data-industry="property" onclick="selectIndustry(this)">
+          <div class="industry-icon">🏗</div>
+          <div class="industry-label">Property & Construction</div>
+          <div class="industry-sub">Capital Intensive</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: FINANCIALS -->
+    <div class="form-section" id="financialsSection" style="opacity:0.45;pointer-events:none;transition:opacity 0.3s;">
+      <div class="form-section-title">Step 2 of 2</div>
+      <h2>Your key business figures</h2>
+      <p>These five numbers are all we need. They stay private — they're used only to personalise your lens output. You can update them anytime.</p>
+
+      <div class="fields-grid" id="fieldsContainer">
+        <!-- Fields injected by JS based on industry selection -->
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button class="btn-primary" id="generateBtn" onclick="generateDashboard()" disabled>
+        Generate My Dashboard →
+      </button>
+      <div class="submit-note">Your data is not stored or shared. This runs locally in your browser.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: LOADING -->
+<div class="screen" id="screen-loading">
+  <div class="loading-screen">
+    <div class="loading-logo">MacroLab<span>.sg</span></div>
+    <div class="signal-bars">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+    <div class="loading-h">Mapping 47 signals to your business</div>
+    <ul class="loading-steps" id="loadingSteps">
+      <li id="ls1"><span class="check">○</span> Ingesting this week's macro signals…</li>
+      <li id="ls2"><span class="check">○</span> Mapping to your industry lens framework…</li>
+      <li id="ls3"><span class="check">○</span> Computing Unit Economics pressure…</li>
+      <li id="ls4"><span class="check">○</span> Running Strategic Buffer stress test…</li>
+      <li id="ls5"><span class="check">○</span> Generating personalised first actions…</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SCREEN 3: DASHBOARD -->
+<div class="screen" id="screen-dashboard">
+  <!-- Header injected by JS -->
+  <div id="dashHeader"></div>
+
+  <div class="dash-body">
+    <div class="section-intro">
+      <h2 id="dashSectionTitle">Your Four Decision Lenses</h2>
+      <p id="dashSectionSub">Updated 20 May 2026 · Based on your business profile and this week's macro signals</p>
+    </div>
+
+    <!-- BUFFER ALERT (personal stress test) -->
+    <div class="buffer-alert" id="bufferAlert"></div>
+
+    <!-- LENS GRID -->
+    <div class="lens-grid" id="lensGrid"></div>
+
+    <!-- WEEKLY BRIEF CTA -->
+    <div class="brief-cta">
+      <div>
+        <h3>Get this analysis every Monday morning</h3>
+        <p>Your personalised Decision Brief — five macro-to-business calls, your four-lens summary, and one sector spotlight. Two pages. Ready before the week starts.</p>
+      </div>
+      <button class="btn-white" onclick="alert('You\'re already subscribed. Your first brief arrives next Monday.')">Get Weekly Brief →</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 MacroLab Singapore · <a href="#">Not financial advice</a> · <a href="#" onclick="showScreen('screen-onboard');return false;">Edit business profile</a>
+  </footer>
+</div>
+
+<script>
+var FIELD_CONFIGS = {
+  fb: [
+    { id: "margin", label: "Gross margin %", hint: "Revenue minus food & beverage cost, as % of revenue", prefix: "", suffix: "%", placeholder: "62" },
+    { id: "opex", label: "Monthly operating expenses (SGD)", hint: "Total fixed costs per month (rent, wages, utilities)", prefix: "S$", suffix: "", placeholder: "45000" },
+    { id: "cash", label: "Cash runway (days)", hint: "How many days of OpEx your cash reserves cover", prefix: "", suffix: " days", placeholder: "60" },
+    { id: "laborPct", label: "Labor as % of revenue", hint: "Total staff wages divided by monthly revenue", prefix: "", suffix: "%", placeholder: "28" },
+    { id: "rentPct", label: "Rent-to-revenue ratio %", hint: "Monthly rent as a % of monthly revenue", prefix: "", suffix: "%", placeholder: "15" }
+  ],
+  mfg: [
+    { id: "margin", label: "Gross margin %", hint: "Revenue minus direct production costs", prefix: "", suffix: "%", placeholder: "38" },
+    { id: "opex", label: "Monthly operating expenses (SGD)", hint: "Total monthly fixed costs including factory overhead", prefix: "S$", suffix: "", placeholder: "120000" },
+    { id: "cash", label: "Cash runway (days)", hint: "Days of OpEx covered by current cash + credit", prefix: "", suffix: " days", placeholder: "90" },
+    { id: "stockDays", label: "Raw material safety stock (days)", hint: "How many days of production your current stock supports", prefix: "", suffix: " days", placeholder: "28" },
+    { id: "creditPct", label: "Unused credit facility (% of monthly OpEx)", hint: "Available credit headroom as multiple of monthly costs", prefix: "", suffix: "%", placeholder: "40" }
+  ],
+  tech: [
+    { id: "margin", label: "Gross margin %", hint: "Revenue minus direct service delivery costs", prefix: "", suffix: "%", placeholder: "72" },
+    { id: "opex", label: "Monthly burn rate (SGD)", hint: "Total monthly cash outflow including all salaries", prefix: "S$", suffix: "", placeholder: "80000" },
+    { id: "cash", label: "Runway (months)", hint: "How many months of burn your cash reserves cover", prefix: "", suffix: " months", placeholder: "18" },
+    { id: "arpu", label: "Avg monthly revenue per client (SGD)", hint: "Average revenue per user or client per month", prefix: "S$", suffix: "", placeholder: "1200" },
+    { id: "keyPersonPct", label: "Revenue from top 20% of staff (%)", hint: "% of revenue from your key rainmakers", prefix: "", suffix: "%", placeholder: "60" }
+  ],
+  hospitality: [
+    { id: "margin", label: "Gross margin %", hint: "Revenue minus direct service costs", prefix: "", suffix: "%", placeholder: "55" },
+    { id: "opex", label: "Monthly operating expenses (SGD)", hint: "Total fixed monthly costs", prefix: "S$", suffix: "", placeholder: "200000" },
+    { id: "cash", label: "Cash runway (days)", hint: "Days of OpEx covered by current reserves", prefix: "", suffix: " days", placeholder: "75" },
+    { id: "occupancy", label: "Current occupancy rate (%)", hint: "Average room or seat occupancy, last 30 days", prefix: "", suffix: "%", placeholder: "78" },
+    { id: "laborPct", label: "Labor as % of revenue", hint: "Total staff wages as % of monthly revenue", prefix: "", suffix: "%", placeholder: "32" }
+  ],
+  logistics: [
+    { id: "margin", label: "Gross margin %", hint: "Revenue minus direct freight and handling costs", prefix: "", suffix: "%", placeholder: "22" },
+    { id: "opex", label: "Monthly operating expenses (SGD)", hint: "Fixed overheads including vehicle leases", prefix: "S$", suffix: "", placeholder: "95000" },
+    { id: "cash", label: "Cash runway (days)", hint: "Days of OpEx your cash covers", prefix: "", suffix: " days", placeholder: "55" },
+    { id: "fuelPct", label: "Fuel/freight as % of revenue", hint: "Variable freight costs as % of revenue", prefix: "", suffix: "%", placeholder: "35" },
+    { id: "creditPct", label: "Unused credit facility (% of monthly OpEx)", hint: "Available credit headroom", prefix: "", suffix: "%", placeholder: "30" }
+  ],
+  property: [
+    { id: "margin", label: "Project gross margin %", hint: "Revenue minus direct construction costs", prefix: "", suffix: "%", placeholder: "18" },
+    { id: "opex", label: "Monthly overhead (SGD)", hint: "Fixed monthly costs: office, staff, insurance", prefix: "S$", suffix: "", placeholder: "75000" },
+    { id: "cash", label: "Cash runway (months)", hint: "Months of overhead covered by current cash", prefix: "", suffix: " months", placeholder: "12" },
+    { id: "stockDays", label: "Materials safety stock (days)", hint: "Days of key materials on hand", prefix: "", suffix: " days", placeholder: "45" },
+    { id: "creditPct", label: "Unused credit / bonding capacity (% of OpEx)", hint: "Available credit and performance bond headroom", prefix: "", suffix: "%", placeholder: "50" }
+  ]
+};
+var MACRO = { freightChange: 12, sgdChange: -0.8, masStance: "holding", pwmExpanding: true, touristArrivals: 8, consumerSentiment: "stable", supplyChainStatus: "high", redSeaDelayDays: 10, vcLiquidity: "contracting", aseanDemand: "solid", creditEasing: true, efsUtilisationUp: 18, usdStrengthPct: 14 };
+var selectedIndustry = null;
+var userInputs = {};
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function selectIndustry(el) {
+  document.querySelectorAll(".industry-card").forEach(function(c){ c.classList.remove("selected"); });
+  el.classList.add("selected");
+  selectedIndustry = el.getAttribute("data-industry");
+  var sec = document.getElementById("financialsSection");
+  sec.style.opacity = "1"; sec.style.pointerEvents = "auto";
+  renderFields(selectedIndustry);
+  checkFormReady();
+}
+function renderFields(industry) {
+  var container = document.getElementById("fieldsContainer");
+  var fields = FIELD_CONFIGS[industry];
+  var html = "";
+  for(var i=0;i<fields.length;i++){
+    var f = fields[i];
+    html += "<div class=\"field-group\">";
+    html += "<label for=\"f_"+f.id+"\">"+f.label+"</label>";
+    html += "<div class=\"field-unit\" style=\"position:relative;\">";
+    if(f.prefix) html += "<span class=\"unit-label\">"+f.prefix+"</span>";
+    html += "<input id=\"f_"+f.id+"\" type=\"text\" placeholder=\""+f.placeholder+"\" ";
+    if(f.prefix) html += "style=\"padding-left:2.2rem;\" ";
+    html += "oninput=\"checkFormReady()\" />";
+    html += "</div>";
+    html += "<div class=\"field-hint\">"+f.hint+"</div>";
+    html += "</div>";
+  }
+  container.innerHTML = html;
+}
+function checkFormReady() {
+  if(!selectedIndustry){ document.getElementById("generateBtn").disabled = true; return; }
+  var fields = FIELD_CONFIGS[selectedIndustry];
+  var allFilled = true;
+  for(var i=0;i<fields.length;i++){
+    var el = document.getElementById("f_"+fields[i].id);
+    if(!el || el.value.trim()==="") { allFilled = false; break; }
+  }
+  document.getElementById("generateBtn").disabled = !allFilled;
+}
+function collectInputs() {
+  var fields = FIELD_CONFIGS[selectedIndustry];
+  var vals = {};
+  for(var i=0;i<fields.length;i++){
+    var raw = document.getElementById("f_"+fields[i].id).value.replace(/,/g,"");
+    vals[fields[i].id] = parseFloat(raw)||0;
+  }
+  return vals;
+}
+var INDUSTRY_LABELS = { fb:"F&B / Retail", mfg:"Manufacturing & Engineering", tech:"Tech & Professional Services", hospitality:"Hospitality & Tourism", logistics:"Logistics & Trade", property:"Property & Construction" };
+function generateDashboard() {
+  userInputs = collectInputs();
+  showScreen("screen-loading");
+  var steps = ["ls1","ls2","ls3","ls4","ls5"];
+  var delay = 600;
+  for(var i=0;i<steps.length;i++){
+    (function(idx){
+      setTimeout(function(){
+        var el = document.getElementById(steps[idx]);
+        el.classList.add("done");
+        el.querySelector(".check").textContent = "✓";
+      }, delay*(idx+1));
+    })(i);
+  }
+  setTimeout(function(){ buildDashboard(); showScreen("screen-dashboard"); }, delay*6+200);
+}
+function buildDashboard() {
+  var ind = selectedIndustry;
+  var v = userInputs;
+  var label = INDUSTRY_LABELS[ind];
+  // update nav
+  document.getElementById("navProfileLabel").textContent = label;
+  // build header
+  var hdr = "";
+  hdr += "<div class=\"dash-header\">";
+  hdr += "<div class=\"dash-inner\">";
+  hdr += "<div class=\"dash-top\">";
+  hdr += "<div class=\"dash-greeting\">";
+  hdr += "<div class=\"eyebrow-dash\">LIVE INTELLIGENCE DASHBOARD</div>";
+  hdr += "<h1>Your MacroLab Dashboard</h1>";
+  hdr += "<p>Industry profile: <strong style=\"color:white;\">"+label+"</strong> &nbsp;·&nbsp; Updated 20 May 2026</p>";
+  hdr += "</div>";
+  hdr += "<div class=\"macro-pulse\">";
+  hdr += "<div class=\"pulse-label\">SINGAPORE MACRO PULSE</div>";
+  hdr += "<div class=\"pulse-status\">";
+  hdr += "<span class=\"pulse-badge\">WATCH</span>";
+  hdr += "<span class=\"pulse-desc\">Cost pressure rising · Demand softening</span>";
+  hdr += "</div>";
+  hdr += "<div class=\"pulse-signals\">SGD weakened 0.8% &nbsp;·&nbsp; Global freight +12% MoM &nbsp;·&nbsp; MAS holding rates</div>";
+  hdr += "</div>";
+  hdr += "</div></div></div>";
+  document.getElementById("dashHeader").innerHTML = hdr;
+  document.getElementById("dashSectionTitle").textContent = "Your Four Decision Lenses — " + label;
+  // Build buffer alert and lenses
+  buildBufferAlert(ind, v);
+  buildLenses(ind, v);
+}
+function buildBufferAlert(ind, v) {
+  var el = document.getElementById("bufferAlert");
+  var baseRunway, freightImpact, adjustedRunway, marginImpact, rec, stat1, stat2, stat3, s1l, s2l, s3l;
+  if(ind === "mfg") {
+    baseRunway = v.cash;
+    freightImpact = Math.round(baseRunway * 0.12 * (v.opex > 0 ? 1 : 0));
+    marginImpact = (MACRO.freightChange * 0.3).toFixed(1);
+    adjustedRunway = Math.max(0, Math.round(baseRunway - (baseRunway * 0.13)));
+    stat1 = adjustedRunway + " days"; s1l = "Effective buffer after freight shock";
+    stat2 = v.stockDays + " days"; s2l = "Current raw material stock";
+    var newStock = Math.round(v.stockDays * 1.1);
+    stat3 = newStock + " days"; s3l = "Recommended safety stock";
+    rec = "If global freight rates spike a further 15% AND the USD strengthens another 2%, your current Strategic Buffer gives you <strong>" + adjustedRunway + " days</strong> of safety. We recommend increasing raw material safety stock from <strong>" + v.stockDays + " to " + newStock + " days</strong> while the Enterprise Financing Scheme window remains open.";
+  } else if(ind === "fb") {
+    baseRunway = v.cash;
+    var primeImpact = (MACRO.freightChange * 0.25).toFixed(1);
+    adjustedRunway = Math.max(0, Math.round(baseRunway - (baseRunway * 0.10)));
+    var newMargin = (v.margin - parseFloat(primeImpact) * 0.4).toFixed(1);
+    stat1 = adjustedRunway + " days"; s1l = "Effective cash runway after cost shock";
+    stat2 = newMargin + "%"; s2l = "Projected gross margin if costs pass through";
+    var wagePressure = v.laborPct > 30 ? "HIGH" : "MODERATE";
+    stat3 = wagePressure; s3l = "PWM wage pressure rating for your profile";
+    rec = "If import costs rise a further 8% in Q3 AND PWM floor wages increase on schedule, your gross margin could compress from <strong>" + v.margin + "% to " + newMargin + "%</strong>. With <strong>" + adjustedRunway + " days</strong> of effective runway, consider locking in supplier contracts this week and testing a <strong>$1.50–$2.00 price increase</strong> before Q3.";
+  } else if(ind === "tech") {
+    baseRunway = v.cash;
+    var talentRisk = v.keyPersonPct > 55 ? "elevated" : "moderate";
+    var adjMonths = Math.max(0, Math.round(baseRunway - 2));
+    stat1 = adjMonths + " months"; s1l = "Effective runway after talent cost shock";
+    var churnRisk = v.keyPersonPct > 55 ? "HIGH" : "MODERATE";
+    stat2 = churnRisk; s2l = "Rainmaker concentration risk";
+    var recArpu = Math.round(v.arpu * 1.12);
+    stat3 = "S$" + recArpu; s3l = "ARPU target to offset wage premium pressure";
+    rec = "With VC liquidity contracting globally and wage premiums for senior tech talent rising, your <strong>" + v.keyPersonPct + "% rainmaker concentration</strong> represents a key vulnerability. A 2-month talent departure could reduce monthly revenue by an estimated <strong>15–20%</strong>. We recommend a retention buffer equivalent to 3 months of their loaded cost, and an ARPU growth target of <strong>S$" + recArpu + "</strong>.";
+  } else if(ind === "hospitality") {
+    baseRunway = v.cash;
+    var occImpact = v.occupancy < 70 ? "below threshold" : "above threshold";
+    adjustedRunway = Math.max(0, Math.round(baseRunway - (baseRunway * 0.08)));
+    var adjOcc = Math.min(100, Math.round(v.occupancy * 1.05));
+    stat1 = adjustedRunway + " days"; s1l = "Effective runway after cost shock";
+    stat2 = v.occupancy + "%"; s2l = "Current occupancy vs 75% breakeven";
+    stat3 = adjOcc + "%"; s3l = "Projected occupancy (tourist uplift scenario)";
+    rec = "Tourist arrivals are running 8% above 2019 levels — a genuine tailwind. However, import cost inflation and PWM expansion will compress your margins through Q3. Your <strong>" + adjustedRunway + "-day</strong> effective runway is " + (adjustedRunway > 60 ? "comfortable" : "tight") + ". Consider locking in F&B supply contracts now and testing a <strong>premium seasonal rate tier</strong> to capture tourist demand before the cost squeeze arrives.";
+  } else if(ind === "logistics") {
+    baseRunway = v.cash;
+    var freightPassThrough = (v.fuelPct * 0.12).toFixed(1);
+    adjustedRunway = Math.max(0, Math.round(baseRunway - (baseRunway * 0.15)));
+    var newMarginL = (v.margin - parseFloat(freightPassThrough) * 0.5).toFixed(1);
+    stat1 = adjustedRunway + " days"; s1l = "Effective runway after freight spike";
+    stat2 = newMarginL + "%"; s2l = "Projected gross margin if freight +15% more";
+    var creditBuf = Math.round(v.creditPct * v.opex / 100);
+    stat3 = "S$" + creditBuf.toLocaleString(); s3l = "Available credit buffer (SGD)";
+    rec = "Your business is directly exposed to the current freight surge. If global freight rates spike a further 15% from today's already elevated base, your gross margin could compress from <strong>" + v.margin + "% to " + newMarginL + "%</strong>. Your <strong>" + adjustedRunway + "-day</strong> effective runway means now is the time to negotiate fuel surcharge clauses into client contracts and draw on your credit facility before rates tighten further.";
+  } else {
+    baseRunway = v.cash * 30;
+    adjustedRunway = Math.max(0, Math.round(baseRunway * 0.88));
+    var newMarginP = (v.margin - 2.5).toFixed(1);
+    stat1 = adjustedRunway + " days"; s1l = "Effective buffer after materials shock";
+    stat2 = v.stockDays + " days"; s2l = "Current materials on hand";
+    var newStockP = Math.round(v.stockDays * 1.15);
+    stat3 = newStockP + " days"; s3l = "Recommended materials buffer";
+    rec = "Materials and financing costs are your primary buffer risk. Red Sea rerouting is adding 8–12 days to key material shipments. With <strong>" + v.stockDays + " days</strong> of stock on hand, a further supply disruption leaves you with limited margin. We recommend increasing your materials buffer to <strong>" + newStockP + " days</strong> and reviewing bonding capacity while the EFS window remains open.";
+  }
+  var html = "";
+  html += "<div class=\"buffer-alert-header\">";
+  html += "<span class=\"buffer-icon\">⚡</span>";
+  html += "<div style=\"flex:1;\">";
+  html += "<h3>Strategic Buffer Stress Test — Your Business</h3>";
+  html += "<div style=\"font-size:0.8rem;color:var(--slate);margin-top:0.2rem;\">Scenario: Freight +15% · USD strengthens 2% · PWM expansion Q3</div>";
+  html += "</div>";
+  html += "<span class=\"status-badge badge-watch\">WATCH</span>";
+  html += "</div>";
+  html += "<div class=\"buffer-scenario-text\">" + rec + "</div>";
+  html += "<div class=\"buffer-stats\">";
+  html += "<div class=\"buffer-stat\"><div class=\"buffer-stat-value\">"+stat1+"</div><div class=\"buffer-stat-label\">"+s1l+"</div></div>";
+  html += "<div class=\"buffer-stat\"><div class=\"buffer-stat-value\">"+stat2+"</div><div class=\"buffer-stat-label\">"+s2l+"</div></div>";
+  html += "<div class=\"buffer-stat\"><div class=\"buffer-stat-value\">"+stat3+"</div><div class=\"buffer-stat-label\">"+s3l+"</div></div>";
+  html += "</div>";
+  html += "<div class=\"buffer-recommend\"><strong>MacroLab Recommendation:</strong> See Lens 4 (Strategic Buffers) below for your full action checklist.</div>";
+  el.innerHTML = html;
+}
+function makeLens(num, name, badgeClass, badgeText, metrics, analysis, action) {
+  var html = "<div class=\"lens-card\">";
+  html += "<div class=\"lens-top\">";
+  html += "<div><div class=\"lens-number\">LENS " + num + "</div><div class=\"lens-name\">" + name + "</div></div>";
+  html += "<span class=\"status-badge " + badgeClass + "\">" + badgeText + "</span>";
+  html += "</div>";
+  html += "<div class=\"lens-body\">";
+  html += "<div class=\"lens-metrics\">";
+  for(var i=0;i<metrics.length;i++){
+    html += "<div class=\"metric-row\">";
+    html += "<span class=\"metric-label\">" + metrics[i][0] + "</span>";
+    html += "<span class=\"metric-value " + (metrics[i][2]||"") + "\">" + metrics[i][1] + "</span>";
+    html += "</div>";
+  }
+  html += "</div>";
+  html += "<div class=\"lens-analysis\">" + analysis + "</div>";
+  html += "<div class=\"first-action\">";
+  html += "<div class=\"first-action-label\">FIRST ACTION</div>";
+  html += "<div class=\"first-action-text\">" + action + "</div>";
+  html += "</div>";
+  html += "</div></div>";
+  return html;
+}
+function buildLenses(ind, v) {
+  var grid = document.getElementById("lensGrid");
+  var html = "";
+  var m = MACRO;
+  if(ind === "mfg") {
+    var unitStatus = (v.margin < 35 || m.freightChange > 10) ? ["badge-high","HIGH"] : ["badge-watch","WATCH"];
+    var scaleStatus = m.creditEasing ? ["badge-watch","WATCH"] : ["badge-high","HIGH"];
+    var macroStatus = ["badge-high","HIGH"];
+    var bufStatus = (v.cash > 60 && v.stockDays > 20) ? ["badge-watch","WATCH"] : ["badge-high","HIGH"];
+    var costPerUnit = (100 - v.margin).toFixed(1);
+    var freightHit = (m.freightChange * 0.3).toFixed(1);
+    html += makeLens(1,"Unit Economics",unitStatus[0],unitStatus[1],
+      [["Gross margin",v.margin+"%","neutral"],["Est. cost per unit (% of revenue)",costPerUnit+"%","up"],["Freight cost add-on this week","+"+freightHit+"%","up"],["Automation ROI signal","Favourable","down"]],
+      "Your margin is under direct pressure from the freight surge. With global freight up 12% MoM and the SGD at a 14-month low against USD, your imported raw material costs are rising on two fronts simultaneously. Every 1% rise in freight adds approximately 0.3% to your cost per unit.",
+      "Lock in raw material contracts with current suppliers this week. Get quotes from Malaysia/Thailand alternatives before further SGD weakening."
+    );
+    html += makeLens(2,"Scale Dynamics",scaleStatus[0],scaleStatus[1],
+      [["ASEAN export demand","Solid","down"],["US order pipeline","Slowing","up"],["Capex financing conditions","Easing","down"],["Multi-shift capacity utilisation","Review","neutral"]],
+      "ASEAN demand remains your most reliable growth channel — prioritise it over USD-denominated exports while currency headwinds persist. The easing credit environment (EFS utilisation up 18% QoQ) presents a window to finance capex expansion before rates move.",
+      "Submit Enterprise Financing Scheme application before July if any capex projects are planned for H2 2026. Pivot export focus to ASEAN markets."
+    );
+    html += makeLens(3,"Macro Forces",macroStatus[0],macroStatus[1],
+      [["Global freight rates","+12% MoM","up"],["SGD vs USD","14-month high","up"],["Red Sea delay","+8–12 days","up"],["MAS policy stance","Holding","neutral"]],
+      "This is the most pressured macro environment for Singapore manufacturers in 18 months. Freight, currency, and supply chain are all moving against you simultaneously. The Red Sea rerouting is structural, not temporary — build it into your delivery time assumptions for the rest of 2026.",
+      "Identify second-source suppliers in Malaysia or Thailand for your top 3 input materials. Factor 12-day delivery buffer into all H2 customer commitments."
+    );
+    var newStock2 = Math.round(v.stockDays * 1.1);
+    var creditAmt = Math.round(v.creditPct * v.opex / 100);
+    html += makeLens(4,"Strategic Buffers",bufStatus[0],bufStatus[1],
+      [["Cash runway",v.cash+" days","neutral"],["Safety stock on hand",v.stockDays+" days","neutral"],["Credit facility headroom","S$"+creditAmt.toLocaleString(),"down"],["Supplier geography diversity","Review","neutral"]],
+      "Your buffers are your shock absorbers. Given the current freight volatility and the window of easing credit conditions, now is the optimal time to build them — not after the next disruption hits. The EFS window closes in December 2026.",
+      "Increase safety stock from "+v.stockDays+" to "+newStock2+" days. Draw on credit facility now while conditions are easing to pre-fund inventory build."
+    );
+  } else if(ind === "fb") {
+    var fbMarginNew = (v.margin - (m.freightChange * 0.25 * 0.4)).toFixed(1);
+    var fbUnitStatus = (v.margin < 60) ? ["badge-high","HIGH"] : ["badge-watch","WATCH"];
+    var fbScaleStatus = (v.rentPct > 18) ? ["badge-high","HIGH"] : ["badge-watch","WATCH"];
+    html += makeLens(1,"Unit Economics",fbUnitStatus[0],fbUnitStatus[1],
+      [["Your gross margin",v.margin+"%","neutral"],["Projected margin (Q3 scenario)",fbMarginNew+"%","up"],["Labour as % of revenue",v.laborPct+"%",v.laborPct>30?"up":"neutral"],["Rent-to-revenue ratio",v.rentPct+"%",v.rentPct>18?"up":"neutral"]],
+      "Palm oil is up 18% YoY and freight adds to import-reliant ingredients. Your prime cost (food + labour) is the critical variable — PWM expansion in Q3 will push the labour line further. Tourist arrivals running 8% above 2019 give you pricing cover that local-only operators do not have.",
+      "Raise prices now, before Q3 wage floor increases. Tourist-facing outlets can test a $2 uplift. Monitor cover counts for 3 weeks before committing to full implementation."
+    );
+    html += makeLens(2,"Scale Dynamics",["badge-watch","WATCH"][0],["badge-watch","WATCH"][1],
+      [["Tourist arrivals vs 2019","+8%","down"],["F&B foot traffic","Outperforming","down"],["Central kitchen ROI signal","Positive","down"],["Geographic clustering","Review","neutral"]],
+      "Tourist-driven locations are outperforming domestic-only outlets. If you operate multiple locations, tourist corridors (Orchard, Marina Bay, heritage districts) are your growth lever right now. A central kitchen investment would lock in your prime cost advantage across locations.",
+      "Model a central kitchen ROI across your current locations. Tourist-facing outlets: test a weekend premium tier before the August peak season."
+    );
+    html += makeLens(3,"Macro Forces",["badge-watch","WATCH"][0],"WATCH",
+      [["Tourist spend at F&B","+22% vs 2019","down"],["PWM expansion (Q3)","Confirmed","up"],["Domestic utilities","Rising","up"],["Consumer sentiment","Stable","neutral"]],
+      "The macro picture for F&B is mixed but actionable. Tourist demand is the tailwind; wage floor expansion and import costs are the headwinds. The window to raise prices is now — before Q3 wage increases are public knowledge and competitors move first.",
+      "Apply for sector-specific grants before July. Flag Q3 PWM impact in your next P&L review and build the cost increase into your August pricing model."
+    );
+    var runawaAdj = Math.max(0,Math.round(v.cash - v.cash*0.10));
+    html += makeLens(4,"Strategic Buffers",v.cash<45?"badge-high":"badge-watch",v.cash<45?"HIGH":"WATCH",
+      [["Cash runway",v.cash+" days","neutral"],["Effective runway (post-shock)",runawaAdj+" days","neutral"],["Labour elasticity",v.laborPct>30?"Tight":"Moderate","neutral"],["Perishable stock exposure","Weekly","neutral"]],
+      "Your key buffer risk is the combination of perishable inventory (can't stockpile) and tight labour elasticity. Cash runway is your primary shock absorber. A 3-month revenue disruption (e.g., a mall renovation or public health event) is the scenario to plan for.",
+      "Maintain minimum "+Math.round(v.cash*0.8)+"-day cash runway. Build a part-time labour pool now — before Q3 hiring competition with larger F&B chains intensifies."
+    );
+  } else if(ind === "tech") {
+    var techBurnAdj = Math.round(v.opex * 1.08);
+    html += makeLens(1,"Unit Economics",v.margin>65?"badge-stable":"badge-watch",v.margin>65?"STABLE":"WATCH",
+      [["Gross margin",v.margin+"%",v.margin>65?"down":"neutral"],["Monthly burn rate","S$"+v.opex.toLocaleString(),"neutral"],["Avg revenue per client","S$"+v.arpu.toLocaleString(),"neutral"],["Implied CAC pressure","Rising","up"]],
+      "With VC liquidity contracting globally, your unit economics need to demonstrate capital efficiency now, not at next funding round. A gross margin above 65% is defensible; below it, you need a clear path to improvement. Your ARPU is your primary lever — pricing power in Singapore's B2B tech market remains resilient for proven ROI tools.",
+      "Build a cost-per-acquisition dashboard this week. If CAC payback exceeds 12 months, pause acquisition spend and focus on expansion revenue from existing clients."
+    );
+    var rainmakerRisk = v.keyPersonPct > 55 ? "HIGH" : "MODERATE";
+    html += makeLens(2,"Scale Dynamics",v.keyPersonPct>55?"badge-high":"badge-watch",v.keyPersonPct>55?"HIGH":"WATCH",
+      [["Rainmaker concentration risk",rainmakerRisk,v.keyPersonPct>55?"up":"neutral"],["Marginal replication cost","Near-zero","down"],["ASEAN expansion signal","Solid","down"],["Regulatory compliance cost","Rising","up"]],
+      "Your scale economics are inherently favourable (near-zero marginal cost of replication), but your growth ceiling is human capital, not capital expenditure. With "+v.keyPersonPct+"% of revenue concentrated in your top performers, a single departure restructures your revenue model. ASEAN demand is solid — the constraint on regional expansion is compliance cost and local talent, not market appetite.",
+      "Map your top 5 revenue contributors. Build a 3-month loaded salary retention buffer for each. Begin ASEAN market entry scoping for Indonesia or Vietnam where digital adoption is accelerating."
+    );
+    html += makeLens(3,"Macro Forces",["badge-watch","WATCH"][0],"WATCH",
+      [["Global VC liquidity","Contracting","up"],["Singapore MAS digital stance","Supportive","down"],["AI governance costs","Emerging","neutral"],["Cross-border data compliance","Tightening","up"]],
+      "The global VC contraction is your primary macro headwind — it affects client budgets (if you serve funded startups) and your own fundraising environment. The offsetting positive is Singapore's supportive digital regulatory environment and MAS's fintech-friendly stance. AI governance compliance costs are an emerging expense line that is not yet priced into most tech SME models.",
+      "Budget for cross-border data compliance costs in your FY2027 model. If you serve VC-backed clients, build a 2-month revenue buffer for delayed renewals."
+    );
+    var adjRunwayTech = Math.max(0, Math.round(v.cash - 1.5));
+    html += makeLens(4,"Strategic Buffers",v.cash<12?"badge-high":"badge-stable",v.cash<12?"HIGH":"STABLE",
+      [["Cash runway",v.cash+" months","neutral"],["Effective runway (talent shock)",adjRunwayTech+" months","neutral"],["Rainmaker retention fund","Build now","up"],["Cyber insurance coverage","Review","neutral"]],
+      "For a knowledge economy business, your strategic buffer is not inventory — it is human capital and institutional knowledge. The risk is not a freight spike; it is a 3-person departure event or a cybersecurity incident that locks down client-facing systems. Both are insurable and both require proactive investment now.",
+      "Establish a key talent retention reserve (3 months loaded cost per rainmaker). Obtain or review your cybersecurity insurance policy — premiums are still reasonable before any incident history."
+    );
+  } else if(ind === "hospitality") {
+    var occBreak = 75;
+    html += makeLens(1,"Unit Economics",v.margin<50?"badge-watch":"badge-stable",v.margin<50?"WATCH":"STABLE",
+      [["Gross margin",v.margin+"%","neutral"],["Current occupancy",v.occupancy+"%",v.occupancy>=occBreak?"down":"up"],["Labour as % of revenue",v.laborPct+"%",v.laborPct>35?"up":"neutral"],["RevPAR signal","Rising","down"]],
+      "Tourist arrivals at 8% above 2019 baseline are your most important unit economics signal. Your breakeven occupancy is approximately 75% — at "+v.occupancy+"%, you are "+(v.occupancy>=occBreak?"above breakeven, with pricing headroom":"approaching your breakeven threshold, requiring attention")+". PWM expansion in Q3 will push your labour line — your primary fixed cost — upward before you can fully offset it with rate increases.",
+      "Model your Q3 rate strategy now. If occupancy is holding, test a 5–8% seasonal rate increase before July to build margin ahead of wage floor increases."
+    );
+    html += makeLens(2,"Scale Dynamics",["badge-watch","WATCH"][0],"WATCH",
+      [["Tourist arrivals (vs 2019)","+8%","down"],["Leisure vs business mix","Shifting","neutral"],["F&B cost embedding","Rising","up"],["Service worker supply","Constrained","up"]],
+      "The tourist demand tailwind is strong but the scaling constraint is labour. Foreign worker EP and S-Pass quotas are tightening and service sector quotas are under review. Your ability to scale with demand is directly limited by your staffing model. Outlets with higher automation (self-check-in, QR ordering) have structurally better unit economics at scale.",
+      "Audit your labour-to-revenue ratio by outlet. Model the ROI of one automation investment (self-check-in, digital ordering) before Q3 headcount pressure arrives."
+    );
+    html += makeLens(3,"Macro Forces",["badge-stable","STABLE"][0],"STABLE",
+      [["Tourist arrivals","+8% vs 2019","down"],["Domestic consumer spend","Stable","neutral"],["Utilities & energy costs","Rising","up"],["MAS rates","Holding","neutral"]],
+      "Hospitality faces the best macro demand environment since 2019, but the cost side is eroding margins. Utilities are rising, food import costs are up, and labour is tightening. The demand tailwind gives you pricing cover that most other sectors don't have right now — use it before the cost pressures fully land in Q3.",
+      "Lock in energy contracts where possible. Apply the tourist demand premium as a rate uplift before August peak season arrives."
+    );
+    var adjRunwayHosp = Math.max(0,Math.round(v.cash - v.cash*0.08));
+    html += makeLens(4,"Strategic Buffers",v.cash<60?"badge-watch":"badge-stable",v.cash<60?"WATCH":"STABLE",
+      [["Cash runway",v.cash+" days","neutral"],["Effective runway (cost shock)",adjRunwayHosp+" days","neutral"],["Labour pool elasticity","Limited","up"],["Perishable food exposure","Weekly","neutral"]],
+      "Your primary buffer scenario is a sudden tourist demand drop (public health event, regional security issue) coinciding with locked-in fixed costs. At "+v.cash+" days runway, you have "+(v.cash>75?"reasonable":"limited")+" capacity to absorb a 6-week downturn. Part-time and contract staff flexibility is your best operational hedge.",
+      "Maintain "+(Math.round(v.cash*0.85))+"-day minimum cash reserve. Build relationships with hospitality staffing agencies now to create a variable labour pool for sudden demand swings."
+    );
+  } else if(ind === "logistics") {
+    var logMarginAdj = (v.margin - v.fuelPct * 0.12 * 0.5).toFixed(1);
+    html += makeLens(1,"Unit Economics",["badge-high","HIGH"][0],"HIGH",
+      [["Gross margin",v.margin+"%","up"],["Projected margin (freight +15%)",logMarginAdj+"%","up"],["Fuel/freight as % revenue",v.fuelPct+"%","up"],["Last-mile cost signal","Rising","up"]],
+      "Logistics businesses are the direct transmission point for the global freight surge — you absorb the cost before you can pass it on. At "+v.margin+"% gross margin, a further 15% freight increase compresses you to "+logMarginAdj+"%. This is the sector under most immediate cost pressure in the current cycle.",
+      "Insert fuel surcharge clauses into all new and renewing client contracts this week. Reprice any contracts that don't have cost pass-through provisions."
+    );
+    html += makeLens(2,"Scale Dynamics",["badge-watch","WATCH"][0],"WATCH",
+      [["Port throughput","Recovering","neutral"],["Red Sea rerouting","+8–12 days","up"],["ASEAN trade corridors","Strong","down"],["Fleet capacity utilisation","Review","neutral"]],
+      "ASEAN intra-regional trade is your growth corridor — it is less exposed to the Red Sea disruption than Europe-bound freight. If your routes are currently weighted toward EU corridors, a partial pivot toward ASEAN trade lanes would reduce your structural exposure to the rerouting surcharge.",
+      "Map your revenue split by trade lane. If EU exposure exceeds 40% of revenue, begin actively quoting ASEAN corridor opportunities to diversify."
+    );
+    html += makeLens(3,"Macro Forces",["badge-high","HIGH"][0],"HIGH",
+      [["Global freight rates","+12% MoM","up"],["Red Sea status","Active rerouting","up"],["SGD vs USD","14-month high","up"],["China port congestion","Easing","down"]],
+      "You are in the eye of the macro storm. Freight rates, currency, and supply chain disruption are all simultaneously elevated. The only partial positive is China port congestion easing slightly. This is a structural environment for at least 2 more quarters — do not plan for a rapid normalisation.",
+      "Communicate freight surcharge rationale to clients proactively before the next invoice cycle. Frame it with reference to the global indices — this is an industry-wide adjustment, not a unilateral price increase."
+    );
+    var creditBufLog = Math.round(v.creditPct * v.opex / 100);
+    html += makeLens(4,"Strategic Buffers",v.cash<45||v.creditPct<25?"badge-high":"badge-watch",v.cash<45||v.creditPct<25?"HIGH":"WATCH",
+      [["Cash runway",v.cash+" days","neutral"],["Credit buffer available","S$"+creditBufLog.toLocaleString(),"neutral"],["Supplier geography","Review","neutral"],["Fuel hedging","Unhedged assumed","up"]],
+      "Your buffers need to be larger than most sectors because your cost volatility is highest. Credit facility headroom is your primary tool — draw it down now to pre-fund operations before any further rate tightening. Fuel hedging, even partially, materially reduces your P&L volatility.",
+      "Draw on S$"+Math.round(creditBufLog*0.6).toLocaleString()+" of your credit facility to pre-fund Q3 operations. Get a fuel hedging quote from your bank this week."
+    );
+  } else {
+    var propMarginAdj = (v.margin - 2.5).toFixed(1);
+    var newStockProp = Math.round(v.stockDays * 1.15);
+    html += makeLens(1,"Unit Economics",v.margin<20?"badge-high":"badge-watch",v.margin<20?"HIGH":"WATCH",
+      [["Project gross margin",v.margin+"%","neutral"],["Materials cost pressure","Rising","up"],["Labour cost signal","Tightening","up"],["Projected margin (scenario)",propMarginAdj+"%","up"]],
+      "Construction materials are exposed to both global freight disruption and SGD weakness against USD. Steel and cement imported via disrupted supply chains carry a 12-day buffer cost that is not yet reflected in most project budgets signed before March 2026.",
+      "Review all projects with fixed-price materials contracts signed pre-2026. Flag where material cost variance clauses are absent and initiate renegotiation."
+    );
+    html += makeLens(2,"Scale Dynamics",["badge-watch","WATCH"][0],"WATCH",
+      [["Capex financing conditions","Easing","down"],["Labour availability","Constrained","up"],["Supply chain lead times","+8–12 days","up"],["EFS utilisation window","Open","down"]],
+      "The easing credit environment is a genuine window for project financing — EFS utilisation is up 18% QoQ, indicating smart operators are moving now. Your scale constraint is not capital; it is labour availability and the foreign worker levy environment.",
+      "Draw on Enterprise Financing Scheme before December 2026 window closes. Review foreign worker dependency ratios against the tightening quota framework."
+    );
+    html += makeLens(3,"Macro Forces",["badge-watch","WATCH"][0],"WATCH",
+      [["Global freight rates","+12% MoM","up"],["SGD vs USD","14-month high","up"],["MAS rates","Holding","neutral"],["Carbon tax timeline","Advancing","neutral"]],
+      "The advancing carbon tax timeline is the sleeper risk for construction and property — it affects both operational energy costs and the long-term value of non-green-certified developments. Begin carbon exposure assessment now, before it becomes a compliance emergency in 2027.",
+      "Flag carbon tax timeline in your next board review. Get a green certification assessment for any development currently in planning — retroactive compliance is significantly more expensive."
+    );
+    html += makeLens(4,"Strategic Buffers",v.cash<9?"badge-high":"badge-stable",v.cash<9?"HIGH":"STABLE",
+      [["Cash runway",v.cash+" months","neutral"],["Materials buffer",v.stockDays+" days","neutral"],["Recommended buffer",newStockProp+" days","down"],["Bonding capacity","Review","neutral"]],
+      "Construction buffers must account for the full project cycle, not just monthly OpEx. A materials shortage mid-project is orders of magnitude more expensive than pre-stocking. Your bonding capacity is as important as your cash buffer for project continuity.",
+      "Increase materials buffer from "+v.stockDays+" to "+newStockProp+" days for key inputs. Confirm bonding capacity with your bank before committing to any new tender."
+    );
+  }
+  grid.innerHTML = html;
+}
+</script>
+</body></html>

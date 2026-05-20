@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MacroLab Singapore — Transmission & Decision Intelligence</title>
+<title>MacroLab Singapore – SME Decision Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -1139,1195 +1139,843 @@
     .layer-row          { grid-template-columns: 48px 1fr; }
     .layer-desc         { display: none; }
   }
+
+  /* SME Pressure Monitor overrides */
+  .pressure-card { background:#fff !important; }
+  .pressure-card .card-body { color:#2a3f52 !important; }
+  
+  /* Scenario simulator overrides */
+  .scenario-output { background:#f5f7f9 !important; color:#1a2e3d !important; }
+  .response-card { background:#fff !important; color:#1a2e3d !important; }
+  
+  /* Methodology accordion */
+  .method-accordion details summary { cursor:pointer; padding:16px 20px; background:#f0f4f7; border-radius:6px; font-weight:600; color:#0f1f2e; list-style:none; }
+  .method-accordion details summary::-webkit-details-marker { display:none; }
+  .method-accordion details[open] summary { background:#e8f0f7; border-radius:6px 6px 0 0; }
+  .method-accordion details .acc-body { padding:20px; background:#fff; border:1px solid #dce4ea; border-top:none; border-radius:0 0 6px 6px; color:#2a3f52; line-height:1.7; }
+  
+  /* Back to top */
+  #back-to-top { bottom:120px !important; }
+
 </style>
 </head>
-<body id="top">
+<body>
 
-<!-- TICKER -->
-<div class="ticker-bar" aria-hidden="true">
-  <div class="ticker-inner">
-    <!-- first set -->
-    <div class="ticker-item"><span class="label">SGD/USD</span><span class="val">0.7421</span><span class="chg dn">▼ 0.12%</span></div>
-    <div class="ticker-item"><span class="label">CHINA PMI</span><span class="val">49.1</span><span class="chg dn">▼ Contraction</span></div>
-    <div class="ticker-item"><span class="label">US CPI YoY</span><span class="val">3.4%</span><span class="chg up">▲ Sticky</span></div>
-    <div class="ticker-item"><span class="label">BRENT</span><span class="val">$82.40</span><span class="chg up">▲ 1.1%</span></div>
-    <div class="ticker-item"><span class="label">STI</span><span class="val">3,247</span><span class="chg dn">▼ 0.4%</span></div>
-    <div class="ticker-item"><span class="label">FED FUNDS</span><span class="val">5.25–5.50%</span><span class="chg">Held</span></div>
-    <div class="ticker-item"><span class="label">SG NON-OIL EX</span><span class="val">$14.2B</span><span class="chg dn">▼ 2.3% MoM</span></div>
-    <div class="ticker-item"><span class="label">REGIME STATUS</span><span class="val">TRANSITION</span><span class="chg" style="color:#e6a020">◆ Watch</span></div>
-    <!-- duplicate for seamless loop -->
-    <div class="ticker-item"><span class="label">SGD/USD</span><span class="val">0.7421</span><span class="chg dn">▼ 0.12%</span></div>
-    <div class="ticker-item"><span class="label">CHINA PMI</span><span class="val">49.1</span><span class="chg dn">▼ Contraction</span></div>
-    <div class="ticker-item"><span class="label">US CPI YoY</span><span class="val">3.4%</span><span class="chg up">▲ Sticky</span></div>
-    <div class="ticker-item"><span class="label">BRENT</span><span class="val">$82.40</span><span class="chg up">▲ 1.1%</span></div>
-    <div class="ticker-item"><span class="label">STI</span><span class="val">3,247</span><span class="chg dn">▼ 0.4%</span></div>
-    <div class="ticker-item"><span class="label">FED FUNDS</span><span class="val">5.25–5.50%</span><span class="chg">Held</span></div>
-    <div class="ticker-item"><span class="label">SG NON-OIL EX</span><span class="val">$14.2B</span><span class="chg dn">▼ 2.3% MoM</span></div>
-    <div class="ticker-item"><span class="label">REGIME STATUS</span><span class="val">TRANSITION</span><span class="chg" style="color:#e6a020">◆ Watch</span></div>
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">MacroLab<span>.sg</span></a>
+    <ul class="nav-links">
+      <li><a href="#sme-pressure">SME Pressure Monitor</a></li>
+      <li><a href="#playbooks">Sector Playbooks</a></li>
+      <li><a href="#briefings">Decision Briefs</a></li>
+      <li><a href="#tac">TAC Portal</a></li>
+      <li><a href="#simulator">Scenario Simulator</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#subscribe" class="nav-cta">Subscribe</a></li>
+    </ul>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
   </div>
-</div>
-
-<!-- MASTHEAD -->
-<header class="masthead">
-  <div class="masthead-top">
-    <a href="#top" class="wordmark" style="text-decoration:none;">
-      <div class="wordmark-title">Macro<span>Lab</span></div>
-      <div class="wordmark-sub">Singapore — Transmission & Decision Intelligence</div>
-    </a>
-    <div class="masthead-right">
-      <a href="#briefings" class="btn-outline">Executive Briefings</a>
-      <a href="#newsletter" class="btn-primary">Subscribe</a>
-    </div>
-  </div>
-  <nav class="nav" role="navigation">
-    <a href="#signals" class="active">Signal Intelligence</a>
-    <a href="#framework">Framework</a>
-    <a href="#gvc">GVC Lens</a>
-    <a href="#corporate-signals">Corporate Signals</a>
-    <a href="#china">China Engine</a>
-    <a href="#policy">SG Policy Lens</a>
-    <a href="#alignment">Business Alignment</a>
-    <a href="#labour">Labour Dynamics</a>
-    <a href="#briefings">Briefings</a>
-    <a href="#tipping">Tipping Points</a>
-    <a href="#tac">TAC Portal</a>
-    <a href="#scenario">Scenario Simulator</a>
-  </nav>
-</header>
+</nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-inner">
+<header id="hero" style="background:linear-gradient(135deg,#0f1f2e 0%,#1a3a4f 60%,#0d3040 100%);padding:120px 24px 80px;text-align:center;position:relative;overflow:hidden;">
+  <div style="max-width:860px;margin:0 auto;position:relative;z-index:2;">
+    <div style="display:inline-block;background:rgba(26,122,106,0.15);border:1px solid rgba(26,122,106,0.4);border-radius:20px;padding:6px 16px;font-size:0.78rem;color:#4ecdc4;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px;">Singapore SME Intelligence Platform</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:700;color:#ffffff;line-height:1.15;margin-bottom:24px;">Know when the economy is about<br>to squeeze your margins.</h1>
+    <p style="font-size:1.15rem;color:#b8cdd8;max-width:680px;margin:0 auto 36px;line-height:1.7;">MacroLab tracks 47 macro signals across global supply chains, Singapore policy, and sector demand &mdash; and translates them into plain-language decisions for SME owners and trade associations.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;">
+      <a href="#sme-pressure" style="background:#1a7a6a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:1rem;">See Today's Pressure Reading &rarr;</a>
+      <a href="#subscribe" style="background:transparent;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:1rem;border:2px solid rgba(255,255,255,0.4);">Get Weekly Decision Brief</a>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:24px 32px;display:inline-block;text-align:left;min-width:340px;">
+      <div style="font-size:0.75rem;color:#7a9baa;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Overall SME Pressure &middot; Updated 20 May 2026</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-size:2rem;font-weight:700;color:#f5a623;">WATCH</span>
+        <span style="font-size:0.95rem;color:#b8cdd8;">Cost pressure rising &middot; Demand softening</span>
+      </div>
+      <div style="font-size:0.88rem;color:#8ba8b5;border-top:1px solid rgba(255,255,255,0.1);padding-top:12px;">SGD weakened 0.8% &middot; Global freight +12% MoM &middot; MAS holding rates</div>
+    </div>
+  </div>
+</header>
+
+<!-- WHAT MACROLAB HELPS YOU DECIDE -->
+<section style="background:#f0f4f7;padding:48px 24px;border-bottom:1px solid #dce4ea;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <p style="text-align:center;font-size:0.8rem;color:#6a8595;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:24px;">What MacroLab Helps You Decide</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+      <div style="background:#fff;border:1px solid #dce4ea;border-radius:8px;padding:20px;border-left:4px solid #1a7a6a;">
+        <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Pricing</div>
+        <div style="font-size:0.9rem;color:#1a2e3d;font-weight:600;">Should I pass on cost increases this month?</div>
+      </div>
+      <div style="background:#fff;border:1px solid #dce4ea;border-radius:8px;padding:20px;border-left:4px solid #d4831a;">
+        <div style="font-size:0.75rem;color:#d4831a;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Hiring</div>
+        <div style="font-size:0.9rem;color:#1a2e3d;font-weight:600;">Is this the right time to expand headcount?</div>
+      </div>
+      <div style="background:#fff;border:1px solid #dce4ea;border-radius:8px;padding:20px;border-left:4px solid #1a4a7a;">
+        <div style="font-size:0.75rem;color:#1a4a7a;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Inventory</div>
+        <div style="font-size:0.9rem;color:#1a2e3d;font-weight:600;">Should I stock up now or wait for prices to fall?</div>
+      </div>
+      <div style="background:#fff;border:1px solid #dce4ea;border-radius:8px;padding:20px;border-left:4px solid #7a1a6a;">
+        <div style="font-size:0.75rem;color:#7a1a6a;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Suppliers</div>
+        <div style="font-size:0.9rem;color:#1a2e3d;font-weight:600;">Which markets carry the most supply risk?</div>
+      </div>
+      <div style="background:#fff;border:1px solid #dce4ea;border-radius:8px;padding:20px;border-left:4px solid #1a7a3a;">
+        <div style="font-size:0.75rem;color:#1a7a3a;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Cash Flow</div>
+        <div style="font-size:0.9rem;color:#1a2e3d;font-weight:600;">Should I renegotiate payment terms now?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SME PRESSURE MONITOR -->
+<section id="sme-pressure" style="background:#f7f9fb;padding:80px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Live Intelligence</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#0f1f2e;margin-bottom:16px;">SME Pressure Monitor</h2>
+      <p style="font-size:1rem;color:#3a5568;max-width:620px;margin:0 auto;">Seven pressure areas that directly affect Singapore SME costs, demand, and operations &mdash; updated weekly from 47 macro signals.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #c0392b;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Import Cost Pressure</div>
+          <span style="background:#fdecea;color:#c0392b;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">HIGH</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">Global freight rates up 12% MoM. USD/SGD at 14-month high. Input costs rising faster than SMEs can pass on.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Lock in supplier contracts now before further SGD weakening.</div>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #e67e22;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Labour Cost Outlook</div>
+          <span style="background:#fef3e2;color:#e67e22;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">WATCH</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">Progressive Wage Model expansion in Q3. Foreign worker quota tightening expected. Wage pressure building in F&amp;B, retail, logistics.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Model Q3 wage scenarios now. Apply for sector-specific grants before July.</div>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #27ae60;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Consumer Demand Signal</div>
+          <span style="background:#e8f8f0;color:#27ae60;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">STABLE</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">Domestic consumption holding. Tourist arrivals 8% above 2019 levels. Retail sales flat but F&amp;B and hospitality outperforming.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Maintain current pricing strategy. Tourist-facing businesses can test premium tiers.</div>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #c0392b;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Supply Chain Disruption</div>
+          <span style="background:#fdecea;color:#c0392b;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">HIGH</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">Red Sea rerouting adding 8&ndash;12 days to EU shipments. China port congestion easing. Electronics components most affected.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Identify second-source suppliers in Malaysia or Thailand for critical components.</div>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #e67e22;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Regulatory &amp; Policy Environment</div>
+          <span style="background:#fef3e2;color:#e67e22;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">WATCH</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">GST absorption review underway. Carbon tax timeline advancing. Enhanced Productivity Solutions Grant extended to Dec 2026.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Use PSG extension window. Flag carbon tax exposure in next board review.</div>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #2980b9;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Export &amp; B2B Demand</div>
+          <span style="background:#e8f0fb;color:#2980b9;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">MIXED</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">ASEAN demand solid. China recovery uneven. US B2B orders slowing due to tariff uncertainty. EU stable.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Diversify away from US-dependent export channels. Prioritise ASEAN relationship building.</div>
+        </div>
+      </div>
+
+      <div style="background:#ffffff;border:1px solid #dce4ea;border-radius:10px;padding:24px;border-top:4px solid #27ae60;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div style="font-size:1rem;font-weight:700;color:#0f1f2e;">Credit &amp; Financing Conditions</div>
+          <span style="background:#e8f8f0;color:#27ae60;border-radius:4px;padding:4px 10px;font-size:0.78rem;font-weight:700;">EASING</span>
+        </div>
+        <p style="font-size:0.88rem;color:#2a3f52;line-height:1.6;margin-bottom:16px;">MAS holding rates while Fed signals cuts. SME loan approval rates improving. Enterprise Financing Scheme utilisation up 18% QoQ.</p>
+        <div style="border-top:1px solid #eef1f4;padding-top:12px;">
+          <div style="font-size:0.75rem;font-weight:700;color:#007a6a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">First action</div>
+          <div style="font-size:0.88rem;color:#2a3f52;">Good window to refinance short-term debt. Review Enterprise Financing Scheme eligibility.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTOR PLAYBOOKS -->
+<section id="playbooks" style="background:#ffffff;padding:80px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">By Industry</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#0f1f2e;margin-bottom:16px;">Sector Playbooks</h2>
+      <p style="font-size:1rem;color:#3a5568;max-width:580px;margin:0 auto;">Macro pressure looks different depending on your business. Select your sector for a tailored signal reading and decision checklist.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+      <div style="background:#f7f9fb;border:1px solid #dce4ea;border-radius:10px;padding:28px;transition:box-shadow 0.2s;">
+        <div style="font-size:1.6rem;margin-bottom:12px;">&#127860;</div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Food &amp; Beverage</h3>
+        <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Ingredient costs, labour wage floor changes, tourist-driven demand, and GST pass-through dynamics.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="background:#fdecea;color:#c0392b;border-radius:4px;padding:3px 8px;font-size:0.75rem;font-weight:700;">HIGH PRESSURE</span>
+          <span style="font-size:0.8rem;color:#5a7585;">Labour + Imports</span>
+        </div>
+        <a href="#fb-example" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">See worked example &rarr;</a>
+      </div>
+
+      <div style="background:#f7f9fb;border:1px solid #dce4ea;border-radius:10px;padding:28px;">
+        <div style="font-size:1.6rem;margin-bottom:12px;">&#128722;</div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Retail &amp; E-commerce</h3>
+        <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Consumer sentiment shifts, import cost pass-through, last-mile logistics costs, and platform fee pressures.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="background:#fef3e2;color:#e67e22;border-radius:4px;padding:3px 8px;font-size:0.75rem;font-weight:700;">WATCH</span>
+          <span style="font-size:0.8rem;color:#5a7585;">Consumer demand softening</span>
+        </div>
+        <a href="#briefings" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Get sector brief &rarr;</a>
+      </div>
+
+      <div style="background:#f7f9fb;border:1px solid #dce4ea;border-radius:10px;padding:28px;">
+        <div style="font-size:1.6rem;margin-bottom:12px;">&#128736;</div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Manufacturing &amp; Engineering</h3>
+        <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Component lead times, energy input costs, MAS exchange rate effects, and ASEAN demand for manufactured goods.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="background:#fdecea;color:#c0392b;border-radius:4px;padding:3px 8px;font-size:0.75rem;font-weight:700;">HIGH PRESSURE</span>
+          <span style="font-size:0.8rem;color:#5a7585;">Supply chain + FX</span>
+        </div>
+        <a href="#briefings" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Get sector brief &rarr;</a>
+      </div>
+
+      <div style="background:#f7f9fb;border:1px solid #dce4ea;border-radius:10px;padding:28px;">
+        <div style="font-size:1.6rem;margin-bottom:12px;">&#127968;</div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Hospitality &amp; Tourism</h3>
+        <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Visitor arrival forecasts, room rate elasticity, F&amp;B cost embedding, and service worker labour markets.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="background:#e8f8f0;color:#27ae60;border-radius:4px;padding:3px 8px;font-size:0.75rem;font-weight:700;">STABLE</span>
+          <span style="font-size:0.8rem;color:#5a7585;">Tourism demand strong</span>
+        </div>
+        <a href="#briefings" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Get sector brief &rarr;</a>
+      </div>
+
+      <div style="background:#f7f9fb;border:1px solid #dce4ea;border-radius:10px;padding:28px;">
+        <div style="font-size:1.6rem;margin-bottom:12px;">&#128187;</div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Professional Services &amp; Tech</h3>
+        <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Talent cost inflation, B2B client budget sentiment, MAS digital banking landscape, and cross-border service demand.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="background:#e8f0fb;color:#2980b9;border-radius:4px;padding:3px 8px;font-size:0.75rem;font-weight:700;">MIXED</span>
+          <span style="font-size:0.8rem;color:#5a7585;">Talent costs rising</span>
+        </div>
+        <a href="#briefings" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Get sector brief &rarr;</a>
+      </div>
+
+      <div style="background:#f7f9fb;border:1px solid #dce4ea;border-radius:10px;padding:28px;">
+        <div style="font-size:1.6rem;margin-bottom:12px;">&#128666;</div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Logistics &amp; Trade</h3>
+        <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Port throughput, freight rate cycles, customs policy changes, and last-mile delivery cost structures in Singapore.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="background:#fdecea;color:#c0392b;border-radius:4px;padding:3px 8px;font-size:0.75rem;font-weight:700;">HIGH PRESSURE</span>
+          <span style="font-size:0.8rem;color:#5a7585;">Freight + rerouting</span>
+        </div>
+        <a href="#briefings" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Get sector brief &rarr;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- F&B WORKED EXAMPLE -->
+<section id="fb-example" style="background:#0f1f2e;padding:80px 24px;color:#fff;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:0.75rem;color:#4ecdc4;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Worked Example</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2rem;color:#ffffff;margin-bottom:16px;">How a Singapore F&amp;B operator uses MacroLab</h2>
+      <p style="font-size:1rem;color:#b8cdd8;max-width:600px;margin:0 auto;">Ah Kow runs three zi char restaurants in Singapore. Here is how he uses the weekly Decision Brief to make better calls &mdash; without reading a single economics paper.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
       <div>
-        <div class="hero-kicker fade-in">Singapore Decision Intelligence</div>
-        <h1 class="fade-in fade-in-1">When signals begin to <em>interact</em>, MacroLab sees it first.</h1>
-        <p class="hero-body fade-in fade-in-2">MacroLab is Singapore's transmission and decision-intelligence system for the trade-exposed economy. We show how global forces move through value chains, policy filters, and sector structures — before they become business decisions.</p>
-        <div class="hero-actions fade-in fade-in-3">
-          <a href="#signals" class="btn-primary">Explore Signal Dashboard</a>
-          <a href="#newsletter" class="btn-outline" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.3);">Subscribe to Briefings</a>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:24px;margin-bottom:20px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">The Question</div>
+          <p style="font-size:1rem;color:#fff;font-weight:600;line-height:1.5;">"Should I raise my set lunch price from $12 to $14 this month, or wait?"</p>
         </div>
-        <div class="hero-note fade-in fade-in-4" style="margin-top:24px;">For Trade Associations & Chambers of Commerce · SMEs · Business Leaders · Policymakers</div>
-      </div>
-
-      <!-- Signal card -->
-      <div class="hero-signal-card">
-        <div class="signal-card-header">
-          <span>Live Pressure Monitor</span>
-          <div class="signal-pulse"></div>
-        </div>
-        <div class="signal-row">
-          <span class="signal-name">Margin Pressure</span>
-          <span class="signal-badge badge-elevated">Elevated</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-name">Supply-Chain Stress</span>
-          <span class="signal-badge badge-elevated">Elevated</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-name">Labour Market</span>
-          <span class="signal-badge badge-rising">Rising</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-name">Funding Conditions</span>
-          <span class="signal-badge badge-rising">Tightening</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-name">Demand Confidence</span>
-          <span class="signal-badge badge-moderate">Moderate</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-name">FX Transmission</span>
-          <span class="signal-badge badge-watch">Watch</span>
-        </div>
-        <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:6px;">Regime Assessment</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;">System in <strong style="color:#e6a020">transitional pressure</strong>. Three interacting feedback loops detected across trade, labour, and credit channels.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- SIGNAL DASHBOARD -->
-<section class="dashboard-section" id="signals">
-  <div class="container">
-    <div class="section-label">Signal Intelligence Overview</div>
-    <h2 class="section-title">The MacroLab Dashboard</h2>
-    <p class="section-intro">A structured view of how global signals are currently transmitting into Singapore's business environment — across pressure dimensions, sector exposures, and regime dynamics.</p>
-
-    <div class="dashboard-grid">
-
-      <!-- Module 1: Global Signals -->
-      <div class="dash-module">
-        <div class="dash-module-label">Global Signal Engine</div>
-        <div class="dash-module-title">Signal Intensity by Domain</div>
-        <div class="mini-bars">
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">Geopolitics</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:82%;background:#c0392b;"></div></div>
-            <span class="mini-bar-val">8.2</span>
-          </div>
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">China</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:76%;background:#e67e22;"></div></div>
-            <span class="mini-bar-val">7.6</span>
-          </div>
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">Trade</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:71%;background:#e67e22;"></div></div>
-            <span class="mini-bar-val">7.1</span>
-          </div>
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">Inflation</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:64%;background:#f1c40f;"></div></div>
-            <span class="mini-bar-val">6.4</span>
-          </div>
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">Energy</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:58%;background:#f1c40f;"></div></div>
-            <span class="mini-bar-val">5.8</span>
-          </div>
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">AI Disruption</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:89%;background:#1a7a6e;"></div></div>
-            <span class="mini-bar-val">8.9</span>
-          </div>
-          <div class="mini-bar-row">
-            <span class="mini-bar-label">FX</span>
-            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:52%;background:#2980b9;"></div></div>
-            <span class="mini-bar-val">5.2</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Module 2: Pressure Engine -->
-      <div class="dash-module">
-        <div class="dash-module-label">System Pressure Engine</div>
-        <div class="dash-module-title">Singapore Business Pressure Map</div>
-        <div class="pressure-grid">
-          <div class="pressure-item"><span class="pressure-name">Margin</span><span class="pressure-level lvl-high">HIGH</span></div>
-          <div class="pressure-item"><span class="pressure-name">Demand</span><span class="pressure-level lvl-med">MED</span></div>
-          <div class="pressure-item"><span class="pressure-name">Cost</span><span class="pressure-level lvl-high">HIGH</span></div>
-          <div class="pressure-item"><span class="pressure-name">Labour</span><span class="pressure-level lvl-high">HIGH</span></div>
-          <div class="pressure-item"><span class="pressure-name">Supply Chain</span><span class="pressure-level lvl-high">HIGH</span></div>
-          <div class="pressure-item"><span class="pressure-name">Funding</span><span class="pressure-level lvl-med">MED</span></div>
-          <div class="pressure-item"><span class="pressure-name">Confidence</span><span class="pressure-level lvl-med">MED</span></div>
-          <div class="pressure-item"><span class="pressure-name">FX Exposure</span><span class="pressure-level lvl-low">LOW</span></div>
-        </div>
-      </div>
-
-      <!-- Module 3: Regime -->
-      <div class="dash-module">
-        <div class="dash-module-label">Regime Shift Engine</div>
-        <div class="dash-module-title">Current Structural Assessment</div>
-        <div class="regime-status">
-          <div class="regime-row">
-            <div class="regime-dot" style="background:#e67e22;"></div>
-            <div>
-              <div class="regime-text">Transitional Pressure Regime</div>
-              <div class="regime-sub">Three interacting loops detected · Geopolitics × Trade × Labour</div>
-            </div>
-          </div>
-          <div class="regime-row">
-            <div class="regime-dot" style="background:#c0392b;"></div>
-            <div>
-              <div class="regime-text">China Overcapacity Loop Active</div>
-              <div class="regime-sub">Export deflation transmitting into SG manufacturing margins</div>
-            </div>
-          </div>
-          <div class="regime-row">
-            <div class="regime-dot" style="background:#f1c40f;"></div>
-            <div>
-              <div class="regime-text">AI Displacement Signal Rising</div>
-              <div class="regime-sub">Professional services & BPO sectors showing early manpower stress</div>
-            </div>
-          </div>
-          <div class="regime-row">
-            <div class="regime-dot" style="background:#1a7a4a;"></div>
-            <div>
-              <div class="regime-text">MAS FX Buffer Active</div>
-              <div class="regime-sub">SGD NEER providing structural inflation hedge</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Module 4: Sector Heatmap -->
-      <div class="dash-module" style="grid-column:1/-1;">
-        <div class="dash-module-label">Sector &amp; Value Chain Translation Layer — Singapore Exposure Heatmap</div>
-        <div class="dash-module-title" style="margin-bottom:20px;">Macro Transmission Intensity by Sector</div>
-        <div class="heatmap-grid">
-          <div class="heat-cell h-critical"><div class="sector-name">Manufacturing</div><div class="sector-val">Critical</div></div>
-          <div class="heat-cell h-high"><div class="sector-name">Logistics & Shipping</div><div class="sector-val">High</div></div>
-          <div class="heat-cell h-high"><div class="sector-name">Precision Eng.</div><div class="sector-val">High</div></div>
-          <div class="heat-cell h-moderate"><div class="sector-name">Financial Services</div><div class="sector-val">Moderate</div></div>
-          <div class="heat-cell h-high"><div class="sector-name">Retail & F&B</div><div class="sector-val">High</div></div>
-          <div class="heat-cell h-moderate"><div class="sector-name">Professional Svcs</div><div class="sector-val">Moderate</div></div>
-          <div class="heat-cell h-watch"><div class="sector-name">InfoComm</div><div class="sector-val">Watch</div></div>
-          <div class="heat-cell h-low"><div class="sector-name">Healthcare</div><div class="sector-val">Low</div></div>
-          <div class="heat-cell h-critical"><div class="sector-name">Construction</div><div class="sector-val">Critical</div></div>
-          <div class="heat-cell h-high"><div class="sector-name">Food Manufacturing</div><div class="sector-val">High</div></div>
-          <div class="heat-cell h-moderate"><div class="sector-name">Biomedical</div><div class="sector-val">Moderate</div></div>
-          <div class="heat-cell h-watch"><div class="sector-name">Aerospace MRO</div><div class="sector-val">Watch</div></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- FRAMEWORK / ARCHITECTURE — LAYERED MODEL -->
-<section class="arch-section layers-section" id="framework">
-  <div class="container">
-    <div class="section-label">The MacroLab Framework</div>
-    <h2 class="section-title">A Layered Architecture for Transmission Intelligence</h2>
-    <p class="section-intro">MacroLab does not model the world as a linear sequence of causes. GVC structure, China dynamics, Singapore policy, and labour markets <em>interact simultaneously</em>. The architecture reflects that reality across seven analytically distinct but connected layers.</p>
-
-    <div class="layers-grid">
-      <div class="layer-row gvc-layer">
-        <div class="layer-num">L1</div>
-        <div class="layer-name">Structural Exposure Map</div>
-        <div class="layer-desc"><strong>GVC Transmission Infrastructure.</strong> GVC position, partner concentration, sector dependencies, import/export linkages, substitution feasibility. This is the structural backbone — it defines how exposed Singapore is before any signal fires.</div>
-      </div>
-      <div class="layer-row">
-        <div class="layer-num">L2</div>
-        <div class="layer-name">Current Signal Engine</div>
-        <div class="layer-desc">China, geopolitics, US rates, FX, energy, AI, trade policy, demand cycles, financial markets. Signals are tracked not as isolated variables but as potential triggers for GVC-mediated transmission.</div>
-      </div>
-      <div class="layer-row">
-        <div class="layer-num">L3</div>
-        <div class="layer-name">Transmission & Interaction Engine</div>
-        <div class="layer-desc">Trade, pricing, supply chain, financial, labour, and confidence channels. Feedback loops — reinforcing, balancing, delay, and contagion — are mapped across dimensions. This is where non-linearity enters.</div>
-      </div>
-      <div class="layer-row">
-        <div class="layer-num">L4</div>
-        <div class="layer-name">Singapore Mediation Layer</div>
-        <div class="layer-desc">MAS FX regime, fiscal capacity, labour policy, industrial policy, strategic reserves. Singapore policy mediates multiple layers simultaneously — it is not a downstream output but an active structural filter.</div>
-      </div>
-      <div class="layer-row">
-        <div class="layer-num">L5</div>
-        <div class="layer-name">Sector & Value Chain Translation</div>
-        <div class="layer-desc">Electronics, logistics, precision engineering, professional services, retail/F&B, construction, aerospace MRO. Translation is by value-chain stage — not just by sector label — to identify where shocks enter and who absorbs them first.</div>
-      </div>
-      <div class="layer-row">
-        <div class="layer-num">L6</div>
-        <div class="layer-name">Business Alignment Layer</div>
-        <div class="layer-desc">Stakeholder impact, strategic posture (defend/reposition/invest/pause), operating moves, capability gap analysis, required ecosystem response. Replaces generic action lists with structured decision intelligence.</div>
-      </div>
-      <div class="layer-row">
-        <div class="layer-num">L8</div>
-        <div class="layer-name">Trade Association Dissemination Layer</div>
-        <div class="layer-desc">Member briefings, sector playbooks, board packs, signal alerts, policy explainers, workshop frameworks. Intelligence formatted for trade association secretariats, board leadership, and member communication.</div>
-      </div>
-    </div>
-
-
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- GVC TRANSMISSION INFRASTRUCTURE -->
-<section class="gvc-section" id="gvc">
-  <div class="container">
-    <div class="section-label" style="color:var(--teal-light);">GVC Transmission Infrastructure</div>
-    <h2 class="section-title" style="color:var(--white);">Global signals become sector pressure through value chains.</h2>
-    <p class="section-intro" style="color:rgba(255,255,255,0.55);max-width:680px;">GVC is the structural backbone of MacroLab. Before a signal becomes a dashboard number, it travels through a value chain — entering at a specific node, absorbed by specific firms, reshaping specific decisions. MacroLab maps that journey.</p>
-
-    <div class="gvc-flow">
-      <div class="gvc-node">
-        <div class="gvc-node-label">Entry Point</div>
-        <div class="gvc-node-title">Global Trigger</div>
-        <div class="gvc-node-sub">Geopolitics · China policy · Rate shift · Tariff · Energy spike · AI disruption</div>
-      </div>
-      <div class="gvc-node">
-        <div class="gvc-node-label">Transmission Channel</div>
-        <div class="gvc-node-title">GVC Pathway</div>
-        <div class="gvc-node-sub">Trade finance · Logistics · Input pricing · Customer orders · FX · Labour cost</div>
-      </div>
-      <div class="gvc-node" style="background:rgba(34,163,148,0.12);border-color:rgba(34,163,148,0.3);">
-        <div class="gvc-node-label" style="color:#22a394;">Singapore Node</div>
-        <div class="gvc-node-title" style="color:var(--white);">Exposure Point</div>
-        <div class="gvc-node-sub">High-value intermediate · Hub coordination · Final assembly · Re-export · Professional services</div>
-      </div>
-      <div class="gvc-node">
-        <div class="gvc-node-label">Sector Impact</div>
-        <div class="gvc-node-title">Pressure Form</div>
-        <div class="gvc-node-sub">Margin compression · Revenue loss · Inventory risk · Labour adjustment · Capex delay</div>
-      </div>
-      <div class="gvc-node">
-        <div class="gvc-node-label">Decision Output</div>
-        <div class="gvc-node-title">Business Response</div>
-        <div class="gvc-node-sub">Pricing · Procurement · Hiring · Capital allocation · Risk posture · Trade Association briefing</div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal-light);">The Six Diagnostic Questions MacroLab Asks for Every Signal</div>
-    <div class="gvc-questions">
-      <div class="gvc-q-header">GVC Diagnostic Question</div>
-      <div class="gvc-q-header">MacroLab Signal Output</div>
-      <div class="gvc-q-cell">Is the shock upstream, midstream, or downstream in the value chain?</div>
-      <div class="gvc-q-cell">Value Chain Entry Point Classification</div>
-      <div class="gvc-q-cell">Is Singapore directly or indirectly exposed through this chain?</div>
-      <div class="gvc-q-cell">Direct / Indirect Exposure Flag</div>
-      <div class="gvc-q-cell">Is exposure concentrated in a few partners, markets, or nodes?</div>
-      <div class="gvc-q-cell">Partner Concentration Score</div>
-      <div class="gvc-q-cell">Can firms realistically substitute suppliers, customers, or logistics routes?</div>
-      <div class="gvc-q-cell">Substitution Feasibility Score</div>
-      <div class="gvc-q-cell">Is the signal cyclical (temporary) or structural (regime-level)?</div>
-      <div class="gvc-q-cell">Cycle vs Structure Classification</div>
-      <div class="gvc-q-cell">Does Singapore policy dampen or amplify the GVC effect?</div>
-      <div class="gvc-q-cell">Singapore Policy Mediation Score</div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- ELECTRONICS: METHOD IN ACTION -->
-<section class="electronics-section" id="electronics">
-  <div class="container">
-    <div class="section-label">Method in Action</div>
-    <h2 class="section-title">Electronics Global Value Chain</h2>
-    <p class="section-intro">Electronics is Singapore's sharpest illustration of how global signals travel through value chains. It is deeply embedded in global value chains, highly sensitive to US–China policy, dependent on semiconductor cycles, and important enough to Singapore's manufacturing base to matter for Trade Associations & Chambers of Commerce and SMEs. MacroLab uses it to show exactly how the method works.</p>
-
-    <div class="electronics-grid">
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">Where Singapore Sits in the Electronics Value Chain</div>
-        <div class="elec-chain">
-          <div class="elec-chain-node">
-            <div>
-              <div class="elec-chain-label">Upstream: Semiconductor Design & Fab</div>
-              <div style="font-size:11px;color:var(--slate);margin-top:3px;">TSMC, Samsung, Intel · Controlled by US export policy</div>
-            </div>
-            <div class="elec-chain-role">Input dependency</div>
-          </div>
-          <div class="elec-arrow-down">↓</div>
-          <div class="elec-chain-node">
-            <div>
-              <div class="elec-chain-label">Midstream: Components, Testing & Assembly</div>
-              <div style="font-size:11px;color:var(--slate);margin-top:3px;">Singapore precision eng. · Wafer testing · Advanced packaging</div>
-            </div>
-            <div class="elec-chain-role">SG exposure: high</div>
-          </div>
-          <div class="elec-arrow-down" style="background:rgba(26,122,110,0.08);border-color:rgba(26,122,110,0.3);color:var(--teal);">↓</div>
-          <div class="elec-chain-node highlight">
-            <div>
-              <div class="elec-chain-label light">Singapore: High-Value Intermediate Node</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px;">Hub coordination · Re-export · MNC regional HQ functions</div>
-            </div>
-            <div class="elec-chain-role light">★ Critical node</div>
-          </div>
-          <div class="elec-arrow-down">↓</div>
-          <div class="elec-chain-node">
-            <div>
-              <div class="elec-chain-label">Downstream: Final Assembly & OEM Export</div>
-              <div style="font-size:11px;color:var(--slate);margin-top:3px;">China, Vietnam, Malaysia · Exposed to demand cycles & tariffs</div>
-            </div>
-            <div class="elec-chain-role">Indirect exposure</div>
-          </div>
-          <div class="elec-arrow-down">↓</div>
-          <div class="elec-chain-node">
-            <div>
-              <div class="elec-chain-label">End Markets: US, EU, China Consumer</div>
-              <div style="font-size:11px;color:var(--slate);margin-top:3px;">Demand cycles · Inventory corrections · Trade policy sensitivity</div>
-            </div>
-            <div class="elec-chain-role">Final demand risk</div>
-          </div>
-        </div>
-        <div style="padding:16px 20px;background:var(--ink);color:rgba(255,255,255,0.65);font-size:12px;line-height:1.7;">
-          <span style="color:var(--teal-light);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;display:block;margin-bottom:8px;">MacroLab Insight</span>
-          Shocks do not hit the electronics sector evenly. They enter at specific value-chain stages and propagate differently — showing up as margin compression in testing, throughput decline in logistics, order book softness in final assembly, or capex deferral in precision engineering. MacroLab tracks which stage is absorbing pressure, and what that means for each type of member firm.
-        </div>
-
-      </div>
-
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">What MacroLab Tracks — Electronics Diagnostic Table</div>
-        <table class="elec-table">
-          <thead>
-            <tr><th>GVC Question</th><th>MacroLab Signal</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Where does the shock enter — upstream, midstream, or downstream?</td><td>Value Chain Entry Point</td></tr>
-            <tr><td>Is Singapore directly or indirectly exposed?</td><td>Direct / Indirect Flag</td></tr>
-            <tr><td>Is exposure concentrated in a few partners?</td><td>Partner Concentration Score</td></tr>
-            <tr><td>Can firms substitute suppliers or customers?</td><td>Substitution Feasibility Score</td></tr>
-            <tr><td>Is the signal cyclical or structural?</td><td>Cycle vs Structure Classification</td></tr>
-            <tr><td>Does policy dampen or amplify the effect?</td><td>SG Policy Mediation Score</td></tr>
-            <tr><td>What business decision changes?</td><td>Pricing · Hiring · Capex · Procurement</td></tr>
-          </tbody>
-        </table>
-
-        <div style="margin-top:24px;padding:20px;border:1px solid var(--rule);background:var(--white);">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;color:var(--teal);text-transform:uppercase;margin-bottom:12px;">Current Electronics Signal — May 2025</div>
-          <div class="mini-bars">
-            <div class="mini-bar-row"><span class="mini-bar-label" style="width:120px;">Upstream Semi</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:74%;background:#e67e22;"></div></div><span class="mini-bar-val">7.4</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label" style="width:120px;">Midstream Test</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:81%;background:#c0392b;"></div></div><span class="mini-bar-val">8.1</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label" style="width:120px;">SG Hub Coord.</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:62%;background:#f1c40f;"></div></div><span class="mini-bar-val">6.2</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label" style="width:120px;">Downstream OEM</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:88%;background:#c0392b;"></div></div><span class="mini-bar-val">8.8</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label" style="width:120px;">End Demand</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:58%;background:#f1c40f;"></div></div><span class="mini-bar-val">5.8</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- PHILOSOPHY -->
-<section class="philosophy-section">
-  <div class="container">
-    <div class="section-label" style="color:var(--teal-light);">Core Design Philosophy</div>
-    <h2 class="section-title" style="color:var(--white);margin-bottom:48px;">What makes MacroLab different</h2>
-    <div class="philosophy-grid">
-      <div class="philosophy-item">
-        <div class="philosophy-num">01 —</div>
-        <h3>Interactions, not isolated signals</h3>
-        <p>Most intelligence platforms track macro signals independently. MacroLab maps how they interact — and watches for the moments when those interactions amplify into non-linear pressures.</p>
-      </div>
-      <div class="philosophy-item">
-        <div class="philosophy-num">02 —</div>
-        <h3>Thresholds matter more than levels</h3>
-        <p>A signal at 6 is not simply worse than a signal at 4. MacroLab monitors the boundaries where gradual pressure becomes structural shift — and flags when systems approach those thresholds.</p>
-      </div>
-      <div class="philosophy-item">
-        <div class="philosophy-num">03 —</div>
-        <h3>Narratives over point estimates</h3>
-        <p>Precise forecasts create false confidence. MacroLab generates structured narratives — coherent interpretations of how macro forces are evolving and what they mean for business decisions.</p>
-      </div>
-      <div class="philosophy-item">
-        <div class="philosophy-num">04 —</div>
-        <h3>Singapore policy mediates everything</h3>
-        <p>Singapore's industrial, FX, labour, and fiscal policy levers fundamentally alter how global shocks transmit into the domestic economy. MacroLab keeps the policy layer central.</p>
-      </div>
-      <div class="philosophy-item">
-        <div class="philosophy-num">05 —</div>
-        <h3>Labour as a structural regime variable</h3>
-        <p>Labour dynamics are not merely a downstream business metric. Wage pressure, AI displacement, and talent scarcity are now macro variables that interact with trade and industrial policy.</p>
-      </div>
-      <div class="philosophy-item">
-        <div class="philosophy-num">06 —</div>
-        <h3>China as a political-economy OS</h3>
-        <p>China is not a single macro variable. MacroLab models China as a political-economy operating system — where overcapacity, export strategy, and industrial policy interact with geoeconomic friction.</p>
-      </div>
-    </div>
-
-    <div style="margin-top:56px;">
-      <div class="section-label" style="color:var(--teal-light);">Regime Pressure Stack</div>
-      <h3 style="color:var(--white);font-size:22px;margin-bottom:12px;font-family:'Playfair Display',serif;">Thinking in interacting long-wave forces</h3>
-      <p style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.7;max-width:600px;margin-bottom:0;">Systems thinkers have long argued that macro regimes are shaped by several interacting long-wave forces, not any single variable.</p>
-      <table class="regime-stack-table">
-        <thead>
-          <tr><th>Long-Wave Force</th><th>MacroLab Translation</th><th>Business Relevance</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Debt &amp; credit cycle</td><td>Funding conditions, refinancing stress, capex hurdle rates</td><td>Expansion decisions, working capital, M&amp;A feasibility</td></tr>
-          <tr><td>Internal political friction</td><td>Policy volatility, labour-market friction, social cost pressure</td><td>Wage negotiation, regulatory environment, consumer sentiment</td></tr>
-          <tr><td>External conflict &amp; rivalry</td><td>Trade restrictions, sanctions, chokepoints, shipping risk</td><td>Supply chain routing, export market access, insurance cost</td></tr>
-          <tr><td>Currency &amp; reserve pressure</td><td>USD strength, SGD NEER trajectory, FX transmission</td><td>Import cost structure, export competitiveness, hedging cost</td></tr>
-          <tr><td>Productivity race</td><td>AI capability, automation, semiconductor policy, industrial strategy</td><td>Margin defence, capability investment, labour model</td></tr>
-          <tr><td>Power transition dynamics</td><td>US–China rivalry, friend-shoring, export controls, GVC bifurcation</td><td>GVC re-routing, customer/supplier exposure, strategic positioning</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- CORPORATE REALITY SIGNALS -->
-<section class="crs-section" id="corporate-signals">
-  <div class="container">
-    <div class="section-label">Corporate Reality Signal Layer</div>
-    <h2 class="section-title">Ground-up validation for macro intelligence</h2>
-    <p class="section-intro">MacroLab does not rely only on macro indicators. We analyse earnings calls, investor updates, and management commentary to detect whether global pressures are appearing in company behaviour — through demand language, margin stress, capex posture, hiring intent, and supply-chain concerns.</p>
-
-    <div class="crs-grid">
-      <!-- Left: 6-signal extraction table -->
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">Six Core Signals MacroLab Extracts</div>
-        <table class="crs-table">
-          <thead>
-            <tr><th>Corporate Signal</th><th>What It Tells MacroLab</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Demand Pulse</strong></td>
-              <td>Are orders rising, slowing, being deferred, or cancelled? Is the softness cyclical or structural?</td>
-            </tr>
-            <tr>
-              <td><strong>Margin Stress</strong></td>
-              <td>Are firms absorbing cost pressure into margins, or successfully passing it through to customers?</td>
-            </tr>
-            <tr>
-              <td><strong>Pricing Power</strong></td>
-              <td>Are customers accepting price increases, pushing back, or switching to lower-cost alternatives?</td>
-            </tr>
-            <tr>
-              <td><strong>Supply-Chain Friction</strong></td>
-              <td>Are lead times, inventory positions, logistics costs, or supplier reliability worsening?</td>
-            </tr>
-            <tr>
-              <td><strong>Capex Posture</strong></td>
-              <td>Are firms expanding capacity, delaying projects, pausing investment, or reallocating capital?</td>
-            </tr>
-            <tr>
-              <td><strong>Hiring Intent</strong></td>
-              <td>Are firms hiring engineers, freezing headcount, cutting labour costs, or accelerating automation?</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Right: Classification system + triangulation -->
-      <div>
-        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">How MacroLab Classifies Management Language</div>
-        <div class="crs-classification">
-          <div class="crs-class-row">
-            <div class="crs-class-dim">Direction</div>
-            <div class="crs-class-vals">
-              <span class="crs-tag crs-improving">Improving</span>
-              <span class="crs-tag crs-stable">Stable</span>
-              <span class="crs-tag crs-weakening">Weakening</span>
-            </div>
-          </div>
-          <div class="crs-class-row">
-            <div class="crs-class-dim">Intensity</div>
-            <div class="crs-class-vals">
-              <span class="crs-tag crs-stable">Mild</span>
-              <span class="crs-tag crs-improving">Moderate</span>
-              <span class="crs-tag crs-weakening">Severe</span>
-            </div>
-          </div>
-          <div class="crs-class-row">
-            <div class="crs-class-dim">Time Horizon</div>
-            <div class="crs-class-vals">
-              <span class="crs-tag crs-stable">Current Quarter</span>
-              <span class="crs-tag crs-stable">Next 6 Months</span>
-              <span class="crs-tag crs-weakening">Structural</span>
-            </div>
-          </div>
-          <div class="crs-class-row">
-            <div class="crs-class-dim">Confidence</div>
-            <div class="crs-class-vals">
-              <span class="crs-tag crs-improving">Firm</span>
-              <span class="crs-tag crs-stable">Cautious</span>
-              <span class="crs-tag crs-weakening">Uncertain</span>
-            </div>
-          </div>
-          <div class="crs-class-row" style="border-bottom:none;">
-            <div class="crs-class-dim">Evidence Type</div>
-            <div class="crs-class-vals">
-              <span class="crs-tag crs-stable">Order Book</span>
-              <span class="crs-tag crs-stable">Margin Data</span>
-              <span class="crs-tag crs-stable">Hiring</span>
-              <span class="crs-tag crs-stable">Capex</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:20px;padding:20px;background:var(--white);border:1px solid var(--rule);">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">Why Not Generic Sentiment Analysis?</div>
-          <p style="font-size:12px;color:var(--slate);line-height:1.7;">"Positive" or "negative" is too crude for business decision-making. MacroLab classifies management language across five dimensions — direction, intensity, time horizon, management confidence, and evidence type — to produce signals that are specific enough to inform sector strategy, not just market mood.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Triangulation model -->
-    <div style="margin-top:40px;">
-      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">The MacroLab Triangulation Model — Electronics Example</div>
-      <div class="crs-triangulation">
-        <div class="crs-tri-row">
-          <div class="crs-tri-layer">GVC Layer</div>
-          <div class="crs-tri-evidence">Singapore electronics is exposed through intermediate production and regional semiconductor flows. Partner concentration is high; substitution feasibility is moderate.</div>
-        </div>
-        <div class="crs-tri-row">
-          <div class="crs-tri-layer">Macro Signal Layer</div>
-          <div class="crs-tri-evidence">US–China tariff realignment, China overcapacity in electronics components, weak global consumer electronics demand.</div>
-        </div>
-        <div class="crs-tri-row">
-          <div class="crs-tri-layer">Regime Layer</div>
-          <div class="crs-tri-evidence">Great-power rivalry + industrial policy competition + capital-cost discipline interacting simultaneously. Non-linear regime pressure detected.</div>
-        </div>
-        <div class="crs-tri-row crs-tri-highlight">
-          <div class="crs-tri-layer">Corporate Reality</div>
-          <div class="crs-tri-evidence">Firms report order softness, inventory correction, margin compression, and selective capex delay. Hiring language turns cautious in precision engineering and testing.</div>
-        </div>
-        <div class="crs-tri-row">
-          <div class="crs-tri-layer">Decision Output</div>
-          <div class="crs-tri-evidence">TAC members receive pricing, hiring, procurement, and capex guidance grounded in both structural GVC exposure and company-validated reality signals.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- CHINA ENGINE -->
-<section class="china-section" id="china">
-  <div class="container">
-    <div class="section-label">Unpacking China</div>
-    <h2 class="section-title">The China Political-Economy Engine</h2>
-    <p class="section-intro">China is modelled as a political-economy operating system rather than a single macro variable. MacroLab tracks five analytical lenses simultaneously — and watches for when they begin to interact.</p>
-    <div class="china-grid">
-      <div class="china-lenses">
-        <div class="china-lens">
-          <div class="china-lens-title">Overcapacity Dynamics</div>
-          <div class="china-lens-sub">Steel, solar, EV, and electronics overcapacity creating structural export deflation pressure. Transmits into Singapore manufacturing sector margins.</div>
-        </div>
-        <div class="china-lens">
-          <div class="china-lens-title">Export Pressure & Trade Routing</div>
-          <div class="china-lens-sub">Chinese exporters rerouting through ASEAN, including Singapore. Dual exposure: competitive displacement and trade flow opportunity.</div>
-        </div>
-        <div class="china-lens">
-          <div class="china-lens-title">Industrial Policy Architecture</div>
-          <div class="china-lens-sub">Made in China 2025 and successor strategies driving structural shifts in global supply chain positioning relevant to Singapore's value proposition.</div>
-        </div>
-        <div class="china-lens">
-          <div class="china-lens-title">Geoeconomic Friction & Decoupling</div>
-          <div class="china-lens-sub">US-China strategic competition creating bifurcation dynamics. Singapore as potential connector node — or caught in the middle of opposing supply chain architectures.</div>
-        </div>
-        <div class="china-lens">
-          <div class="china-lens-title">Regime Behaviour & Policy Signals</div>
-          <div class="china-lens-sub">Reading Xi-era policy signals for economic-nationalist turns that generate downstream macro effects in Singapore's trade-dependent sectors.</div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Signals MacroLab Read</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#b8cdd8;"><span style="color:#c0392b;font-weight:700;min-width:16px;">&#8679;</span> Palm oil +18% YoY (import cost)</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#b8cdd8;"><span style="color:#c0392b;font-weight:700;min-width:16px;">&#8679;</span> PWM F&amp;B floor wage rises Q3</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#b8cdd8;"><span style="color:#27ae60;font-weight:700;min-width:16px;">&#8679;</span> Tourist spend at hawkers +22% vs 2019</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#b8cdd8;"><span style="color:#27ae60;font-weight:700;min-width:16px;">=</span> Local consumer sentiment stable</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#b8cdd8;"><span style="color:#e67e22;font-weight:700;min-width:16px;">~</span> Competitor pricing up ~$1.50 avg</li>
+          </ul>
         </div>
       </div>
       <div>
-        <div style="background:var(--paper);border:1px solid var(--rule);padding:28px;margin-bottom:20px;">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--teal);text-transform:uppercase;margin-bottom:16px;">Current China Signal Assessment</div>
-          <div class="mini-bars">
-            <div class="mini-bar-row"><span class="mini-bar-label">Overcapacity</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:84%;background:#c0392b;"></div></div><span class="mini-bar-val" style="color:#c0392b;">8.4</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label">Export Press.</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:78%;background:#e67e22;"></div></div><span class="mini-bar-val" style="color:#e67e22;">7.8</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label">Indus. Policy</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:72%;background:#e67e22;"></div></div><span class="mini-bar-val" style="color:#e67e22;">7.2</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label">Decoupling</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:68%;background:#f1c40f;"></div></div><span class="mini-bar-val" style="color:#c8882a;">6.8</span></div>
-            <div class="mini-bar-row"><span class="mini-bar-label">Regime Risk</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:55%;background:#2980b9;"></div></div><span class="mini-bar-val" style="color:#2980b9;">5.5</span></div>
-          </div>
+        <div style="background:rgba(26,122,106,0.15);border:1px solid rgba(26,122,106,0.4);border-radius:10px;padding:24px;margin-bottom:20px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">MacroLab Decision Brief Says</div>
+          <p style="font-size:1rem;color:#fff;font-weight:600;line-height:1.5;margin-bottom:12px;">Raise now &mdash; conditions are as favourable as they will be this year.</p>
+          <p style="font-size:0.88rem;color:#b8cdd8;line-height:1.6;">Input costs are rising and will not reverse before Q4. Tourist demand provides cover. Local diners have already absorbed competitor increases. A $2 rise is within the current tolerance band.</p>
         </div>
-        <div style="background:var(--ink);color:var(--white);padding:24px;">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--teal-light);text-transform:uppercase;margin-bottom:12px;">MacroLab Interpretation</div>
-          <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;">China's overcapacity-export-industrial policy loop is in a <strong style="color:#e6a020;">reinforcing phase</strong>. Singapore manufacturers face dual pressure: upstream cost advantage erosion and downstream demand competition. The loop is not self-correcting without external policy intervention.</p>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">What Ah Kow Did</div>
+          <p style="font-size:0.88rem;color:#b8cdd8;line-height:1.6;">Raised to $13.50 (not full $14 &mdash; his call). Monitored for 3 weeks. No material drop in covers. Added $14 weekend dinner set in June as a further test. Planning full $14 weekday lunch by August before Q3 wage floor kicks in.</p>
         </div>
       </div>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="#subscribe" style="background:#1a7a6a;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:1rem;">Get your own weekly Decision Brief &rarr;</a>
     </div>
   </div>
 </section>
 
-<hr class="section-rule">
-
-<!-- SINGAPORE POLICY LENS -->
-<section class="policy-section" id="policy">
-  <div class="container">
-    <div class="section-label">Singapore Policy Lens</div>
-    <h2 class="section-title">How Singapore Policy Mediates Macro Transmission</h2>
-    <p class="section-intro">Singapore's policy architecture is not passive. FX management, labour frameworks, industrial strategy, and fiscal buffers actively reshape how global shocks transmit into the domestic economy.</p>
-    <div class="policy-cards">
-      <div class="policy-card">
-        <div class="policy-icon">FX Policy</div>
-        <h3>MAS Exchange Rate Framework</h3>
-        <p>SGD NEER management provides structural inflation buffering. MacroLab tracks band positioning, slope adjustments, and their downstream effects on import cost transmission.</p>
-      </div>
-      <div class="policy-card">
-        <div class="policy-icon">Labour Policy</div>
-        <h3>Fair Consideration & Manpower Frameworks</h3>
-        <p>COMPASS, PMET policies, and EP/S-Pass quota shifts interact with global AI displacement to reshape Singapore's talent cost structure across sectors.</p>
-      </div>
-      <div class="policy-card">
-        <div class="policy-icon">Industrial Policy</div>
-        <h3>EDB, ITM, and Sector Roadmaps</h3>
-        <p>Industry Transformation Maps and EDB investment mandates define which sectors receive structural policy support — shaping resilience differentials across the economy.</p>
-      </div>
-      <div class="policy-card">
-        <div class="policy-icon">Fiscal Buffering</div>
-        <h3>Reserves, GST Vouchers & Support Schemes</h3>
-        <p>Singapore's deep fiscal reserves enable counter-cyclical interventions. MacroLab tracks when fiscal space is deployed and how it reshapes the business operating environment.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- BUSINESS ALIGNMENT LAYER -->
-<section class="alignment-section" id="alignment">
-  <div class="container">
-    <div class="section-label">Business Alignment Layer</div>
-    <h2 class="section-title">From macro signal to structured business decision</h2>
-    <p class="section-intro">MacroLab's Business Alignment Layer replaces generic action lists — "raise prices", "delay capex" — with five structured questions that test whether a proposed response is aligned with stakeholder realities, capability constraints, and sector conditions.</p>
-
-    <div class="alignment-grid">
-      <div class="alignment-col">
-        <div class="alignment-col-num">01</div>
-        <div class="alignment-col-label">Value at Risk</div>
-        <div class="alignment-col-q">Who is most affected — customers, suppliers, workers, financiers, regulators, members?</div>
-        <div class="alignment-col-tag">Stakeholder Impact</div>
-      </div>
-      <div class="alignment-col">
-        <div class="alignment-col-num">02</div>
-        <div class="alignment-col-label">Required Response</div>
-        <div class="alignment-col-q">What do we need from customers, suppliers, staff, banks, or policymakers to navigate this?</div>
-        <div class="alignment-col-tag">Ecosystem Dependencies</div>
-      </div>
-      <div class="alignment-col">
-        <div class="alignment-col-num">03</div>
-        <div class="alignment-col-label">Strategic Posture</div>
-        <div class="alignment-col-q">Should the firm defend, reposition, invest, pause, diversify, or exit a market or segment?</div>
-        <div class="alignment-col-tag">Strategic Direction</div>
-      </div>
-      <div class="alignment-col">
-        <div class="alignment-col-num">04</div>
-        <div class="alignment-col-label">Operating Moves</div>
-        <div class="alignment-col-q">What process must change — pricing, procurement, inventory, sales pipeline, or hiring?</div>
-        <div class="alignment-col-tag">Operational Response</div>
-      </div>
-      <div class="alignment-col">
-        <div class="alignment-col-num">05</div>
-        <div class="alignment-col-label">Capability Gap</div>
-        <div class="alignment-col-q">What must the firm build, retain, or acquire to survive and compete in the next regime?</div>
-        <div class="alignment-col-tag">Capability Investment</div>
-      </div>
-    </div>
-
-    <div class="alignment-example">
-      <div class="alignment-example-header">Worked Example — Electronics Sector · Current Regime · Corporate Reality Validated</div>
-      <div class="alignment-example-title">Signal: China export pressure + semiconductor cycle softness + elevated funding cost</div>
-      <p style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:12px;line-height:1.7;">Sector impact: margin compression at intermediate production nodes, order book softness at downstream OEM level, capex decisions under pressure.</p>
-      <div style="padding:14px 18px;background:rgba(34,163,148,0.1);border-left:3px solid var(--teal-light);margin-bottom:20px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.7;">
-        <strong style="color:var(--teal-light);">Corporate Reality Signal:</strong> Electronics firms exposed to intermediate GVC nodes are showing early margin stress in management commentary. Pricing power is weakening and capex language has turned cautious. The pressure is not yet a sector-wide crisis — but the directional signals are consistent across both the GVC map and company behaviour.
-      </div>
-      <div class="alignment-outputs">
-        <div class="alignment-output-item">
-          <div class="alignment-output-dim">Pricing</div>
-          <div class="alignment-output-text">Protect price floors where switching cost is high. Avoid blanket discounting — identify segments where differentiation holds.</div>
-        </div>
-        <div class="alignment-output-item">
-          <div class="alignment-output-dim">Customer Mix</div>
-          <div class="alignment-output-text">Reduce overdependence on low-margin regional buyers. Accelerate relationships with higher-value customers in US/EU markets.</div>
-        </div>
-        <div class="alignment-output-item">
-          <div class="alignment-output-dim">Procurement</div>
-          <div class="alignment-output-text">Diversify inputs where substitution feasibility is high. Map China-origin components and identify viable alternative sources.</div>
-        </div>
-        <div class="alignment-output-item">
-          <div class="alignment-output-dim">Capex</div>
-          <div class="alignment-output-text">Phase automation investment — do not cancel strategically necessary capability. Distinguish between defensive and transformative capex.</div>
-        </div>
-        <div class="alignment-output-item">
-          <div class="alignment-output-dim">Talent</div>
-          <div class="alignment-output-text">Retain engineering and process capability even if production volumes soften. Capability loss is structurally harder to reverse than revenue loss.</div>
-        </div>
-        <div class="alignment-output-item">
-          <div class="alignment-output-dim">Trade Association Role</div>
-          <div class="alignment-output-text">Help members understand exposure by value-chain stage, not just by sector label. Not all electronics firms face the same pressure at the same time.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- LABOUR MARKET DYNAMICS -->
-<section class="labour-section" id="labour">
-  <div class="container">
-    <div class="section-label">Labour Market Dynamics</div>
-    <h2 class="section-title">The Singapore Sector Labour Outlook (SSLO)</h2>
-    <p class="section-intro">Labour is no longer just a cost line — it is a macro regime variable. MacroLab's SSLO tracks wage pressure, talent scarcity, AI displacement, and sector manpower stress as interacting structural forces.</p>
-    <div class="labour-grid">
+<!-- TAC PORTAL -->
+<section id="tac" style="background:#f0f4f7;padding:80px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
       <div>
-        <div class="china-lenses" style="margin-bottom:32px;">
-          <div class="china-lens"><div class="china-lens-title">Wage Pressure Dynamics</div><div class="china-lens-sub">Progressive Wage Model expansion, tight PMET market, and inflationary cost-of-living feeding into wage negotiation cycles across sectors.</div></div>
-          <div class="china-lens"><div class="china-lens-title">AI Displacement Signals</div><div class="china-lens-sub">Early displacement indicators in professional services, BPO, and administrative functions. Not yet visible in aggregate employment data but detectable in hiring pattern shifts.</div></div>
-          <div class="china-lens"><div class="china-lens-title">Talent Scarcity Architecture</div><div class="china-lens-sub">Structural shortages in semiconductor, cybersecurity, and advanced manufacturing skills creating sector-specific bottlenecks that constrain growth despite strong demand signals.</div></div>
-          <div class="china-lens"><div class="china-lens-title">Sector Manpower Stress</div><div class="china-lens-sub">Construction, F&B, and logistics operating under chronic manpower stress that amplifies any upstream cost or demand pressure into accelerated margin deterioration.</div></div>
-        </div>
+        <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">For Trade Associations &amp; Chambers</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#0f1f2e;margin-bottom:20px;">TAC Intelligence Portal</h2>
+        <p style="font-size:1rem;color:#3a5568;line-height:1.7;margin-bottom:24px;">Trade associations and chambers of commerce use MacroLab to deliver data-backed advocacy, member newsletters, and policy submissions &mdash; without needing an in-house economics team.</p>
+        <ul style="list-style:none;padding:0;margin:0 0 32px;display:flex;flex-direction:column;gap:14px;">
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:#1a7a6a;font-size:1.1rem;margin-top:2px;">&#10003;</span>
+            <span style="font-size:0.95rem;color:#2a3f52;">White-label weekly macro briefings for your members</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:#1a7a6a;font-size:1.1rem;margin-top:2px;">&#10003;</span>
+            <span style="font-size:0.95rem;color:#2a3f52;">Policy submission support with quantified economic impact</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:#1a7a6a;font-size:1.1rem;margin-top:2px;">&#10003;</span>
+            <span style="font-size:0.95rem;color:#2a3f52;">Sector-specific dashboard for member communications</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:#1a7a6a;font-size:1.1rem;margin-top:2px;">&#10003;</span>
+            <span style="font-size:0.95rem;color:#2a3f52;">Quarterly briefings for your board or executive committee</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:#1a7a6a;font-size:1.1rem;margin-top:2px;">&#10003;</span>
+            <span style="font-size:0.95rem;color:#2a3f52;">Custom scenario modelling for your sector's specific concerns</span>
+          </li>
+        </ul>
+        <a href="mailto:tac@macrolab.sg" style="display:inline-block;background:#0f1f2e;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:0.95rem;">Request TAC Partnership &rarr;</a>
       </div>
       <div>
-        <div class="sslo-card">
-          <div class="sslo-header">SSLO — Sector Labour Stress Monitor</div>
-          <div class="sslo-metric"><span class="sslo-label">Construction</span><span class="sslo-val"><span class="sslo-stress badge-elevated">Critical</span></span></div>
-          <div class="sslo-metric"><span class="sslo-label">F&B & Retail</span><span class="sslo-val"><span class="sslo-stress badge-elevated">High</span></span></div>
-          <div class="sslo-metric"><span class="sslo-label">Logistics</span><span class="sslo-val"><span class="sslo-stress badge-elevated">High</span></span></div>
-          <div class="sslo-metric"><span class="sslo-label">Manufacturing</span><span class="sslo-val"><span class="sslo-stress badge-rising">Moderate</span></span></div>
-          <div class="sslo-metric"><span class="sslo-label">Professional Svcs</span><span class="sslo-val"><span class="sslo-stress badge-rising">Rising</span></span></div>
-          <div class="sslo-metric"><span class="sslo-label">Financial Services</span><span class="sslo-val"><span class="sslo-stress badge-moderate">Stable</span></span></div>
-          <div class="sslo-metric"><span class="sslo-label">Biomedical</span><span class="sslo-val"><span class="sslo-stress badge-moderate">Stable</span></span></div>
-          <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:rgba(255,255,255,0.4);">SSLO updated weekly · Based on MacroLab proprietary framework</div>
+        <div style="background:#fff;border:1px solid #dce4ea;border-radius:12px;padding:32px;">
+          <div style="font-size:0.8rem;color:#6a8595;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;">Current TAC Partners</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;align-items:center;gap:14px;padding:14px;background:#f7f9fb;border-radius:8px;">
+              <div style="width:40px;height:40px;background:#1a7a6a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;">F&amp;B</div>
+              <div>
+                <div style="font-size:0.9rem;font-weight:600;color:#0f1f2e;">Restaurant Association of Singapore</div>
+                <div style="font-size:0.8rem;color:#5a7585;">Weekly member briefings &middot; Policy submissions</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;padding:14px;background:#f7f9fb;border-radius:8px;">
+              <div style="width:40px;height:40px;background:#1a4a7a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;">MFG</div>
+              <div>
+                <div style="font-size:0.9rem;font-weight:600;color:#0f1f2e;">Singapore Manufacturing Federation</div>
+                <div style="font-size:0.8rem;color:#5a7585;">Sector dashboard &middot; Quarterly board briefings</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;padding:14px;background:#f7f9fb;border-radius:8px;">
+              <div style="width:40px;height:40px;background:#6a3a9a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;">RTL</div>
+              <div>
+                <div style="font-size:0.9rem;font-weight:600;color:#0f1f2e;">Retail and E-Commerce Alliance</div>
+                <div style="font-size:0.8rem;color:#5a7585;">Consumer demand signals &middot; Member newsletter</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid #eef1f4;font-size:0.82rem;color:#6a8595;text-align:center;">Confidential &middot; Names illustrative for prototype</div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
-<hr class="section-rule">
-
-<!-- EXECUTIVE BRIEFINGS -->
-<section class="briefings-section" id="briefings">
-  <div class="container">
-    <div class="section-label">Executive Briefings</div>
-    <h2 class="section-title">MacroLab Intelligence Reports</h2>
-    <p class="section-intro">Structured intelligence for Singapore's business leadership — translating macro signals into decision-relevant analysis for boards, C-suites, and trade association leadership.</p>
-    <div class="briefings-grid">
-      <div class="briefing-card">
-        <div class="briefing-tag">Regime Monitor · May 2025</div>
-        <h3>When Three Loops Interact: Reading Singapore's Current Macro Regime</h3>
-        <p>An analysis of how geopolitical fragmentation, China overcapacity, and Singapore's labour market tightening are creating a compounding pressure regime unlike previous cycles.</p>
-        <div class="briefing-meta">
-          <span>MacroLab Singapore</span>
-          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
-        </div>
-      </div>
-      <div class="briefing-card">
-        <div class="briefing-tag">China Engine · April 2025</div>
-        <h3>China's Overcapacity Loop: What Singapore Manufacturers Need to Know</h3>
-        <p>A deep-dive into the structural dynamics of Chinese industrial overcapacity and its transmission pathway into Singapore's manufacturing and precision engineering sectors.</p>
-        <div class="briefing-meta">
-          <span>MacroLab Singapore</span>
-          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
-        </div>
-      </div>
-      <div class="briefing-card">
-        <div class="briefing-tag">Labour Dynamics · April 2025</div>
-        <h3>The SSLO Signal: AI Displacement and Wage Pressure as Interacting Forces</h3>
-        <p>MacroLab's inaugural Singapore Sector Labour Outlook — tracking the early signals of AI-driven role displacement alongside the continuing tightness of Singapore's PMET labour market.</p>
-        <div class="briefing-meta">
-          <span>MacroLab Singapore</span>
-          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
-        </div>
-      </div>
-      <div class="briefing-card">
-        <div class="briefing-tag">Policy Lens · March 2025</div>
-        <h3>MAS and the Transmission Filter: How FX Policy Shapes Business Exposure</h3>
-        <p>An examination of how MAS's exchange rate framework mediates global inflationary pressure — and what the current SGD NEER positioning means for import-dependent businesses.</p>
-        <div class="briefing-meta">
-          <span>MacroLab Singapore</span>
-          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
-        </div>
-      </div>
-      <div class="briefing-card">
-        <div class="briefing-tag">Tipping Points · March 2025</div>
-        <h3>Non-Linear Thinking for Singapore Business Leaders</h3>
-        <p>A primer on why conventional forecasting fails at inflection points — and how MacroLab's threshold-based approach to macro interpretation provides earlier, more actionable signals.</p>
-        <div class="briefing-meta">
-          <span>MacroLab Singapore</span>
-          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
-        </div>
-      </div>
-      <div class="briefing-card">
-        <div class="briefing-tag">Sector Intelligence · February 2025</div>
-        <h3>Logistics Under Compound Stress: A Sector Intelligence Pack</h3>
-        <p>Comprehensive sector analysis for Singapore's logistics industry — covering the interacting pressures of energy volatility, Red Sea rerouting, labour shortages, and AI-driven efficiency transformation.</p>
-        <div class="briefing-meta">
-          <span>MacroLab Singapore</span>
-          <a href="#newsletter" class="read-more">Subscribe to Access →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- TIPPING POINT WATCH -->
-<section class="tipping-section" id="tipping">
-  <div class="container">
-    <div class="section-label">Tipping Point Watch</div>
-    <h2 class="section-title">Macro Regime Threshold Monitor</h2>
-    <p class="section-intro">MacroLab continuously monitors the system for conditions where gradual pressure is approaching non-linear transition. These are not predictions — they are structural watch conditions requiring elevated vigilance.</p>
-    <div class="tipping-list">
-      <div class="tipping-item">
-        <div class="tipping-severity sev-critical">Critical</div>
-        <div class="tipping-content">
-          <h4>China Export Deflation Threshold</h4>
-          <p>Chinese manufacturing export prices approaching level where Singapore sector price competition becomes structurally untenable. Threshold condition: 3 consecutive months of >5% YoY decline in Chinese industrial export prices.</p>
-        </div>
-        <div class="tipping-date">Active · Since Mar 2025</div>
-      </div>
-      <div class="tipping-item">
-        <div class="tipping-severity sev-critical">Critical</div>
-        <div class="tipping-content">
-          <h4>Construction Sector Labour Collapse</h4>
-          <p>Singapore construction sector operating at chronic manpower deficit. Any additional demand shock (infrastructure pipeline acceleration) combined with current foreign worker quota constraints creates compounding delivery risk.</p>
-        </div>
-        <div class="tipping-date">Active · Since Jan 2025</div>
-      </div>
-      <div class="tipping-item">
-        <div class="tipping-severity sev-elevated">Elevated</div>
-        <div class="tipping-content">
-          <h4>US-China Tariff Escalation Loop</h4>
-          <p>Current tariff ratchet trajectory approaching threshold where Singapore's role as neutral trade corridor is structurally challenged by US secondary tariff pressure on ASEAN trade intermediation.</p>
-        </div>
-        <div class="tipping-date">Watch · Since Feb 2025</div>
-      </div>
-      <div class="tipping-item">
-        <div class="tipping-severity sev-elevated">Elevated</div>
-        <div class="tipping-content">
-          <h4>PMET Market Wage Spiral Risk</h4>
-          <p>Singapore PMET talent scarcity combined with AI-driven productivity differentiation creating conditions for wage bifurcation — AI-augmented roles versus non-augmented roles diverging structurally.</p>
-        </div>
-        <div class="tipping-date">Watch · Since Apr 2025</div>
-      </div>
-      <div class="tipping-item">
-        <div class="tipping-severity sev-watch">Watch</div>
-        <div class="tipping-content">
-          <h4>Fed Rate Persistence & SGD Carry Pressure</h4>
-          <p>Prolonged US rate elevation maintaining carry trade dynamics that create intermittent SGD pressure. Not yet at threshold for MAS policy response but warrants monitoring as global rate differential persists.</p>
-        </div>
-        <div class="tipping-date">Monitor · Since Oct 2024</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
-
-<!-- TAC MEMBER PORTAL -->
-<section class="tac-section" id="tac">
-  <div class="container">
-    <div class="tac-grid">
-      <div>
-        <div class="section-label" style="color:var(--teal-light);">Trade Association & Chamber Member Portal</div>
-        <h2 class="section-title" style="color:var(--white);">Intelligence designed for trade associations and their members</h2>
-        <p class="section-intro" style="color:rgba(255,255,255,0.55);">MacroLab's institutional offering gives trade associations the macro intelligence infrastructure to brief their boards, inform their members, and engage government with evidence-based positioning.</p>
-        <div class="tac-features">
-          <div class="tac-feature">
-            <div class="tac-feature-icon">01</div>
-            <div><h4>Sector Intelligence Packs</h4><p>Monthly deep-dive briefings specific to your sector — translating macro signals into operational and strategic implications for your members.</p></div>
-          </div>
-          <div class="tac-feature">
-            <div class="tac-feature-icon">02</div>
-            <div><h4>Board-Ready Executive Reports</h4><p>Formatted for Trade Association board consumption — concise, authoritative, actionable. Designed to inform board-level strategic discussion without requiring macro expertise.</p></div>
-          </div>
-          <div class="tac-feature">
-            <div class="tac-feature-icon">03</div>
-            <div><h4>Member Briefing Support</h4><p>MacroLab provides TAC secretariats with briefing materials, talking points, and Q&A support for member education sessions on macro-business developments.</p></div>
-          </div>
-          <div class="tac-feature">
-            <div class="tac-feature-icon">04</div>
-            <div><h4>Policy Engagement Intelligence</h4><p>Evidence-based macro analysis to support Trade Association representations to government — grounding advocacy in structured intelligence rather than anecdote.</p></div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="tac-cta-box">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--teal-light);text-transform:uppercase;margin-bottom:16px;">Institutional Enquiries</div>
-          <h3>Request a Sector Intelligence Briefing</h3>
-          <p>MacroLab is currently onboarding Singapore trade association partners for sector intelligence subscriptions. Request a complimentary briefing session for your leadership team.</p>
-          <a href="#newsletter" class="btn-primary" style="display:inline-block;margin-bottom:16px;">Request a Briefing</a>
-          <div style="font-size:11px;color:rgba(255,255,255,0.3);font-family:'DM Mono',monospace;letter-spacing:0.05em;">Targeting: Singapore Trade Associations & Chambers · Enterprise Strategy Teams · CFO Offices · Policy Units</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-rule">
 
 <!-- SCENARIO SIMULATOR -->
-<section class="scenario-section" id="scenario">
-  <div class="container">
-    <div class="section-label">Scenario Simulator</div>
-    <h2 class="section-title">What-If Intelligence for Singapore Business</h2>
-    <p class="section-intro">MacroLab's scenario framework maps how specific macro shocks would transmit through Singapore's economy — across pressure dimensions, policy responses, and sector exposures.</p>
+<section id="simulator" style="background:#0f1f2e;padding:80px 24px;color:#fff;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:0.75rem;color:#4ecdc4;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Interactive Tool</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#ffffff;margin-bottom:16px;">Scenario Simulator</h2>
+      <p style="font-size:1rem;color:#b8cdd8;max-width:600px;margin:0 auto;">Select a scenario to see how different macro environments play out for Singapore SMEs. Built on MacroLab's probabilistic signal model.</p>
+    </div>
 
-    <div class="scenario-ui">
-      <div class="scenario-sidebar">
-        <div class="scenario-sidebar-label">Select Scenario</div>
-        <div class="scenario-option active" onclick="selectScenario(this,'A')">US-China Tariff Escalation to 145%+</div>
-        <div class="scenario-option" onclick="selectScenario(this,'B')">China Overcapacity Shock — Manufacturing</div>
-        <div class="scenario-option" onclick="selectScenario(this,'C')">Fed Rate Hold — Prolonged High-for-Longer</div>
-        <div class="scenario-option" onclick="selectScenario(this,'D')">Red Sea Crisis — Logistics Disruption</div>
-        <div class="scenario-option" onclick="selectScenario(this,'E')">AI Displacement — Professional Services Wave</div>
+    <div style="display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:10px;" id="sim-buttons">
+        <button onclick="runScenario('soft')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:14px 18px;border-radius:8px;text-align:left;cursor:pointer;font-size:0.9rem;transition:all 0.2s;">
+          <div style="font-weight:700;margin-bottom:4px;">&#127775; Soft Landing</div>
+          <div style="font-size:0.8rem;color:#8ba8b5;">Inflation eases, rates fall, demand holds</div>
+        </button>
+        <button onclick="runScenario('stagflation')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:14px 18px;border-radius:8px;text-align:left;cursor:pointer;font-size:0.9rem;transition:all 0.2s;">
+          <div style="font-weight:700;margin-bottom:4px;">&#128293; Stagflation Squeeze</div>
+          <div style="font-size:0.8rem;color:#8ba8b5;">High inflation, weak growth, tight labour</div>
+        </button>
+        <button onclick="runScenario('china')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:14px 18px;border-radius:8px;text-align:left;cursor:pointer;font-size:0.9rem;transition:all 0.2s;">
+          <div style="font-weight:700;margin-bottom:4px;">&#127758; China Demand Surge</div>
+          <div style="font-size:0.8rem;color:#8ba8b5;">Chinese consumers return, ASEAN trade lifts</div>
+        </button>
+        <button onclick="runScenario('supply')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:14px 18px;border-radius:8px;text-align:left;cursor:pointer;font-size:0.9rem;transition:all 0.2s;">
+          <div style="font-weight:700;margin-bottom:4px;">&#9935; Supply Shock</div>
+          <div style="font-size:0.8rem;color:#8ba8b5;">Shipping disruption + energy spike</div>
+        </button>
+        <button onclick="runScenario('tightening')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:14px 18px;border-radius:8px;text-align:left;cursor:pointer;font-size:0.9rem;transition:all 0.2s;">
+          <div style="font-weight:700;margin-bottom:4px;">&#128204; MAS Policy Tightening</div>
+          <div style="font-size:0.8rem;color:#8ba8b5;">SGD strengthens, credit tightens</div>
+        </button>
       </div>
-      <div class="scenario-main">
-        <div class="scenario-main-label">MacroLab Scenario Analysis</div>
-        <div class="scenario-output" id="scenario-output">
-          <strong style="color:var(--ink);">Scenario: US-China Tariff Escalation to 145%+</strong><br><br>
-          A further escalation in US-China tariffs beyond current levels would activate three simultaneous transmission pathways into Singapore's economy. First, trade flow disruption: Singapore's role as an ASEAN trade hub creates direct exposure as Chinese exporters accelerate ASEAN rerouting, creating both opportunity (higher port throughput) and risk (secondary tariff scrutiny). Second, manufacturing margin compression: Singapore's precision engineering and electronics manufacturing sectors face accelerating upstream cost pressure as Chinese component suppliers adjust pricing structures. Third, demand-side deceleration in Singapore's financial services sector as regional corporate investment decisions are deferred pending trade policy clarity.
+
+      <div id="sim-output" style="background:#f5f7f9;border-radius:10px;padding:32px;min-height:320px;color:#1a2e3d;">
+        <div style="color:#4a6275;font-size:1rem;text-align:center;padding:60px 0;">&#8592; Select a scenario to see the analysis</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function runScenario(key) {
+  const scenarios = {
+    soft: {
+      title: '&#127775; Soft Landing Scenario',
+      prob: '42% probability',
+      color: '#27ae60',
+      bgColor: '#e8f8f0',
+      summary: 'Inflation falls to 2.5%, MAS eases in Q4, GDP growth holds at 2.8%. Best outcome for SMEs in 18 months.',
+      impacts: [
+        { area: 'Costs', signal: 'EASING', color: '#27ae60', bg: '#e8f8f0', text: 'Import costs stabilise. Freight rates return to 2023 levels by Q3.' },
+        { area: 'Demand', signal: 'RISING', color: '#27ae60', bg: '#e8f8f0', text: 'Consumer confidence recovers. B2B order books improve from Q3.' },
+        { area: 'Labour', signal: 'STABLE', color: '#2980b9', bg: '#e8f0fb', text: 'Wage pressures moderate. PWM increases proceed but at manageable pace.' },
+        { area: 'Credit', signal: 'EASING', color: '#27ae60', bg: '#e8f8f0', text: 'Refinancing window opens. SME loan spreads narrow by 40-60bps.' }
+      ],
+      action: 'Invest now ahead of the recovery. Lock in current supplier pricing. Expand cautiously.'
+    },
+    stagflation: {
+      title: '&#128293; Stagflation Squeeze Scenario',
+      prob: '28% probability',
+      color: '#c0392b',
+      bgColor: '#fdecea',
+      summary: 'Inflation stays above 4%, growth slows to 1.2%, labour market tightens. Most difficult environment for SME margins.',
+      impacts: [
+        { area: 'Costs', signal: 'HIGH', color: '#c0392b', bg: '#fdecea', text: 'Input costs remain elevated. No relief from import prices or wages through year-end.' },
+        { area: 'Demand', signal: 'FALLING', color: '#c0392b', bg: '#fdecea', text: 'Consumer spending contracts. Discretionary F&B and retail hit hardest.' },
+        { area: 'Labour', signal: 'RISING', color: '#e67e22', bg: '#fef3e2', text: 'Wage floor increases compound with tight supply of workers. Overtime costs surge.' },
+        { area: 'Credit', signal: 'TIGHT', color: '#c0392b', bg: '#fdecea', text: 'MAS holds rates. Business loan approval rates fall. Working capital stress rises.' }
+      ],
+      action: 'Protect margins aggressively. Defer non-essential capex. Apply for government productivity grants now.'
+    },
+    china: {
+      title: '&#127758; China Demand Surge Scenario',
+      prob: '18% probability',
+      color: '#2980b9',
+      bgColor: '#e8f0fb',
+      summary: 'Chinese domestic recovery accelerates, tourism to Singapore surges 35%, ASEAN trade volumes lift across the board.',
+      impacts: [
+        { area: 'Tourism', signal: 'RISING', color: '#27ae60', bg: '#e8f8f0', text: 'Orchard and Marina Bay F&B and retail see 25-40% revenue uplift. Hotel rates spike.' },
+        { area: 'Trade', signal: 'RISING', color: '#27ae60', bg: '#e8f8f0', text: 'Re-export volumes through Singapore port increase. Logistics and warehousing demand rises.' },
+        { area: 'Costs', signal: 'WATCH', color: '#e67e22', bg: '#fef3e2', text: 'Higher demand creates own cost pressure. Labour shortages worsen in hospitality.' },
+        { area: 'FX', signal: 'MIXED', color: '#2980b9', bg: '#e8f0fb', text: 'SGD/CNY dynamics shift. USD weakens slightly. Net effect positive for importers.' }
+      ],
+      action: 'Position for Chinese tourist traffic now. Hire and stock ahead of the surge. Raise prices in tourist-facing channels.'
+    },
+    supply: {
+      title: '&#9935; Supply Shock Scenario',
+      prob: '8% probability',
+      color: '#c0392b',
+      bgColor: '#fdecea',
+      summary: 'Major shipping route disruption plus energy price spike. Singapore as a trade hub is directly exposed.',
+      impacts: [
+        { area: 'Imports', signal: 'CRITICAL', color: '#c0392b', bg: '#fdecea', text: 'Lead times double for key categories. Spot freight rates triple from current levels.' },
+        { area: 'Energy', signal: 'HIGH', color: '#c0392b', bg: '#fdecea', text: 'Electricity and fuel costs surge. Manufacturing and logistics margins collapse.' },
+        { area: 'Inventory', signal: 'WATCH', color: '#e67e22', bg: '#fef3e2', text: 'Businesses with buffer stock gain significant competitive advantage.' },
+        { area: 'Policy', signal: 'RESPONSE', color: '#2980b9', bg: '#e8f0fb', text: 'Government likely to activate cost-of-living assistance packages within 6-8 weeks.' }
+      ],
+      action: 'Build inventory buffers immediately for critical inputs. Identify local or regional substitutes. Apply for government supply chain resilience grants.'
+    },
+    tightening: {
+      title: '&#128204; MAS Policy Tightening Scenario',
+      prob: '15% probability',
+      color: '#6a3a9a',
+      bgColor: '#f3eef8',
+      summary: 'MAS further tightens monetary policy via SGD appreciation slope. Importers benefit but exporters and debtors face pressure.',
+      impacts: [
+        { area: 'Import Costs', signal: 'EASING', color: '#27ae60', bg: '#e8f8f0', text: 'Stronger SGD reduces cost of imported inputs. F&B and retail importers benefit immediately.' },
+        { area: 'Exports', signal: 'WATCH', color: '#e67e22', bg: '#fef3e2', text: 'Singapore-made goods become more expensive. Regional export competitiveness erodes.' },
+        { area: 'Credit', signal: 'TIGHT', color: '#c0392b', bg: '#fdecea', text: 'Business loan rates stay elevated. Variable-rate borrowers face higher monthly costs.' },
+        { area: 'Property', signal: 'STABLE', color: '#2980b9', bg: '#e8f0fb', text: 'Commercial rents stabilise. No further property cost spike for SME tenants.' }
+      ],
+      action: 'Importers should lock in forward FX contracts now. Exporters should diversify to SGD-priced domestic channels. Refinance variable loans.'
+    }
+  };
+
+  const s = scenarios[key];
+  if (!s) return;
+
+  const impactHTML = s.impacts.map(i =>
+    '<div style="background:' + i.bg + ';border:1px solid ' + i.color + '33;border-radius:8px;padding:16px;margin-bottom:12px;">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+    '<span style="font-weight:700;color:#0f1f2e;font-size:0.9rem;">' + i.area + '</span>' +
+    '<span style="background:' + i.color + ';color:#fff;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700;">' + i.signal + '</span>' +
+    '</div>' +
+    '<p style="font-size:0.85rem;color:#2a3f52;margin:0;line-height:1.5;">' + i.text + '</p>' +
+    '</div>'
+  ).join('');
+
+  document.getElementById('sim-output').innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">' +
+    '<h3 style="font-size:1.15rem;font-weight:700;color:#0f1f2e;margin:0;">' + s.title + '</h3>' +
+    '<span style="background:' + s.bgColor + ';color:' + s.color + ';border-radius:20px;padding:4px 12px;font-size:0.8rem;font-weight:700;white-space:nowrap;">' + s.prob + '</span>' +
+    '</div>' +
+    '<p style="font-size:0.92rem;color:#2a3f52;margin-bottom:20px;line-height:1.6;">' + s.summary + '</p>' +
+    impactHTML +
+    '<div style="background:#0f1f2e;border-radius:8px;padding:16px;margin-top:16px;">' +
+    '<div style="font-size:0.75rem;color:#4ecdc4;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;">Recommended First Action</div>' +
+    '<p style="font-size:0.88rem;color:#e8f0f7;margin:0;line-height:1.5;">' + s.action + '</p>' +
+    '</div>';
+}
+</script>
+
+<!-- HOW MACROLAB WORKS -->
+<section id="how-it-works" style="background:#fff;padding:80px 24px;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:56px;">
+      <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">The Engine</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#0f1f2e;margin-bottom:16px;">How MacroLab Works</h2>
+      <p style="font-size:1rem;color:#3a5568;max-width:600px;margin:0 auto;">Rigorous macro analysis, translated into business decisions. No economics degree required.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0;">
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:flex-start;padding-bottom:40px;position:relative;">
+        <div style="width:48px;height:48px;background:#1a7a6a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;">1</div>
+        <div style="padding-top:8px;">
+          <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">47 signals ingested weekly</h3>
+          <p style="font-size:0.9rem;color:#3a5568;line-height:1.7;">Global freight indices, MAS policy statements, China PMI, Singapore CPI components, sector wage data, regional trade flows, and corporate earnings signals are pulled and processed every week.</p>
         </div>
-        <div class="scenario-implications" id="scenario-implications">
-          <div class="implication-card"><div class="implication-sector">Manufacturing</div><div class="implication-text">Review China-origin procurement. Accelerate supplier diversification to Malaysia, Vietnam, India.</div></div>
-          <div class="implication-card"><div class="implication-sector">Logistics</div><div class="implication-text">Port throughput opportunity. Monitor for US secondary tariff risk on ASEAN-origin goods.</div></div>
-          <div class="implication-card"><div class="implication-sector">Financial Svcs</div><div class="implication-text">Capital allocation decisions likely deferred. Pipeline risk for corporate advisory business.</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:flex-start;padding-bottom:40px;">
+        <div style="width:48px;height:48px;background:#1a4a7a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;">2</div>
+        <div style="padding-top:8px;">
+          <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Transmission pathways mapped</h3>
+          <p style="font-size:0.9rem;color:#3a5568;line-height:1.7;">MacroLab's analytical framework traces how each global signal moves through Singapore's GVC linkages, MAS policy transmission, and sector-specific demand channels &mdash; to your business's cost structure.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:flex-start;padding-bottom:40px;">
+        <div style="width:48px;height:48px;background:#6a3a9a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;">3</div>
+        <div style="padding-top:8px;">
+          <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Probabilistic scenarios computed</h3>
+          <p style="font-size:0.9rem;color:#3a5568;line-height:1.7;">Rather than a single forecast, MacroLab produces probability-weighted scenarios across plausible macro regimes &mdash; giving you a realistic view of the range of outcomes and their likelihood.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:flex-start;padding-bottom:40px;">
+        <div style="width:48px;height:48px;background:#d4831a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;">4</div>
+        <div style="padding-top:8px;">
+          <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Business decisions extracted</h3>
+          <p style="font-size:0.9rem;color:#3a5568;line-height:1.7;">The analytical output is translated into concrete SME-relevant decisions: pricing, hiring, inventory, supplier, and cash flow calls &mdash; specific enough to act on, without requiring economic expertise.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:flex-start;">
+        <div style="width:48px;height:48px;background:#1a7a6a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;">5</div>
+        <div style="padding-top:8px;">
+          <h3 style="font-size:1.05rem;font-weight:700;color:#0f1f2e;margin-bottom:8px;">Delivered to your inbox every Monday</h3>
+          <p style="font-size:0.9rem;color:#3a5568;line-height:1.7;">Your weekly Decision Brief arrives before the business week starts. Two pages. Five decisions. One sector spotlight. Ready to share with your team or board.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="section-rule">
+<!-- METHODOLOGY -->
+<section id="methodology" style="background:#f7f9fb;padding:80px 24px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">For the Rigour-Curious</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#0f1f2e;margin-bottom:16px;">Methodology</h2>
+      <p style="font-size:1rem;color:#3a5568;max-width:600px;margin:0 auto;">MacroLab's analytical framework is built on eight interconnected layers. Each layer is explained below.</p>
+    </div>
 
-<!-- NEWSLETTER -->
-<section class="newsletter-section" id="newsletter">
-  <div class="container">
-    <div class="newsletter-inner">
-      <div>
-        <div class="section-label">MacroLab Briefings</div>
-        <h2 class="section-title">Stay ahead of the macro regime</h2>
-        <p style="font-size:14px;color:var(--slate);margin-bottom:24px;line-height:1.7;">Weekly intelligence for Singapore business leaders — when global pressures begin to interact in non-linear ways, MacroLab subscribers receive structured analysis before it becomes news.</p>
-        <div class="newsletter-form">
-          <input type="email" class="newsletter-input" placeholder="Your business email address">
-          <button class="btn-primary" onclick="handleSubscribe()">Subscribe</button>
+    <div class="method-accordion" style="display:flex;flex-direction:column;gap:10px;">
+
+      <details>
+        <summary>Layer 1 &mdash; Global Value Chain (GVC) Signal Engine</summary>
+        <div class="acc-body">
+          MacroLab monitors Singapore's position in global value chains across electronics, precision engineering, chemicals, and food manufacturing. The GVC engine tracks upstream disruption signals &mdash; such as Chinese factory output changes, Malaysian component lead times, and Batam industrial capacity &mdash; and maps their transmission speed and magnitude to Singapore SME input costs. This allows early warning of cost shocks 4&ndash;8 weeks before they appear in CPI data.
         </div>
-        <div class="newsletter-note">For Trade Association leadership · Business owners · Policymakers</div>
+      </details>
+
+      <details>
+        <summary>Layer 2 &mdash; MAS Monetary Policy Transmission</summary>
+        <div class="acc-body">
+          Singapore's monetary policy operates through exchange rate management rather than interest rates. MacroLab models how MAS S$NEER slope adjustments affect import prices, export competitiveness, and borrowing costs for SGD-denominated SME debt. The model incorporates MAS policy reaction functions estimated from historical intervention patterns, allowing scenario analysis around likely policy responses to inflationary or recessionary shocks.
+        </div>
+      </details>
+
+      <details>
+        <summary>Layer 3 &mdash; China Macro Linkage Model</summary>
+        <div class="acc-body">
+          China accounts for approximately 13% of Singapore's total trade and significantly larger shares in specific sectors. MacroLab's China module integrates PMI data, property sector health indicators, consumer confidence indices, and outbound tourism flows to project demand spillovers into Singapore. The model separately tracks the manufacturing supply chain channel (B2B) and the consumer demand channel (B2C tourism and retail).
+        </div>
+      </details>
+
+      <details>
+        <summary>Layer 4 &mdash; Singapore Domestic Policy Lens</summary>
+        <div class="acc-body">
+          Singapore's government actively uses fiscal and regulatory tools that directly affect SME operating costs. MacroLab tracks Progressive Wage Model expansions, GST treatment changes, Enterprise Development Grant eligibility windows, foreign worker quota policies, and CPF rate adjustments. Each policy signal is mapped to its cost impact on relevant sectors with a 3&ndash;12 month forward projection.
+        </div>
+      </details>
+
+      <details>
+        <summary>Layer 5 &mdash; Corporate Reality Signals</summary>
+        <div class="acc-body">
+          Macro models anchored only in government data miss the ground-level reality of business decisions. MacroLab supplements official data with corporate earnings signals, business sentiment surveys, trade association member feedback, and commercial property transaction data. These signals are used to calibrate the macro model's sector-specific outputs and to detect divergences between policy assumptions and actual business behaviour.
+        </div>
+      </details>
+
+      <details>
+        <summary>Layer 6 &mdash; Probabilistic Signal Architecture</summary>
+        <div class="acc-body">
+          MacroLab does not produce single-point forecasts. Instead, the signal architecture generates probability distributions across plausible macro regimes, weighted by current signal strength. This allows users to understand not just the most likely outcome, but the range of plausible outcomes and their relative likelihood &mdash; a more honest representation of macroeconomic uncertainty than a single number.
+        </div>
+      </details>
+
+      <details>
+        <summary>Layer 7 &mdash; Singapore-Specific Labour Signal Output (SSLO)</summary>
+        <div class="acc-body">
+          Labour costs are the largest operating cost for most Singapore SMEs. The SSLO layer integrates Ministry of Manpower data, NTUC wage trend reports, sector-specific job vacancy indices, foreign worker dependency ratios, and Progressive Wage Model expansion schedules. The output is a forward-looking labour cost pressure index by sector, updated monthly and incorporated into each sector playbook.
+        </div>
+      </details>
+
+      <details>
+        <summary>Layer 8 &mdash; Tipping Point Detection Logic</summary>
+        <div class="acc-body">
+          Many macro regime shifts are non-linear &mdash; conditions can appear stable until a threshold is crossed, at which point the system shifts rapidly. MacroLab's tipping point layer monitors composite indicator thresholds that historically precede regime changes: freight rate acceleration, credit spread widening, FX volatility clustering, and consumer confidence cliff edges. When multiple thresholds are simultaneously approached, the system elevates its scenario probability weights accordingly.
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- DECISION BRIEFS -->
+<section id="briefings" style="background:#fff;padding:80px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:0.75rem;color:#1a7a6a;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Published Intelligence</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#0f1f2e;margin-bottom:16px;">Decision Briefs</h2>
+      <p style="font-size:1rem;color:#3a5568;max-width:580px;margin:0 auto;">Concise, decision-focused intelligence for Singapore SME owners and trade association leaders. Each brief is two pages and answers a specific business question.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
+
+      <div style="border:1px solid #dce4ea;border-radius:10px;overflow:hidden;">
+        <div style="background:#0f1f2e;padding:20px 24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">May 2026 &middot; Pricing</div>
+          <h3 style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;margin:0;">Should Singapore F&amp;B operators raise prices before Q3?</h3>
+        </div>
+        <div style="padding:20px 24px;">
+          <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Analyses import cost trajectory, PWM wage floor timing, and tourist demand elasticity to give a clear pricing window recommendation.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">F&amp;B</span>
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Pricing</span>
+            <span style="background:#fdecea;color:#c0392b;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Urgent</span>
+          </div>
+          <a href="#subscribe" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Subscribe to access &rarr;</a>
+        </div>
       </div>
-      <div>
-        <div class="newsletter-pillars">
-          <div class="pillar">
-            <div class="pillar-marker">W01</div>
-            <div class="pillar-text"><strong>Signal Intelligence Digest</strong> — Weekly synthesis of global macro signals and their Singapore transmission pathways.</div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-marker">W02</div>
-            <div class="pillar-text"><strong>Pressure Monitor Update</strong> — Bi-weekly update to the MacroLab pressure dashboard — what has moved and why it matters.</div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-marker">W03</div>
-            <div class="pillar-text"><strong>Tipping Point Watch</strong> — Alerts when a monitored threshold condition changes in severity or classification.</div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-marker">W04</div>
-            <div class="pillar-text"><strong>Monthly Regime Briefing</strong> — Full executive briefing on Singapore's current macro operating environment — suitable for board distribution.</div>
-          </div>
+
+      <div style="border:1px solid #dce4ea;border-radius:10px;overflow:hidden;">
+        <div style="background:#1a3a4f;padding:20px 24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">May 2026 &middot; Supply Chain</div>
+          <h3 style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;margin:0;">How exposed is your supply chain to Red Sea disruption?</h3>
         </div>
+        <div style="padding:20px 24px;">
+          <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Maps Singapore SME exposure by sector and identifies alternative sourcing strategies with lead time and cost comparisons.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Manufacturing</span>
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Logistics</span>
+          </div>
+          <a href="#subscribe" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Subscribe to access &rarr;</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid #dce4ea;border-radius:10px;overflow:hidden;">
+        <div style="background:#1a3a4f;padding:20px 24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">April 2026 &middot; Hiring</div>
+          <h3 style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;margin:0;">Is now the right time to expand headcount in Singapore?</h3>
+        </div>
+        <div style="padding:20px 24px;">
+          <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Labour market analysis across five sectors with PWM implications, quota projections, and a hire-now vs hire-later decision framework.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">All Sectors</span>
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Hiring</span>
+          </div>
+          <a href="#subscribe" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Subscribe to access &rarr;</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid #dce4ea;border-radius:10px;overflow:hidden;">
+        <div style="background:#1a3a4f;padding:20px 24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">April 2026 &middot; Financing</div>
+          <h3 style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;margin:0;">Using the Enterprise Financing Scheme before the window closes</h3>
+        </div>
+        <div style="padding:20px 24px;">
+          <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">Explains current EFS eligibility, application process, and how to align financing needs with the current macro window before MAS rate outlook shifts.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">SME Finance</span>
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Cash Flow</span>
+          </div>
+          <a href="#subscribe" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Subscribe to access &rarr;</a>
+        </div>
+      </div>
+
+      <div style="border:1px solid #dce4ea;border-radius:10px;overflow:hidden;">
+        <div style="background:#1a3a4f;padding:20px 24px;">
+          <div style="font-size:0.75rem;color:#4ecdc4;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">March 2026 &middot; FX &amp; Trade</div>
+          <h3 style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;margin:0;">SGD/USD outlook and what it means for your import costs</h3>
+        </div>
+        <div style="padding:20px 24px;">
+          <p style="font-size:0.88rem;color:#3a5568;line-height:1.6;margin-bottom:16px;">FX scenario analysis with practical implications for importers. Includes forward contract strategy guidance without financial advice.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">Import-Heavy</span>
+            <span style="background:#f0f4f7;color:#3a5568;border-radius:4px;padding:3px 8px;font-size:0.75rem;">FX</span>
+          </div>
+          <a href="#subscribe" style="color:#1a7a6a;font-size:0.88rem;font-weight:600;text-decoration:none;">Subscribe to access &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SUBSCRIBE -->
+<section id="subscribe" style="background:linear-gradient(135deg,#0f1f2e 0%,#1a3a4f 100%);padding:80px 24px;text-align:center;color:#fff;">
+  <div style="max-width:680px;margin:0 auto;">
+    <div style="font-size:0.75rem;color:#4ecdc4;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;">Stay Ahead</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#ffffff;margin-bottom:20px;">Get the Weekly Decision Brief</h2>
+    <p style="font-size:1rem;color:#b8cdd8;line-height:1.7;margin-bottom:40px;">Every Monday morning: five macro-to-business decisions, one sector spotlight, and the week's pressure reading. Written for Singapore SME owners. Free for early subscribers.</p>
+    <form style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;" onsubmit="event.preventDefault(); document.getElementById('sub-confirm').style.display='block'; this.style.display='none';">
+      <input type="email" placeholder="Your business email" required style="padding:14px 20px;border-radius:6px;border:none;font-size:1rem;min-width:280px;color:#0f1f2e;background:#fff;">
+      <select style="padding:14px 20px;border-radius:6px;border:none;font-size:0.95rem;color:#0f1f2e;background:#fff;">
+        <option value="">Your sector</option>
+        <option>Food &amp; Beverage</option>
+        <option>Retail &amp; E-commerce</option>
+        <option>Manufacturing &amp; Engineering</option>
+        <option>Hospitality &amp; Tourism</option>
+        <option>Professional Services &amp; Tech</option>
+        <option>Logistics &amp; Trade</option>
+        <option>Trade Association / Chamber</option>
+      </select>
+      <button type="submit" style="background:#1a7a6a;color:#fff;padding:14px 28px;border-radius:6px;border:none;font-weight:700;font-size:1rem;cursor:pointer;">Subscribe Free &rarr;</button>
+    </form>
+    <div id="sub-confirm" style="display:none;background:rgba(26,122,106,0.2);border:1px solid rgba(26,122,106,0.4);border-radius:8px;padding:20px;color:#4ecdc4;font-weight:600;font-size:1rem;">
+      &#10003; You're on the list. First brief arrives Monday.
+    </div>
+    <p style="font-size:0.82rem;color:#5a7585;margin-top:16px;">No spam. Unsubscribe anytime. Your data is not shared.</p>
+    <div style="margin-top:48px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:4px;">47</div>
+        <div style="font-size:0.82rem;color:#7a9baa;">Macro signals tracked</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:4px;">6</div>
+        <div style="font-size:0.82rem;color:#7a9baa;">Sectors covered</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:4px;">Weekly</div>
+        <div style="font-size:0.82rem;color:#7a9baa;">Brief cadence</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:4px;">2 min</div>
+        <div style="font-size:0.82rem;color:#7a9baa;">Read time</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BACK TO TOP BUTTON -->
-<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-  ↑
-</button>
-
-
-<footer>
-  <div class="container">
-    <div class="footer-inner">
+<!-- FOOTER -->
+<footer style="background:#080f18;padding:48px 24px 32px;color:#5a7585;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;">
       <div>
-        <div class="footer-mark">Macro<span>Lab</span> Singapore</div>
-        <div style="margin-top:4px;color:rgba(255,255,255,0.4);font-size:12px;">Transmission &amp; Decision Intelligence for Singapore Business</div>
-        <div style="margin-top:4px;color:rgba(255,255,255,0.25);font-size:11px;">© 2025 GlobaSense Pte Ltd</div>
+        <a href="#" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#fff;text-decoration:none;">MacroLab<span style="color:#1a7a6a;">.sg</span></a>
+        <p style="font-size:0.85rem;color:#4a6275;line-height:1.7;margin-top:12px;max-width:300px;">Macro intelligence for Singapore SMEs and trade associations. Turning complex economics into clear business decisions.</p>
+        <p style="font-size:0.8rem;color:#3a5060;margin-top:12px;">&#9993; hello@macrolab.sg</p>
       </div>
-      <div class="footer-links">
-        <a href="#signals">Dashboard</a>
-        <a href="#framework">Framework</a>
-        <a href="#briefings">Briefings</a>
-        <a href="#tac">TAC Portal</a>
-        <a href="#newsletter">Subscribe</a>
+      <div>
+        <div style="font-size:0.75rem;color:#3a5060;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Platform</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="#sme-pressure" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">SME Pressure Monitor</a></li>
+          <li><a href="#playbooks" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Sector Playbooks</a></li>
+          <li><a href="#simulator" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Scenario Simulator</a></li>
+          <li><a href="#briefings" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Decision Briefs</a></li>
+        </ul>
       </div>
+      <div>
+        <div style="font-size:0.75rem;color:#3a5060;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">For TACs</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="#tac" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">TAC Intelligence Portal</a></li>
+          <li><a href="mailto:tac@macrolab.sg" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Request Partnership</a></li>
+          <li><a href="#methodology" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Methodology</a></li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:0.75rem;color:#3a5060;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Subscribe</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="#subscribe" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Weekly Decision Brief</a></li>
+          <li><a href="mailto:hello@macrolab.sg" style="color:#5a7585;text-decoration:none;font-size:0.88rem;">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <p style="font-size:0.8rem;color:#3a5060;margin:0;">&copy; 2026 MacroLab Singapore. All rights reserved. Not financial advice.</p>
+      <p style="font-size:0.8rem;color:#3a5060;margin:0;">Built for Singapore SMEs &middot; Powered by macro intelligence</p>
     </div>
   </div>
 </footer>
 
+<!-- BACK TO TOP -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top" style="position:fixed;bottom:120px;right:32px;background:#1a7a6a;color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.25);display:none;z-index:999;align-items:center;justify-content:center;">&#8679;</button>
+
 <script>
-  // Scenario simulator
-  const scenarios = {
-    A: {
-      title: 'US-China Tariff Escalation to 145%+',
-      body: 'A further escalation in US-China tariffs beyond current levels would activate three simultaneous transmission pathways into Singapore\'s economy. First, trade flow disruption: Singapore\'s role as an ASEAN trade hub creates direct exposure as Chinese exporters accelerate ASEAN rerouting, creating both opportunity (higher port throughput) and risk (secondary tariff scrutiny). Second, manufacturing margin compression: Singapore\'s precision engineering and electronics manufacturing sectors face accelerating upstream cost pressure as Chinese component suppliers adjust pricing structures. Third, demand-side deceleration in Singapore\'s financial services sector as regional corporate investment decisions are deferred pending trade policy clarity.',
-      implications: [
-        { sector: 'Manufacturing', text: 'Review China-origin procurement. Accelerate supplier diversification to Malaysia, Vietnam, India.' },
-        { sector: 'Logistics', text: 'Port throughput opportunity. Monitor for US secondary tariff risk on ASEAN-origin goods.' },
-        { sector: 'Financial Svcs', text: 'Capital allocation decisions likely deferred. Pipeline risk for corporate advisory business.' }
-      ]
-    },
-    B: {
-      title: 'China Overcapacity Shock — Manufacturing Sector',
-      body: 'A sharp acceleration in Chinese overcapacity-driven export dumping would create structural margin compression across Singapore\'s manufacturing base. Chinese producers in steel, solar panels, electronics, and precision components — operating below cost — would systematically undercut Singapore-based manufacturers in regional and global markets. The shock would be non-linear: once a critical threshold of margin compression is reached, Singapore manufacturers would face simultaneous pressure to reduce capacity, defer capital investment, and restructure workforces. The SSLO would register elevated stress across manufacturing, logistics, and precision engineering simultaneously.',
-      implications: [
-        { sector: 'Precision Eng.', text: 'Immediate margin review required. Identify segments where differentiation insulates from price competition.' },
-        { sector: 'Manufacturing', text: 'Accelerate transition to higher-value segments. Map exposure to Chinese import competition by product line.' },
-        { sector: 'Workforce', text: 'Prepare for workforce restructuring cycles. Engage SNEF and NTUC on retraining pipeline.' }
-      ]
-    },
-    C: {
-      title: 'Fed Rate Hold — Prolonged High-for-Longer',
-      body: 'A prolonged Federal Reserve high-rate environment extending beyond Q4 2025 would sustain several structural pressures on Singapore\'s business environment. Singapore\'s property and construction sectors face extended financing cost elevation. Corporate refinancing cycles for Singapore-listed companies with USD debt expose balance sheets to sustained cost pressure. SME credit conditions — already tightening — would remain constrained. The MAS SGD NEER framework partially insulates Singapore from imported inflation, but cannot offset the business credit cost transmission pathway. Financial services firms with regional deal pipelines would continue to experience subdued M&A and capital markets activity.',
-      implications: [
-        { sector: 'Real Estate', text: 'Defer non-essential capital projects. Lock in fixed-rate financing where available.' },
-        { sector: 'SME Finance', text: 'Monitor credit line accessibility. Enterprise Singapore support schemes likely to expand.' },
-        { sector: 'Capital Mkts', text: 'Regional deal pipeline likely suppressed through H1 2026. Restructuring advisory in demand.' }
-      ]
-    },
-    D: {
-      title: 'Red Sea Crisis — Logistics Disruption',
-      body: 'A sustained Red Sea navigation crisis forcing continued Cape of Good Hope rerouting would create compound stress on Singapore\'s logistics and trade ecosystem. Rerouting adds 10-14 days to Europe-Asia shipping times, inflating freight costs and creating supply chain timing misalignments. Singapore\'s port throughput may benefit from increased ASEAN hub demand, but Singapore-based importers face elevated landed cost structures. Sectors with thin inventory buffers — retail, F&B manufacturing, pharmaceutical distribution — face the highest acute exposure. The feedback loop: elevated logistics costs transmit into margin pressure, which transmits into constrained reinvestment, which transmits into reduced resilience for subsequent shocks.',
-      implications: [
-        { sector: 'Logistics', text: 'Port throughput uplift likely. Freight forwarding margins under pressure from capacity reallocation.' },
-        { sector: 'Retail & F&B', text: 'Build 45-60 day inventory buffers for European-origin inputs. Accelerate supplier diversification.' },
-        { sector: 'Manufacturing', text: 'Review just-in-time assumptions. Extended lead times require buffer stock strategy revision.' }
-      ]
-    },
-    E: {
-      title: 'AI Displacement — Professional Services Wave',
-      body: 'A rapid acceleration of AI capability deployment in professional services would create structural manpower stress across Singapore\'s legal, accounting, financial advisory, and management consulting sectors. Unlike previous technology transitions, AI displacement in professional services is occurring at graduate and experienced professional levels simultaneously — compressing the traditional career ladder. Singapore\'s PMET labour market would experience bifurcation: AI-augmented roles commanding significant wage premiums, non-augmented roles facing displacement or commoditisation. The Trade Association-relevant implication: member associations for professional services sectors will face simultaneous member concerns about competitive displacement, workforce transition costs, and regulatory uncertainty around AI-generated professional outputs.',
-      implications: [
-        { sector: 'Legal & Acctg', text: 'Map AI exposure by service line. Identify differentiation through judgment-intensive, relationship-dependent work.' },
-        { sector: 'HR & Talent', text: 'Accelerate AI-augmentation reskilling programmes. SSLO signals early career role compression.' },
-        { sector: 'TACs', text: 'Professional services Trade Associations should prepare member briefings on AI disruption scenarios specific to their sector.' }
-      ]
-    }
-  };
+// Nav scroll effect
+window.addEventListener('scroll', function() {
+  const nav = document.getElementById('nav');
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 60);
+  
+  // Back to top button visibility
+  const btn = document.getElementById('back-to-top');
+  if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+});
 
-  function selectScenario(el, key) {
-    document.querySelectorAll('.scenario-option').forEach(o => o.classList.remove('active'));
-    el.classList.add('active');
-    const s = scenarios[key];
-    document.getElementById('scenario-output').innerHTML =
-      `<strong style="color:var(--ink);">Scenario: ${s.title}</strong><br><br>${s.body}`;
-    document.getElementById('scenario-implications').innerHTML =
-      s.implications.map(i => `<div class="implication-card"><div class="implication-sector">${i.sector}</div><div class="implication-text">${i.text}</div></div>`).join('');
-  }
-
-  // Subscribe handler
-  function handleSubscribe() {
-    const input = document.querySelector('.newsletter-input');
-    const val = input.value.trim();
-    if (!val || !val.includes('@')) {
-      input.style.borderColor = '#c0392b';
-      setTimeout(() => input.style.borderColor = 'var(--ink)', 1500);
-      return;
-    }
-    input.value = '';
-    input.placeholder = '✓ Subscribed — first briefing coming soon.';
-    input.style.background = '#f0f7f5';
-  }
-
-  // Smooth scroll for nav
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
-    });
+// Mobile hamburger
+const hamburger = document.querySelector('.nav-hamburger');
+const navLinks = document.querySelector('.nav-links');
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', function() {
+    navLinks.classList.toggle('open');
   });
-
-  // Back to top visibility
-  const btt = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    btt.classList.toggle('visible', window.scrollY > 400);
-  });
-
-  // Nav active state on scroll
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav a');
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY + 120;
-    sections.forEach(s => {
-      if (scrollY >= s.offsetTop && scrollY < s.offsetTop + s.offsetHeight) {
-        navLinks.forEach(a => {
-          a.classList.toggle('active', a.getAttribute('href') === '#' + s.id);
-        });
-      }
-    });
-  });
+}
 </script>
+
 </body>
 </html>

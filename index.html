@@ -1157,6 +1157,95 @@
   /* Back to top */
   #back-to-top { bottom:120px !important; }
 
+
+  /* ── NEW NAV ──────────────────────────────────────────── */
+  #nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10, 20, 30, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.3s;
+  }
+  #nav.scrolled {
+    background: rgba(8, 15, 24, 0.98);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: #1a7a6a; }
+  .nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 4px;
+    align-items: center;
+  }
+  .nav-links li a {
+    color: #b8cdd8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-links li a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .nav-links li a.nav-cta {
+    background: #1a7a6a;
+    color: #fff;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 5px;
+    margin-left: 8px;
+  }
+  .nav-links li a.nav-cta:hover { background: #15685a; }
+  .nav-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 8px;
+  }
+  @media (max-width: 900px) {
+    .nav-hamburger { display: block; }
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(8,15,24,0.98);
+      flex-direction: column;
+      padding: 16px;
+      gap: 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-links.open { display: flex; }
+    .nav-links li a { padding: 10px 16px; display: block; width: 100%; }
+  }
 </style>
 </head>
 <body>

@@ -1,1 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacroLab.sg – Firm Intelligence Diagnostic</title>
+<meta name="description" content="Private diagnostic tool linking your firm's unit economics and scale ratios to MacroLab's macro and sector signals. Generate your personalised Firm Intelligence Report.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1923; --ink-mid: #1e2d3d; --ink-light: #2e4057;
+    --teal: #1a7a6e; --teal-light: #22a394;
+    --paper: #f7f5f0; --white: #ffffff;
+    --amber: #c8882a; --red-signal: #c0392b;
+    --green-signal: #1a7a4a; --blue-signal: #1a4a7a;
+    --slate: #4a6075; --muted: #8a9bb0; --rule: #d4dde6;
+    --nav-bg: rgba(10,20,30,0.97); --col-width: 1160px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+  h1,h2,h3 { font-family: 'Playfair Display', serif; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--nav-bg); position: sticky; top: 0; z-index: 200;
+    padding: 0 2rem; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo { color: white; font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 500; text-decoration: none; letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--teal-light); }
+  .nav-back { color: rgba(255,255,255,0.5); font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.15s; }
+  .nav-back:hover { color: white; }
+  .nav-right { display: flex; align-items: center; gap: 1.25rem; }
+  .nav-pill {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 999px; padding: 0.3rem 0.9rem;
+    font-size: 0.78rem; color: rgba(255,255,255,0.8); cursor: pointer;
+    transition: background 0.15s;
+  }
+  .nav-pill:hover { background: rgba(255,255,255,0.12); }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-light); display: inline-block; }
+  .nav-dot.offline { background: var(--muted); }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── LANDING ── */
+  .landing-hero {
+    background: linear-gradient(155deg, #080f18 0%, #0d1f30 55%, #0a1c2e 100%);
+    min-height: calc(100vh - 60px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 4rem 2rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .landing-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 60%, rgba(26,122,110,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em;
+    color: var(--teal-light); text-transform: uppercase;
+    border: 1px solid rgba(34,163,148,0.3); border-radius: 4px; padding: 0.3rem 0.85rem; margin-bottom: 2rem;
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--teal-light); display: inline-block; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:0.4} 50%{opacity:1} }
+  .landing-hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); color: white; line-height: 1.15; max-width: 680px; margin: 0 auto 1.25rem; letter-spacing: -0.02em; }
+  .landing-hero h1 em { font-style: italic; color: var(--teal-light); }
+  .landing-hero p { color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto 2.5rem; font-size: 1rem; line-height: 1.65; }
+  .hero-cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--teal); color: white; border: none; border-radius: 7px;
+    padding: 0.85rem 2rem; font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+    font-weight: 600; cursor: pointer; transition: background 0.18s, transform 0.1s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: transparent; color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 7px; padding: 0.85rem 2rem; font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.18s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.45); color: white; }
+  .hero-proof { margin-top: 3.5rem; display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; }
+  .proof-item { text-align: center; }
+  .proof-val { font-size: 1.6rem; font-weight: 700; color: white; font-family: 'DM Mono', monospace; }
+  .proof-label { font-size: 0.73rem; color: rgba(255,255,255,0.4); margin-top: 0.2rem; letter-spacing: 0.05em; }
+
+  /* ── AUTH MODAL ── */
+  .auth-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(5,12,20,0.88); z-index: 500;
+    align-items: center; justify-content: center;
+    padding: 1.5rem; backdrop-filter: blur(4px);
+  }
+  .auth-overlay.active { display: flex; }
+  .auth-box {
+    background: white; border-radius: 14px; width: 100%; max-width: 460px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4); overflow: hidden;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .auth-top { background: linear-gradient(135deg, #080f18, #0d1f30); padding: 1.75rem 2rem 1.5rem; }
+  .auth-logo { font-family: 'DM Mono', monospace; font-size: 0.92rem; color: white; margin-bottom: 0.85rem; }
+  .auth-logo span { color: var(--teal-light); }
+  .auth-top h2 { font-size: 1.3rem; color: white; margin-bottom: 0.3rem; }
+  .auth-top p { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+  .auth-close { float: right; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+  .auth-tabs { display: flex; border-bottom: 1px solid var(--rule); background: #f9f8f6; }
+  .auth-tab {
+    flex: 1; padding: 0.85rem 1rem; text-align: center; font-size: 0.84rem; font-weight: 500;
+    cursor: pointer; color: var(--slate); border-bottom: 2px solid transparent;
+    transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .auth-tab.active { color: var(--teal); border-bottom-color: var(--teal); background: white; }
+  .auth-body { padding: 1.75rem 2rem 2rem; }
+  .auth-error { background: #fdf0ee; border: 1px solid #f5c6c0; border-radius: 6px; padding: 0.65rem 0.9rem; font-size: 0.82rem; color: var(--red-signal); margin-bottom: 1rem; display: none; }
+  .auth-error.visible { display: block; }
+  .auth-field { margin-bottom: 1.1rem; }
+  .auth-field label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--ink-mid); margin-bottom: 0.4rem; }
+  .auth-field input, .auth-field select {
+    width: 100%; border: 1.5px solid var(--rule); border-radius: 7px; padding: 0.65rem 0.9rem;
+    font-size: 0.9rem; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white;
+    transition: border-color 0.15s; outline: none;
+  }
+  .auth-field input:focus, .auth-field select:focus { border-color: var(--teal-light); }
+  .auth-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .auth-submit { width: 100%; margin-top: 0.5rem; justify-content: center; }
+  .auth-note { font-size: 0.74rem; color: var(--slate); text-align: center; margin-top: 0.85rem; line-height: 1.5; }
+
+  /* ── ONBOARDING ── */
+  .onboard-hero {
+    background: linear-gradient(160deg, #0a141e 60%, #0f2535 100%);
+    padding: 3.5rem 2rem 2.5rem; text-align: center; color: white;
+  }
+  .eyebrow {
+    display: inline-block; font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; color: var(--teal-light);
+    border: 1px solid rgba(34,163,148,0.35); border-radius: 4px; padding: 0.3rem 0.8rem;
+    margin-bottom: 1.5rem; text-transform: uppercase;
+  }
+  .onboard-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: white; line-height: 1.2; max-width: 580px; margin: 0 auto 0.9rem; }
+  .onboard-hero p { color: rgba(255,255,255,0.6); max-width: 480px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6; }
+  .onboard-user-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px; padding: 0.3rem 1rem; font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 1.25rem;
+  }
+  .onboard-user-tag strong { color: white; }
+  .form-container { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .form-section {
+    background: white; border: 1px solid var(--rule); border-radius: 12px;
+    padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(15,25,35,0.04);
+  }
+  .form-section-title { font-family: 'DM Mono', monospace; font-size: 0.67rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.4rem; }
+  .form-section h2 { font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
+  .form-section > p { font-size: 0.87rem; color: var(--slate); margin-bottom: 1.5rem; line-height: 1.55; }
+  .industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .industry-card {
+    border: 2px solid var(--rule); border-radius: 9px; padding: 1rem 0.85rem;
+    cursor: pointer; transition: all 0.18s; text-align: center; background: white;
+  }
+  .industry-card:hover { border-color: var(--teal-light); background: #f0fafa; }
+  .industry-card.selected { border-color: var(--teal); background: #e8f5f3; }
+  .industry-icon { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .industry-label { font-size: 0.82rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .industry-sub { font-size: 0.7rem; color: var(--slate); margin-top: 0.2rem; font-family: 'DM Mono', monospace; }
+  .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field-group label { font-size: 0.81rem; font-weight: 500; color: var(--ink-mid); }
+  .field-group .field-hint { font-size: 0.73rem; color: var(--slate); line-height: 1.4; }
+  .field-group input {
+    border: 1.5px solid var(--rule); border-radius: 7px; padding: 0.6rem 0.85rem;
+    font-size: 0.9rem; font-family: 'DM Sans', sans-serif; color: var(--ink);
+    background: white; transition: border-color 0.15s; outline: none; width: 100%;
+  }
+  .field-group input:focus { border-color: var(--teal-light); }
+  .field-unit { position: relative; }
+  .field-unit input { padding-left: 2.2rem; }
+  .field-unit .unit-label { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-size: 0.88rem; color: var(--slate); }
+  .submit-area { text-align: center; padding-top: 0.5rem; }
+  .submit-note { font-size: 0.76rem; color: var(--slate); margin-top: 0.75rem; }
+
+  /* ── LOADING ── */
+  .loading-screen {
+    background: linear-gradient(160deg, #080f18 0%, #0d1f30 55%, #0a1c2e 100%);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; padding: 2rem; color: white;
+  }
+  .loading-logo { font-family: 'DM Mono', monospace; font-size: 1.2rem; margin-bottom: 2.5rem; color: rgba(255,255,255,0.8); }
+  .loading-logo span { color: var(--teal-light); }
+  .signal-bars { display: flex; gap: 0.4rem; align-items: flex-end; margin-bottom: 2rem; height: 40px; }
+  .bar { width: 8px; background: var(--teal-light); border-radius: 3px; animation: pulse 1.2s ease-in-out infinite; }
+  .bar:nth-child(1){height:20px;animation-delay:0s} .bar:nth-child(2){height:30px;animation-delay:0.15s}
+  .bar:nth-child(3){height:40px;animation-delay:0.3s} .bar:nth-child(4){height:25px;animation-delay:0.45s}
+  .bar:nth-child(5){height:35px;animation-delay:0.6s} .bar:nth-child(6){height:20px;animation-delay:0.75s}
+  @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  .loading-h { font-family: 'Playfair Display', serif; font-size: 1.55rem; margin-bottom: 0.5rem; }
+  .loading-sub { font-size: 0.84rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; font-family: 'DM Mono', monospace; }
+  .loading-steps { list-style: none; padding: 0; }
+  .loading-steps li { font-size: 0.84rem; color: rgba(255,255,255,0.4); padding: 0.4rem 0; display: flex; align-items: center; gap: 0.6rem; justify-content: center; transition: color 0.3s; }
+  .loading-steps li.done { color: var(--teal-light); }
+  .check { font-size: 0.9rem; }
+  .loading-ai-note { margin-top: 2rem; font-size: 0.72rem; color: rgba(255,255,255,0.2); font-family: 'DM Mono', monospace; }
+
+  /* ── DASHBOARD ── */
+  .dash-header { background: linear-gradient(160deg, #0a141e 55%, #0f2535 100%); padding: 2rem 2rem 1.8rem; color: white; }
+  .dash-inner { max-width: var(--col-width); margin: 0 auto; }
+  .dash-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+  .dash-greeting .eyebrow-dash { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 0.5rem; }
+  .dash-greeting h1 { font-size: 1.7rem; color: white; line-height: 1.2; margin-bottom: 0.3rem; }
+  .dash-greeting p { font-size: 0.86rem; color: rgba(255,255,255,0.55); }
+  .ai-synthesis-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(26,122,110,0.15); border: 1px solid rgba(34,163,148,0.25);
+    border-radius: 6px; padding: 0.4rem 0.9rem;
+    font-size: 0.72rem; color: rgba(255,255,255,0.6); margin-top: 0.75rem; font-family: 'DM Mono', monospace;
+  }
+  .ai-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-light); animation: blink 2s ease-in-out infinite; display: inline-block; }
+  .macro-pulse { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 1.25rem; min-width: 280px; }
+  .pulse-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.35rem; }
+  .pulse-status { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .pulse-badge { font-size: 1.1rem; font-weight: 700; color: var(--amber); font-family: 'DM Sans'; }
+  .pulse-desc { font-size: 0.82rem; color: rgba(255,255,255,0.75); }
+  .pulse-signals { font-size: 0.72rem; color: rgba(255,255,255,0.4); line-height: 1.5; font-family: 'DM Mono', monospace; }
+
+  /* ── LENS GRID ── */
+  .dash-body { max-width: var(--col-width); margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .section-intro { margin-bottom: 1.75rem; }
+  .section-intro h2 { font-size: 1.3rem; color: var(--ink); margin-bottom: 0.3rem; }
+  .section-intro p { font-size: 0.86rem; color: var(--slate); }
+  .lens-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
+  .lens-card { background: white; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(15,25,35,0.05); }
+  .lens-top { padding: 1.2rem 1.4rem 0.9rem; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: flex-start; }
+  .lens-number { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.2rem; }
+  .lens-name { font-size: 1.05rem; font-weight: 700; color: var(--ink); font-family: 'Playfair Display', serif; }
+  .status-badge { font-family: 'DM Mono', monospace; font-size: 0.67rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 4px; white-space: nowrap; }
+  .badge-high { background: #fdf0ee; color: var(--red-signal); border: 1px solid #f5c6c0; }
+  .badge-watch { background: #fdf6e8; color: var(--amber); border: 1px solid #f0dbb0; }
+  .badge-stable { background: #e8f5ed; color: var(--green-signal); border: 1px solid #b8dfc5; }
+  .lens-body { padding: 1.2rem 1.4rem; }
+  .lens-metrics { margin-bottom: 1.2rem; }
+  .metric-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.83rem; }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { color: var(--slate); }
+  .metric-value { font-weight: 600; color: var(--ink); font-family: 'DM Mono', monospace; font-size: 0.82rem; }
+  .metric-value.up { color: var(--red-signal); }
+  .metric-value.down { color: var(--green-signal); }
+  .metric-value.neutral { color: var(--amber); }
+  .lens-analysis { background: #f7f9fb; border: 1px solid var(--rule); border-radius: 7px; padding: 1rem 1.1rem; margin-bottom: 1rem; font-size: 0.84rem; color: var(--ink-light); line-height: 1.65; }
+  .first-action { border-left: 3px solid var(--teal); padding: 0.7rem 1rem; background: #eef7f5; border-radius: 0 7px 7px 0; }
+  .first-action-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.25rem; }
+  .first-action-text { font-size: 0.84rem; font-weight: 500; color: var(--ink); line-height: 1.5; }
+  .ai-tag { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--teal); opacity: 0.55; margin-top: 0.5rem; display: block; }
+
+  /* ── BUFFER ALERT ── */
+  .buffer-alert { background: white; border: 1.5px solid var(--amber); border-radius: 12px; padding: 1.5rem 1.75rem; margin-bottom: 1.5rem; }
+  .buffer-alert-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .buffer-icon { font-size: 1.4rem; }
+  .buffer-alert-header h3 { font-size: 1rem; font-weight: 700; color: var(--ink); }
+  .buffer-scenario-text { font-size: 0.87rem; color: var(--ink-light); line-height: 1.65; margin-bottom: 1.1rem; }
+  .buffer-scenario-text strong { color: var(--ink); }
+  .buffer-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.1rem; }
+  .buffer-stat { background: #fffbf2; border: 1px solid #f0dbb0; border-radius: 8px; padding: 0.85rem 1rem; text-align: center; }
+  .buffer-stat-value { font-size: 1.4rem; font-weight: 700; color: var(--ink); font-family: 'DM Mono', monospace; }
+  .buffer-stat-label { font-size: 0.7rem; color: var(--slate); margin-top: 0.2rem; line-height: 1.3; }
+  .buffer-recommend { background: #fdf6e8; border-radius: 7px; padding: 0.75rem 1rem; font-size: 0.83rem; color: var(--ink-light); line-height: 1.55; }
+  .buffer-recommend strong { color: var(--amber); }
+
+  /* ── BRIEF CTA ── */
+  .brief-cta { background: linear-gradient(135deg, var(--teal) 0%, #0f5c54 100%); border-radius: 12px; padding: 2rem 2.5rem; color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+  .brief-cta h3 { font-size: 1.2rem; margin-bottom: 0.35rem; color: white; }
+  .brief-cta p { font-size: 0.86rem; color: rgba(255,255,255,0.7); max-width: 440px; line-height: 1.55; }
+  .btn-white { background: white; color: var(--teal); border: none; border-radius: 7px; padding: 0.8rem 1.75rem; font-size: 0.92rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; white-space: nowrap; transition: transform 0.15s; }
+  .btn-white:hover { transform: translateY(-1px); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--nav-bg); color: rgba(255,255,255,0.4); text-align: center; padding: 1.25rem 2rem; font-size: 0.76rem; }
+  footer a { color: var(--teal-light); text-decoration: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .lens-grid { grid-template-columns: 1fr; }
+    .industry-grid { grid-template-columns: repeat(2, 1fr); }
+    .fields-grid { grid-template-columns: 1fr; }
+    .buffer-stats { grid-template-columns: 1fr; }
+    .brief-cta { text-align: center; }
+    .dash-top { flex-direction: column; }
+    .macro-pulse { min-width: unset; width: 100%; }
+    .auth-field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">MacroLab<span>.sg</span></a>
+  <div class="nav-right">
+    <a class="nav-back" href="/">← Main site</a>
+    <div class="nav-pill" id="navProfileBtn" onclick="handleNavProfile()">
+      <span class="nav-dot offline" id="navDot"></span>
+      <span id="navProfileLabel">Sign in</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ AUTH MODAL ═══ -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-top">
+      <button class="auth-close" onclick="closeAuth()">✕</button>
+      <div class="auth-logo">MacroLab<span>.sg</span> · Firm Intelligence Diagnostic</div>
+      <h2 id="authTitle">Access your Firm Intelligence Diagnostic</h2>
+      <p id="authSubtitle">Enter your subscriber credentials to generate a private report linking your business metrics to MacroLab's sector and macro signals</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">Register</button>
+      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign In</button>
+    </div>
+    <div class="auth-body">
+      <div class="auth-error" id="authError"></div>
+      <!-- REGISTER -->
+      <div id="form-register">
+        <div class="auth-field-row">
+          <div class="auth-field"><label>First name</label><input type="text" id="reg-firstname" placeholder="Wei Jie" /></div>
+          <div class="auth-field"><label>Last name</label><input type="text" id="reg-lastname" placeholder="Tan" /></div>
+        </div>
+        <div class="auth-field"><label>Work email</label><input type="email" id="reg-email" placeholder="wj.tan@company.com.sg" /></div>
+        <div class="auth-field"><label>Company name</label><input type="text" id="reg-company" placeholder="Tan Brothers Engineering Pte Ltd" /></div>
+        <div class="auth-field-row">
+          <div class="auth-field"><label>Designation</label><input type="text" id="reg-designation" placeholder="Managing Director" /></div>
+          <div class="auth-field">
+            <label>Association membership</label>
+            <select id="reg-association" style="border:1.5px solid var(--rule);border-radius:7px;padding:0.65rem 0.9rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--ink);background:white;outline:none;width:100%;">
+              <option value="">Select (optional)</option>
+              <option value="SBF">SBF – Singapore Business Federation</option>
+              <option value="SCCCI">SCCCI – Chinese Chamber</option>
+              <option value="SICCI">SICCI – Indian Chamber</option>
+              <option value="SMCCI">SMCCI – Malay Chamber</option>
+              <option value="EDB">EDB Partner</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="auth-field"><label>Password</label><input type="password" id="reg-password" placeholder="Min. 8 characters" /></div>
+        <button class="btn-primary auth-submit" onclick="doRegister()">Create account & set up profile →</button>
+        <div class="auth-note">Your firm data stays private and is never shared. Used only to personalise your four decision lenses.</div>
+      </div>
+      <!-- LOGIN -->
+      <div id="form-login" style="display:none;">
+        <div class="auth-field"><label>Email address</label><input type="email" id="login-email" placeholder="your@email.com" /></div>
+        <div class="auth-field"><label>Password</label><input type="password" id="login-password" placeholder="Your password" /></div>
+        <button class="btn-primary auth-submit" onclick="doLogin()">Sign in →</button>
+        <div class="auth-note">No account? <a href="#" onclick="switchTab('register');return false;" style="color:var(--teal);">Register free</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN: LANDING ═══ -->
+<div class="screen active" id="screen-landing">
+  <div class="landing-hero">
+    <div class="hero-badge">Firm Intelligence Diagnostic · Subscriber Access</div>
+    <h1>Macro intelligence,<br><em>personalised to your firm</em></h1>
+    <p>Enter your firm's unit economics and scale ratios. MacroLab combines them with this week's sector and macro signals to generate a private Firm Intelligence Report showing where pressure is likely to affect your margins, pricing power, labour model, capex, and liquidity.</p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="openAuth('register')">Create free account →</button>
+      <button class="btn-ghost" onclick="openAuth('login')">Sign in</button>
+    </div>
+    <div class="hero-proof">
+      <div class="proof-item"><div class="proof-val">47</div><div class="proof-label">Macro signals tracked</div></div>
+      <div class="proof-item"><div class="proof-val">8</div><div class="proof-label">Sectors covered</div></div>
+      <div class="proof-item"><div class="proof-val">4</div><div class="proof-label">Decision lenses</div></div>
+      <div class="proof-item"><div class="proof-val">Human</div><div class="proof-label">Judgment-reviewed synthesis</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN: ONBOARDING ═══ -->
+<div class="screen" id="screen-onboard">
+  <div class="onboard-hero">
+    <div class="eyebrow">Firm Intelligence Diagnostic</div>
+    <h1>Generate your private Firm Intelligence Report</h1>
+    <p>Three steps. MacroLab combines your firm profile, unit economics, and exposure questions with this week's sector and macro signals to produce a personalised report through a short guided flow.</p>
+    <div class="onboard-user-tag">Signed in as <strong id="onboardUserName">—</strong> &nbsp;·&nbsp; <a href="#" onclick="doLogout();return false;" style="color:rgba(255,255,255,0.45);text-decoration:none;font-size:0.75rem;">Sign out</a></div>
+  </div>
+  <div class="form-container">
+
+    <!-- STEP 1: FIRM PROFILE -->
+    <div class="form-section">
+      <div class="form-section-title">Step 1 of 3 · Firm Profile</div>
+      <h2>Tell us where your business sits</h2>
+      <p>This determines which macro and sector signals are most relevant to your firm and how the diagnostic maps exposure.</p>
+      <div class="industry-grid" id="industryGrid">
+        <div class="industry-card" data-industry="fb" onclick="selectIndustry(this)"><div class="industry-icon">🍴</div><div class="industry-label">F&B / Retail</div><div class="industry-sub">Consumer Facing</div></div>
+        <div class="industry-card" data-industry="mfg" onclick="selectIndustry(this)"><div class="industry-icon">🛠</div><div class="industry-label">Manufacturing & Engineering</div><div class="industry-sub">B2B / Industrial</div></div>
+        <div class="industry-card" data-industry="tech" onclick="selectIndustry(this)"><div class="industry-icon">💻</div><div class="industry-label">Tech & Professional Services</div><div class="industry-sub">Knowledge Economy</div></div>
+        <div class="industry-card" data-industry="hospitality" onclick="selectIndustry(this)"><div class="industry-icon">🏨</div><div class="industry-label">Hospitality & Tourism</div><div class="industry-sub">Consumer Facing</div></div>
+        <div class="industry-card" data-industry="logistics" onclick="selectIndustry(this)"><div class="industry-icon">🚢</div><div class="industry-label">Logistics & Trade</div><div class="industry-sub">Industrial / B2B</div></div>
+        <div class="industry-card" data-industry="property" onclick="selectIndustry(this)"><div class="industry-icon">🏗</div><div class="industry-label">Property & Construction</div><div class="industry-sub">Capital Intensive</div></div>
+        <div class="industry-card" data-industry="electronics" onclick="selectIndustry(this)"><div class="industry-icon">🔬</div><div class="industry-label">Electronics & Precision Engineering</div><div class="industry-sub">GVC / Export</div></div>
+        <div class="industry-card" data-industry="wholesale" onclick="selectIndustry(this)"><div class="industry-icon">📦</div><div class="industry-label">Wholesale Trade</div><div class="industry-sub">Trade / Distribution</div></div>
+      </div>
+      <!-- Profile fields shown after industry selected -->
+      <div id="profileFieldsSection" style="display:none;margin-top:1.5rem;">
+        <div class="fields-grid">
+          <div class="field-group">
+            <label>Revenue band</label>
+            <select id="pf-revenue" onchange="checkFormReady()" style="border:1.5px solid var(--rule);border-radius:7px;padding:0.6rem 0.85rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--ink);background:white;outline:none;width:100%;">
+              <option value="">Select</option>
+              <option value="under1m">Under S$1M</option>
+              <option value="1to5m">S$1M – S$5M</option>
+              <option value="5to20m">S$5M – S$20M</option>
+              <option value="20to100m">S$20M – S$100M</option>
+              <option value="over100m">Over S$100M</option>
+            </select>
+            <div class="field-hint">Approximate annual revenue</div>
+          </div>
+          <div class="field-group">
+            <label>Number of employees</label>
+            <select id="pf-headcount" onchange="checkFormReady()" style="border:1.5px solid var(--rule);border-radius:7px;padding:0.6rem 0.85rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--ink);background:white;outline:none;width:100%;">
+              <option value="">Select</option>
+              <option value="1to10">1 – 10</option>
+              <option value="11to50">11 – 50</option>
+              <option value="51to200">51 – 200</option>
+              <option value="201to500">201 – 500</option>
+              <option value="over500">Over 500</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Primary customer type</label>
+            <select id="pf-customer" onchange="checkFormReady()" style="border:1.5px solid var(--rule);border-radius:7px;padding:0.6rem 0.85rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--ink);background:white;outline:none;width:100%;">
+              <option value="">Select</option>
+              <option value="b2b">B2B</option>
+              <option value="b2c">B2C</option>
+              <option value="govt">Government / statutory</option>
+              <option value="export">Export / international</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Primary market</label>
+            <select id="pf-market" onchange="checkFormReady()" style="border:1.5px solid var(--rule);border-radius:7px;padding:0.6rem 0.85rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--ink);background:white;outline:none;width:100%;">
+              <option value="">Select</option>
+              <option value="sg">Singapore only</option>
+              <option value="asean">Singapore + ASEAN</option>
+              <option value="china">China-linked</option>
+              <option value="global">Global</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: UNIT ECONOMICS -->
+    <div class="form-section" id="financialsSection" style="opacity:0.45;pointer-events:none;transition:opacity 0.3s;">
+      <div class="form-section-title">Step 2 of 3 · Unit Economics & Scale</div>
+      <h2>Input the operating ratios that shape your resilience</h2>
+      <p>These ratios are used to personalise your report and map which macro signals are most relevant. Stored privately — never shared without your permission.</p>
+      <div class="fields-grid" id="fieldsContainer"></div>
+    </div>
+
+    <!-- STEP 3: EXPOSURE QUESTIONS -->
+    <div class="form-section" id="exposureSection" style="opacity:0.45;pointer-events:none;transition:opacity 0.3s;">
+      <div class="form-section-title">Step 3 of 3 · Exposure Questions</div>
+      <h2>Map your exposure to current MacroLab signals</h2>
+      <p>These questions calibrate which macro pressures matter most for your firm. Answer instinctively — there are no wrong answers.</p>
+      <div style="display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden;" id="exposureContainer">
+        <!-- Injected by JS based on industry -->
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button class="btn-primary" id="generateBtn" onclick="generateDashboard()" disabled>Generate my Firm Intelligence Report →</button>
+      <div class="submit-note">🔒 Your firm data is private and used only to generate your report.</div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;max-width:520px;margin-left:auto;margin-right:auto;">
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--slate);cursor:pointer;">
+          <input type="checkbox" id="consent-anon" style="margin-top:2px;accent-color:var(--teal);flex-shrink:0;">
+          <span>I agree that my <strong>anonymised</strong> responses may be included in aggregated sector insights shared with trade associations (no firm-level data, no names).</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--slate);cursor:pointer;">
+          <input type="checkbox" id="consent-tac-firm" style="margin-top:2px;accent-color:var(--teal);flex-shrink:0;">
+          <span>I agree to let my affiliated trade association view my <strong>firm-level</strong> report. <span style="color:var(--muted);">(Only relevant if you have TAC affiliation. Default: off.)</span></span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--slate);cursor:pointer;">
+          <input type="checkbox" id="consent-advisory" style="margin-top:2px;accent-color:var(--teal);flex-shrink:0;">
+          <span>I would like MacroLab to contact me about a follow-up advisory briefing.</span>
+        </label>
+        <p style="font-size:11px;color:var(--muted);padding-top:4px;line-height:1.5;font-style:italic;">All checkboxes default to off. Your firm inputs are used only to generate your report. MacroLab does not publish or share firm-level data without explicit permission from you.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN: LOADING ═══ -->
+<div class="screen" id="screen-loading">
+  <div class="loading-screen">
+    <div class="loading-logo">MacroLab<span>.sg</span></div>
+    <div class="signal-bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+    <div class="loading-h">Generating your Firm Intelligence Report</div>
+    <div class="loading-sub" id="loadingSectorLabel"></div>
+    <ul class="loading-steps" id="loadingSteps">
+      <li id="ls1"><span class="check">○</span> Ingesting this week's macro and sector signals…</li>
+      <li id="ls2"><span class="check">○</span> Mapping signals to your sector's transmission channels…</li>
+      <li id="ls3"><span class="check">○</span> Running unit economics and scale diagnostics…</li>
+      <li id="ls4"><span class="check">○</span> Computing your firm exposure map…</li>
+      <li id="ls5"><span class="check">○</span> Generating decision recommendations and firm archetype…</li>
+    </ul>
+    <div class="loading-ai-note">MacroLab · automation-supported, judgment-reviewed signal synthesis</div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN: DASHBOARD ═══ -->
+<div class="screen" id="screen-dashboard">
+  <div id="dashHeader"></div>
+  <div class="dash-body">
+    <div class="section-intro">
+      <h2 id="dashSectionTitle">Your Firm Intelligence Report</h2>
+      <p id="dashSectionSub">Updated 20 May 2026 · Private diagnostic synthesised from your unit economics, scale ratios, and this week's macro signals</p>
+    </div>
+    <div class="buffer-alert" id="bufferAlert"></div>
+    <div class="lens-grid" id="lensGrid"></div>
+
+    <!-- POST-REPORT ACTION BAR -->
+    <div id="reportActionBar" style="background:white;border:1px solid var(--rule);border-radius:12px;padding:1.5rem 1.75rem;margin-bottom:1.5rem;box-shadow:0 2px 10px rgba(15,25,35,0.05);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem;">Report Actions</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button onclick="downloadReportPDF()" style="display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='var(--teal)'" onmouseout="this.style.background='var(--ink)'">🖨 Print / Download Report PDF</button>
+        <button onclick="saveThisReport()" style="display:inline-flex;align-items:center;gap:6px;background:white;color:var(--ink);border:1.5px solid var(--rule);border-radius:6px;padding:9px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">💾 Save This Report</button>
+        <button onclick="compareNextQuarter()" style="display:inline-flex;align-items:center;gap:6px;background:white;color:var(--ink);border:1.5px solid var(--rule);border-radius:6px;padding:9px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">📊 Compare Next Quarter</button>
+        <button onclick="shareWithTAC()" id="shareWithTACBtn" style="display:inline-flex;align-items:center;gap:6px;background:white;color:var(--ink);border:1.5px solid var(--rule);border-radius:6px;padding:9px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--teal)';this.style.color='var(--teal)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--ink)'">🏢 Share Anonymised Insight with TAC</button>
+        <button onclick="requestAdvisory()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(26,122,110,0.08);color:var(--teal);border:1.5px solid rgba(26,122,110,0.3);border-radius:6px;padding:9px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='var(--teal)';this.style.color='white'" onmouseout="this.style.background='rgba(26,122,110,0.08)';this.style.color='var(--teal)'">→ Request Advisory Briefing</button>
+      </div>
+      <div id="reportActionMsg" style="display:none;margin-top:0.85rem;font-size:12px;color:var(--teal);font-family:'DM Mono',monospace;"></div>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted);font-style:italic;">Report history and quarter-on-quarter comparison are prototype features in this version. Production deployment will store reports securely in your account.</div>
+    </div>
+
+    <div class="brief-cta">
+      <div>
+        <h3>Get this analysis every Monday morning</h3>
+        <p>Your MacroLab Decision Brief — sector signals, your four-lens summary, and one spotlight. Two pages. Human-reviewed. Ready before the week starts.</p>
+      </div>
+      <button class="btn-white" onclick="alert('You\'re subscribed. Your first brief arrives next Monday.')">Get Weekly Brief →</button>
+    </div>
+  </div>
+  <footer>
+    © 2026 MacroLab Singapore &nbsp;·&nbsp; <a href="/">← Main site</a> &nbsp;·&nbsp;
+    <a href="#">Not financial advice · Diagnostic outputs are for decision support only</a> &nbsp;·&nbsp;
+    <a href="#" onclick="showScreen('screen-onboard');return false;">Update firm profile</a> &nbsp;·&nbsp;
+    <a href="#" onclick="doLogout();return false;">Sign out</a>
+    <br><span style="font-size:10px;color:rgba(255,255,255,0.2);display:block;margin-top:6px;">Prototype notice: Front-end demonstration only. Production deployment will use secure authentication, encrypted storage, server-side consent records, and database-backed report history.</span>
+  </footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE & SESSION
+// ═══════════════════════════════════════════
+var currentUser = null, selectedIndustry = null, userInputs = {}, synthesisCache = null;
+
+function getUsers() { try { return JSON.parse(localStorage.getItem('ml_users')||'{}'); } catch(e){return{};} }
+function saveUsers(u) { try { localStorage.setItem('ml_users', JSON.stringify(u)); } catch(e){} }
+function saveSession(u) { try { localStorage.setItem('ml_session', JSON.stringify(u)); } catch(e){} }
+function loadSession() { try { return JSON.parse(localStorage.getItem('ml_session')); } catch(e){return null;} }
+function clearSession() { try { localStorage.removeItem('ml_session'); } catch(e){} }
+
+window.addEventListener('DOMContentLoaded', function() {
+  var s = loadSession();
+  if (s) {
+    currentUser = s;
+    updateNav();
+    if (currentUser.industry && currentUser.inputs) {
+      selectedIndustry = currentUser.industry;
+      userInputs = currentUser.inputs;
+      runLoadingAndSynthesize();
+    } else {
+      showScreen('screen-onboard');
+      document.getElementById('onboardUserName').textContent = currentUser.firstName + ' ' + currentUser.lastName;
+    }
+  }
+});
+
+function updateNav() {
+  if (!currentUser) return;
+  document.getElementById('navDot').classList.remove('offline');
+  document.getElementById('navProfileLabel').textContent = currentUser.firstName + ' · ' + (INDUSTRY_LABELS[currentUser.industry] || 'Profile');
+}
+
+// ═══════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════
+function openAuth(tab) { document.getElementById('authOverlay').classList.add('active'); switchTab(tab||'register'); }
+function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); clearAuthError(); }
+function switchTab(tab) {
+  document.getElementById('form-register').style.display = tab==='register'?'block':'none';
+  document.getElementById('form-login').style.display = tab==='login'?'block':'none';
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('authTitle').textContent = tab==='register'?'Create your account':'Welcome back';
+  document.getElementById('authSubtitle').textContent = tab==='register'?'Access your personalised firm intelligence dashboard':'Sign in to your MacroLab dashboard';
+  clearAuthError();
+}
+function showAuthError(msg) { var e=document.getElementById('authError'); e.textContent=msg; e.classList.add('visible'); }
+function clearAuthError() { document.getElementById('authError').classList.remove('visible'); }
+
+function doRegister() {
+  var fn=document.getElementById('reg-firstname').value.trim();
+  var ln=document.getElementById('reg-lastname').value.trim();
+  var email=document.getElementById('reg-email').value.trim().toLowerCase();
+  var company=document.getElementById('reg-company').value.trim();
+  var designation=document.getElementById('reg-designation').value.trim();
+  var association=document.getElementById('reg-association').value;
+  var password=document.getElementById('reg-password').value;
+  if(!fn||!ln||!email||!company||!password){showAuthError('Please fill in all required fields.');return;}
+  if(!email.includes('@')||!email.includes('.')){showAuthError('Please enter a valid email address.');return;}
+  if(password.length<8){showAuthError('Password must be at least 8 characters.');return;}
+  var users=getUsers();
+  if(users[email]){showAuthError('An account with this email already exists. Please sign in.');return;}
+  var user={firstName:fn,lastName:ln,email:email,company:company,designation:designation,association:association,passwordHash:btoa(password),industry:null,inputs:null,registered:new Date().toISOString()};
+  users[email]=user; saveUsers(users);
+  currentUser=user; saveSession(user);
+  closeAuth(); updateNav();
+  showScreen('screen-onboard');
+  document.getElementById('onboardUserName').textContent=fn+' '+ln;
+}
+
+function doLogin() {
+  var email=document.getElementById('login-email').value.trim().toLowerCase();
+  var password=document.getElementById('login-password').value;
+  if(!email||!password){showAuthError('Please enter your email and password.');return;}
+  var users=getUsers();
+  var user=users[email];
+  if(!user||user.passwordHash!==btoa(password)){showAuthError('Email or password incorrect. Please try again.');return;}
+  currentUser=user; saveSession(user);
+  closeAuth(); updateNav();
+  if(user.industry&&user.inputs){selectedIndustry=user.industry;userInputs=user.inputs;runLoadingAndSynthesize();}
+  else{showScreen('screen-onboard');document.getElementById('onboardUserName').textContent=user.firstName+' '+user.lastName;}
+}
+
+function doLogout() {
+  currentUser=null;selectedIndustry=null;userInputs={};synthesisCache=null;
+  clearSession();
+  document.getElementById('navDot').classList.add('offline');
+  document.getElementById('navProfileLabel').textContent='Sign in';
+  showScreen('screen-landing');
+}
+
+function handleNavProfile() {
+  if(currentUser){
+    if(selectedIndustry&&Object.keys(userInputs).length>0) showScreen('screen-dashboard');
+    else showScreen('screen-onboard');
+  } else { openAuth('login'); }
+}
+
+// ═══════════════════════════════════════════
+// FIELD CONFIGS
+// ═══════════════════════════════════════════
+var FIELD_CONFIGS = {
+  fb:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus food & beverage cost, as % of revenue",prefix:"",suffix:"%",placeholder:"62"},
+    {id:"opex",label:"Monthly OpEx (SGD)",hint:"Total fixed costs: rent, wages, utilities",prefix:"S$",suffix:"",placeholder:"45000"},
+    {id:"cash",label:"Cash runway (days)",hint:"Days of OpEx your cash reserves cover",prefix:"",suffix:" days",placeholder:"60"},
+    {id:"laborPct",label:"Labor as % of revenue",hint:"Total staff wages ÷ monthly revenue",prefix:"",suffix:"%",placeholder:"28"},
+    {id:"rentPct",label:"Rent-to-revenue ratio %",hint:"Monthly rent as % of monthly revenue",prefix:"",suffix:"%",placeholder:"15"}
+  ],
+  mfg:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus direct production costs",prefix:"",suffix:"%",placeholder:"38"},
+    {id:"opex",label:"Monthly OpEx (SGD)",hint:"Total monthly fixed costs including factory overhead",prefix:"S$",suffix:"",placeholder:"120000"},
+    {id:"cash",label:"Cash runway (days)",hint:"Days of OpEx covered by current cash + credit",prefix:"",suffix:" days",placeholder:"90"},
+    {id:"stockDays",label:"Raw material safety stock (days)",hint:"Days of production your current stock supports",prefix:"",suffix:" days",placeholder:"28"},
+    {id:"creditPct",label:"Unused credit facility (%)",hint:"Available credit headroom as % of monthly OpEx",prefix:"",suffix:"%",placeholder:"40"}
+  ],
+  tech:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus direct service delivery costs",prefix:"",suffix:"%",placeholder:"72"},
+    {id:"opex",label:"Monthly burn rate (SGD)",hint:"Total monthly cash outflow including all salaries",prefix:"S$",suffix:"",placeholder:"80000"},
+    {id:"cash",label:"Runway (months)",hint:"Months of burn your cash reserves cover",prefix:"",suffix:" months",placeholder:"18"},
+    {id:"arpu",label:"Avg revenue per client/month (SGD)",hint:"Average monthly revenue per client or user",prefix:"S$",suffix:"",placeholder:"1200"},
+    {id:"keyPersonPct",label:"Revenue from top performers (%)",hint:"% of revenue concentrated in your key rainmakers",prefix:"",suffix:"%",placeholder:"60"}
+  ],
+  hospitality:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus direct service costs",prefix:"",suffix:"%",placeholder:"55"},
+    {id:"opex",label:"Monthly OpEx (SGD)",hint:"Total fixed monthly costs",prefix:"S$",suffix:"",placeholder:"200000"},
+    {id:"cash",label:"Cash runway (days)",hint:"Days of OpEx covered by current cash reserves",prefix:"",suffix:" days",placeholder:"75"},
+    {id:"occupancy",label:"Current occupancy rate (%)",hint:"Average room or seat occupancy, last 30 days",prefix:"",suffix:"%",placeholder:"78"},
+    {id:"laborPct",label:"Labor as % of revenue",hint:"Total staff wages as % of monthly revenue",prefix:"",suffix:"%",placeholder:"32"}
+  ],
+  logistics:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus direct freight and handling costs",prefix:"",suffix:"%",placeholder:"22"},
+    {id:"opex",label:"Monthly OpEx (SGD)",hint:"Fixed overheads including vehicle leases",prefix:"S$",suffix:"",placeholder:"95000"},
+    {id:"cash",label:"Cash runway (days)",hint:"Days of OpEx your cash covers",prefix:"",suffix:" days",placeholder:"55"},
+    {id:"fuelPct",label:"Fuel/freight as % of revenue",hint:"Variable freight costs as % of revenue",prefix:"",suffix:"%",placeholder:"35"},
+    {id:"creditPct",label:"Unused credit facility (%)",hint:"Available credit headroom as % of monthly OpEx",prefix:"",suffix:"%",placeholder:"30"}
+  ],
+  property:[
+    {id:"margin",label:"Project gross margin %",hint:"Revenue minus direct construction costs",prefix:"",suffix:"%",placeholder:"18"},
+    {id:"opex",label:"Monthly overhead (SGD)",hint:"Fixed monthly costs: office, staff, insurance",prefix:"S$",suffix:"",placeholder:"75000"},
+    {id:"cash",label:"Cash runway (months)",hint:"Months of overhead covered by current cash",prefix:"",suffix:" months",placeholder:"12"},
+    {id:"stockDays",label:"Materials safety stock (days)",hint:"Days of key materials on hand",prefix:"",suffix:" days",placeholder:"45"},
+    {id:"creditPct",label:"Unused credit / bonding capacity (%)",hint:"Available credit and bond headroom as % of OpEx",prefix:"",suffix:"%",placeholder:"50"}
+  ],
+  electronics:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus direct production and component costs",prefix:"",suffix:"%",placeholder:"32"},
+    {id:"opex",label:"Monthly OpEx (SGD)",hint:"Total fixed monthly costs including factory and R&D overhead",prefix:"S$",suffix:"",placeholder:"180000"},
+    {id:"cash",label:"Cash runway (days)",hint:"Days of OpEx your current cash + credit covers",prefix:"",suffix:" days",placeholder:"90"},
+    {id:"inventoryDays",label:"Inventory days on hand",hint:"Days of production output / components in current stock",prefix:"",suffix:" days",placeholder:"35"},
+    {id:"customerConc",label:"Revenue from top 3 customers (%)",hint:"% of revenue from your 3 largest customers",prefix:"",suffix:"%",placeholder:"55"}
+  ],
+  wholesale:[
+    {id:"margin",label:"Gross margin %",hint:"Revenue minus cost of goods sold",prefix:"",suffix:"%",placeholder:"18"},
+    {id:"opex",label:"Monthly OpEx (SGD)",hint:"Fixed overheads: warehouse, staff, logistics",prefix:"S$",suffix:"",placeholder:"60000"},
+    {id:"cash",label:"Cash runway (days)",hint:"Days of OpEx your cash covers",prefix:"",suffix:" days",placeholder:"50"},
+    {id:"inventoryDays",label:"Inventory days on hand",hint:"Days of stock at current sales velocity",prefix:"",suffix:" days",placeholder:"40"},
+    {id:"chinaExposure",label:"China-linked revenue or sourcing (%)",hint:"% of revenue or cost base linked to China (demand or supply)",prefix:"",suffix:"%",placeholder:"45"}
+  ]
+};
+
+var INDUSTRY_LABELS={fb:"F&B / Retail",mfg:"Manufacturing & Engineering",tech:"Tech & Professional Services",hospitality:"Hospitality & Tourism",logistics:"Logistics & Trade",property:"Property & Construction",electronics:"Electronics & Precision Engineering",wholesale:"Wholesale Trade"};
+
+var MACRO={freightChange:12,sgdChange:-0.8,masStance:"holding",pwmExpanding:true,touristArrivals:8,consumerSentiment:"stable",redSeaDelayDays:10,vcLiquidity:"contracting",aseanDemand:"solid",creditEasing:true,efsUtilisationUp:18,palmOilYoY:18,carbonTaxAdvancing:true};
+
+// ═══════════════════════════════════════════
+// FORM LOGIC
+// ═══════════════════════════════════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+
+// ─── Exposure questions per sector ───
+var EXPOSURE_QUESTIONS = {
+  fb:[
+    {id:'passthrough',q:'Can you pass on cost increases to customers within 3 months?',opts:['Yes, easily','Partially','No, very difficult']},
+    {id:'wagepressure',q:'Are wage increases harder to absorb than 6 months ago?',opts:['Yes, significantly','Somewhat','No change']},
+    {id:'delayorders',q:'Are customers reducing order sizes or visit frequency?',opts:['Yes','Starting to','No']},
+    {id:'chinaexp',q:'Are imported inputs (food, packaging, equipment) China-linked?',opts:['Yes, heavily','Some','No']},
+    {id:'aiworkflow',q:'Are AI tools changing your workflow or staffing plans?',opts:['Yes, actively','Exploring','Not yet']}
+  ],
+  mfg:[
+    {id:'passthrough',q:'Can you pass on freight and materials cost increases to customers?',opts:['Yes, easily','Partially','No, very difficult']},
+    {id:'chinaexp',q:'Is your business exposed to China demand or China-linked supply?',opts:['Yes, heavily','Moderate','Minimal']},
+    {id:'freightmat',q:'Are freight or logistics costs material to your margin?',opts:['Yes, significant','Moderate','Minimal']},
+    {id:'capexdelay',q:'Are you delaying capex or expansion investment?',opts:['Yes','Considering it','No']},
+    {id:'supplierconc',q:'Do you rely on a single or small number of key suppliers?',opts:['Yes, concentrated','Somewhat','Well diversified']}
+  ],
+  tech:[
+    {id:'passthrough',q:'Can you maintain pricing without heavy discounting?',opts:['Yes, pricing holds','Some pressure','Significant pressure']},
+    {id:'clientbudget',q:'Are client budgets tightening or procurement cycles slowing?',opts:['Yes','Some signs','Not yet']},
+    {id:'aiworkflow',q:'Are AI tools changing your workflow, headcount, or service delivery?',opts:['Yes, significantly','Early stages','Not yet']},
+    {id:'keymanrisk',q:'Is significant revenue concentrated in a small number of key people?',opts:['Yes, high concentration','Moderate','Well distributed']},
+    {id:'regionexp',q:'Are you considering or actively pursuing ASEAN expansion?',opts:['Actively planning','Exploring','Not at this stage']}
+  ],
+  hospitality:[
+    {id:'occupancy',q:'Is occupancy or footfall trending up, flat, or down vs 3 months ago?',opts:['Up','Flat','Down']},
+    {id:'wagepressure',q:'Is labour cost as a share of revenue rising?',opts:['Yes, rising','Stable','Falling']},
+    {id:'passthrough',q:'Can you raise rates or menu prices without losing demand?',opts:['Yes','Partially','No']},
+    {id:'touristmix',q:'What share of your revenue comes from international guests?',opts:['High >50%','Moderate 20-50%','Low <20%']},
+    {id:'aiworkflow',q:'Are you using AI or automation to reduce back-office or service costs?',opts:['Yes, actively','Exploring','Not yet']}
+  ],
+  logistics:[
+    {id:'freightmat',q:'Have freight rate changes materially affected your margin this quarter?',opts:['Yes, significantly','Somewhat','Not materially']},
+    {id:'routerisk',q:'Are your key trade lanes affected by Red Sea or route disruptions?',opts:['Yes, direct impact','Indirect impact','Not affected']},
+    {id:'passthrough',q:'Can you pass freight cost increases to clients through surcharges?',opts:['Yes, via surcharges','Partial','No, absorb it']},
+    {id:'chinaexp',q:'Is your freight volume China-linked (imports, exports, transshipment)?',opts:['Yes, heavily','Moderate','Minimal']},
+    {id:'creditpressure',q:'Are working capital or credit conditions affecting operations?',opts:['Yes, a constraint','Manageable','Not an issue']}
+  ],
+  property:[
+    {id:'passthrough',q:'Can you pass on materials cost increases through contract variations?',opts:['Yes, contractually','Partially','Absorbed by firm']},
+    {id:'capexdelay',q:'Are project starts or client decisions being delayed?',opts:['Yes, significant delays','Some','No']},
+    {id:'chinaexp',q:'Are key materials or subcontractors China-linked?',opts:['Yes, significantly','Somewhat','Minimal']},
+    {id:'creditpressure',q:'Are financing conditions affecting project cashflow or bonding?',opts:['Yes, a constraint','Manageable','Not an issue']},
+    {id:'wagepressure',q:'Is subcontractor or skilled labour availability a constraint?',opts:['Yes, significant','Somewhat','Not currently']}
+  ],
+  electronics:[
+    {id:'chinaexp',q:'Is your business exposed to China demand or China-linked supply / competition?',opts:['Yes, heavily','Moderate','Minimal']},
+    {id:'exportcontrols',q:'Do US-China export controls or technology restrictions affect your products or customers?',opts:['Yes, direct impact','Indirect impact','Not affected']},
+    {id:'passthrough',q:'Can you maintain pricing against Chinese competitors in third markets?',opts:['Yes, differentiated','Some pressure','High competition']},
+    {id:'inventoryrisk',q:'Is your inventory build-up or component availability a concern?',opts:['Yes, significant','Some','Managed well']},
+    {id:'capexdelay',q:'Are you delaying capex or capacity expansion due to demand uncertainty?',opts:['Yes','Considering it','No']}
+  ],
+  wholesale:[
+    {id:'chinaexp',q:'Is your sourcing or customer base significantly China-linked?',opts:['Yes, heavily','Moderate','Minimal']},
+    {id:'passthrough',q:'Can you pass on import cost increases to your customers?',opts:['Yes, easily','Partially','No, absorb it']},
+    {id:'inventoryrisk',q:'Are you holding more inventory as a buffer, or running it down?',opts:['Building buffer','Stable','Running down']},
+    {id:'freightmat',q:'Are freight costs or delivery delays materially affecting your margins?',opts:['Yes, significant','Somewhat','Minimal']},
+    {id:'delayorders',q:'Are your customers reducing order sizes or extending payment terms?',opts:['Yes','Starting to','No']}
+  ]
+};
+
+function selectIndustry(el){
+  document.querySelectorAll('.industry-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  selectedIndustry=el.getAttribute('data-industry');
+  document.getElementById('profileFieldsSection').style.display='block';
+  var sec=document.getElementById('financialsSection');
+  sec.style.opacity='1';sec.style.pointerEvents='auto';
+  renderFields(selectedIndustry);
+  var expSec=document.getElementById('exposureSection');
+  expSec.style.opacity='1';expSec.style.pointerEvents='auto';
+  renderExposureQuestions(selectedIndustry);
+  checkFormReady();
+}
+
+function renderExposureQuestions(industry){
+  var container=document.getElementById('exposureContainer');
+  var questions=EXPOSURE_QUESTIONS[industry]||[];
+  var html='';
+  for(var i=0;i<questions.length;i++){
+    var q=questions[i];
+    html+='<div style="padding:14px 18px;border-bottom:1px solid var(--rule);background:'+(i%2===0?'white':'#fafaf9')+';">';
+    html+='<div style="font-size:0.84rem;font-weight:500;color:var(--ink);margin-bottom:10px;">'+(i+1)+'. '+q.q+'</div>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+    for(var j=0;j<q.opts.length;j++){
+      html+='<label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--slate);cursor:pointer;padding:5px 10px;border:1.5px solid var(--rule);border-radius:5px;transition:all 0.15s;" class="exp-opt">';
+      html+='<input type="radio" name="exp_'+q.id+'" value="'+j+'" onchange="checkFormReady()" style="accent-color:var(--teal);"> '+q.opts[j];
+      html+='</label>';
+    }
+    html+='</div></div>';
+  }
+  container.innerHTML=html;
+  container.querySelectorAll('input[type=radio]').forEach(function(r){
+    r.addEventListener('change',function(){
+      var name=this.name;
+      container.querySelectorAll('input[name="'+name+'"]').forEach(function(rb){
+        rb.closest('label').style.borderColor='var(--rule)';
+        rb.closest('label').style.background='white';
+        rb.closest('label').style.color='var(--slate)';
+      });
+      this.closest('label').style.borderColor='var(--teal)';
+      this.closest('label').style.background='#eef7f5';
+      this.closest('label').style.color='var(--teal)';
+    });
+  });
+}
+
+function renderFields(industry){
+  var container=document.getElementById('fieldsContainer');
+  var fields=FIELD_CONFIGS[industry];
+  var html='';
+  for(var i=0;i<fields.length;i++){
+    var f=fields[i];
+    html+='<div class="field-group">';
+    html+='<label for="f_'+f.id+'">'+f.label+'</label>';
+    html+='<div class="field-unit" style="position:relative;">';
+    if(f.prefix) html+='<span class="unit-label">'+f.prefix+'</span>';
+    html+='<input id="f_'+f.id+'" type="text" placeholder="'+f.placeholder+'" ';
+    if(f.prefix) html+='style="padding-left:2.2rem;" ';
+    html+='oninput="checkFormReady()" />';
+    html+='</div>';
+    html+='<div class="field-hint">'+f.hint+'</div></div>';
+  }
+  container.innerHTML=html;
+}
+
+function checkFormReady(){
+  if(!selectedIndustry){document.getElementById('generateBtn').disabled=true;return;}
+  var revEl=document.getElementById('pf-revenue');
+  var hcEl=document.getElementById('pf-headcount');
+  if(!revEl||!revEl.value||!hcEl||!hcEl.value){document.getElementById('generateBtn').disabled=true;return;}
+  var fields=FIELD_CONFIGS[selectedIndustry];
+  for(var i=0;i<fields.length;i++){var el=document.getElementById('f_'+fields[i].id);if(!el||el.value.trim()===''){document.getElementById('generateBtn').disabled=true;return;}}
+  var questions=EXPOSURE_QUESTIONS[selectedIndustry]||[];
+  var answered=0;
+  for(var j=0;j<questions.length;j++){if(document.querySelector('input[name="exp_'+questions[j].id+'"]:checked'))answered++;}
+  document.getElementById('generateBtn').disabled=(answered<3);
+}
+
+function collectInputs(){
+  var fields=FIELD_CONFIGS[selectedIndustry];var vals={};
+  for(var i=0;i<fields.length;i++){var raw=document.getElementById('f_'+fields[i].id).value.replace(/,/g,'');vals[fields[i].id]=parseFloat(raw)||0;}
+  vals._revenue=document.getElementById('pf-revenue')?document.getElementById('pf-revenue').value:'';
+  vals._headcount=document.getElementById('pf-headcount')?document.getElementById('pf-headcount').value:'';
+  vals._customer=document.getElementById('pf-customer')?document.getElementById('pf-customer').value:'';
+  vals._market=document.getElementById('pf-market')?document.getElementById('pf-market').value:'';
+  vals._exposure={};
+  var questions=EXPOSURE_QUESTIONS[selectedIndustry]||[];
+  for(var j=0;j<questions.length;j++){
+    var checked=document.querySelector('input[name="exp_'+questions[j].id+'"]:checked');
+    if(checked) vals._exposure[questions[j].id]={score:parseInt(checked.value),answer:questions[j].opts[parseInt(checked.value)]};
+  }
+  return vals;
+}
+// ═══════════════════════════════════════════
+// GENERATE & SYNTHESIZE
+// ═══════════════════════════════════════════
+function generateDashboard(){
+  if(!currentUser){openAuth('login');return;}
+  userInputs=collectInputs();
+  currentUser.industry=selectedIndustry;currentUser.inputs=userInputs;
+  saveSession(currentUser);
+  var users=getUsers();if(users[currentUser.email]){users[currentUser.email].industry=selectedIndustry;users[currentUser.email].inputs=userInputs;saveUsers(users);}
+  synthesisCache=null;
+  runLoadingAndSynthesize();
+}
+
+function runLoadingAndSynthesize(){
+  showScreen('screen-loading');
+  document.getElementById('loadingSectorLabel').textContent='Sector: '+(INDUSTRY_LABELS[selectedIndustry]||'—')+' · Firm profile loaded';
+  var steps=['ls1','ls2','ls3','ls4','ls5'];
+  steps.forEach(function(id){var el=document.getElementById(id);el.classList.remove('done');el.querySelector('.check').textContent='○';});
+  setTimeout(function(){tickStep('ls1');},800);
+  setTimeout(function(){tickStep('ls2');},1600);
+  callClaudeForAllLenses(function(result){
+    synthesisCache=result;
+    setTimeout(function(){tickStep('ls3');},300);
+    setTimeout(function(){tickStep('ls4');},900);
+    setTimeout(function(){tickStep('ls5');},1500);
+    setTimeout(function(){buildDashboard();showScreen('screen-dashboard');},2100);
+  });
+}
+
+function tickStep(id){var el=document.getElementById(id);el.classList.add('done');el.querySelector('.check').textContent='✓';}
+
+// ═══════════════════════════════════════════
+// CLAUDE API SYNTHESIS
+// ═══════════════════════════════════════════
+function buildSynthesisPrompt(){
+  var ind=selectedIndustry,v=userInputs,m=MACRO,label=INDUSTRY_LABELS[ind];
+  var firmData='';
+  FIELD_CONFIGS[ind].forEach(function(f){firmData+='  - '+f.label+': '+v[f.id]+(f.suffix||'')+'\n';});
+  var exposureData='';
+  if(v._exposure){Object.keys(v._exposure).forEach(function(k){exposureData+='  - '+k+': '+v._exposure[k].answer+'\n';});}
+  return 'You are MacroLab\'s Singapore business intelligence engine. Your role is to synthesise macro signals with a firm\'s actual operating data and produce a structured Firm Intelligence Report with four decision lenses.\n\n'+
+  '## FIRM PROFILE\nSector: '+label+'\n'+
+  'Revenue band: '+(v._revenue||'not specified')+'\n'+
+  'Headcount band: '+(v._headcount||'not specified')+'\n'+
+  'Customer type: '+(v._customer||'mixed')+'\n'+
+  'Primary market: '+(v._market||'Singapore')+'\n'+
+  'Unit economics:\n'+firmData+
+  'Exposure signals (from firm\'s own answers):\n'+exposureData+'\n'+
+  '## SINGAPORE MACRO SIGNALS (week of 20 May 2026)\n'+
+  '- Global freight rates: +'+m.freightChange+'% MoM (Red Sea rerouting, +'+m.redSeaDelayDays+' days)\n'+
+  '- SGD vs USD: '+m.sgdChange+'% (14-month high for USD strength)\n'+
+  '- MAS monetary stance: '+m.masStance+'\n'+
+  '- Macro regime: Compression Cycle — macro stable, margins under pressure\n'+
+  '- PWM wage floor expansion: confirmed Q3 2026\n'+
+  '- Tourist arrivals vs 2019: +'+m.touristArrivals+'%\n'+
+  '- Consumer sentiment: '+m.consumerSentiment+'\n'+
+  '- Global VC liquidity: '+m.vcLiquidity+'\n'+
+  '- ASEAN trade demand: '+m.aseanDemand+'\n'+
+  '- Credit conditions (EFS): easing, utilisation up '+m.efsUtilisationUp+'% QoQ\n'+
+  '- Palm oil prices: +'+m.palmOilYoY+'% YoY\n'+
+  '- Carbon tax timeline: advancing toward 2027\n'+
+  '- Corporate reality signals: pricing pressure evident in earnings calls, capex caution, delayed orders\n\n'+
+  '## MacroLab Classification Framework\nSignal type for current environment: Slow Squeeze (moderate intensity, high persistence)\nPolicy posture: Singapore macro-stable but policy does not directly protect firm-level margins\nBusiness posture: Protect margins before chasing volume\n\n'+
+  '## YOUR TASK\nProduce a JSON object with EXACTLY this structure — pure JSON only, no preamble, no markdown:\n\n'+
+  '{\n'+
+  '  "overallStatus": "WATCH",\n'+
+  '  "pulseSummary": "12-word headline of macro situation for this sector",\n'+
+  '  "pulseSignals": "3 key signal readings separated by ·",\n'+
+  '  "firmArchetype": "Primary archetype name (e.g. Margin-Squeezed Operator, Labour-Constrained Business, Productivity-Lagged Firm, China-Exposed Trader, Pricing-Power Defender)",\n'+
+  '  "firmArchetypeDesc": "One sentence explaining why this archetype applies to this firm.",\n'+
+  '  "bufferScenario": "2-sentence personalised stress test using actual firm numbers. Use <strong> tags for key figures.",\n'+
+  '  "bufferStat1": {"value":"...","label":"..."},\n'+
+  '  "bufferStat2": {"value":"...","label":"..."},\n'+
+  '  "bufferStat3": {"value":"...","label":"..."},\n'+
+  '  "bufferRecommend": "One specific recommendation sentence.",\n'+
+  '  "lenses": [\n'+
+  '    {"name":"Unit Economics","status":"HIGH","metrics":[{"label":"...","value":"...","direction":"up"},{"label":"...","value":"...","direction":"down"},{"label":"...","value":"...","direction":"neutral"},{"label":"...","value":"...","direction":"neutral"}],"analysis":"2-3 sentences using actual firm numbers and specific macro signals from the transmission framework.","firstAction":"One concrete time-bound action this week or this month."},\n'+
+  '    {"name":"Scale Dynamics",...},\n'+
+  '    {"name":"Macro Forces & Transmission",...},\n'+
+  '    {"name":"Strategic Buffers & Operating Posture",...}\n'+
+  '  ]\n'+
+  '}\n\n'+
+  'RULES: Use the firm\'s ACTUAL numbers throughout (e.g. "your 38% margin"). Status: HIGH=act now, WATCH=monitor, STABLE=managed. 4 metrics per lens mixing firm data and macro. Analysis must reference the transmission channel (not just the headline). First actions must be specific, time-bound, and practical for an SME. Firm archetype must reflect the dominant operating challenge. Pure JSON only.';
+}
+
+function callClaudeForAllLenses(callback){
+  var prompt=buildSynthesisPrompt();
+  // Try the Netlify proxy first (works when hosted on Netlify)
+  // Falls back to hardcoded synthesis on GitHub Pages
+  fetch('/api/synthesize',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})
+  })
+  .then(function(res){
+    if(!res.ok) throw new Error('proxy unavailable');
+    return res.json();
+  })
+  .then(function(data){
+    var text=(data.result||'').replace(/```json|```/g,'').trim();
+    try{callback(JSON.parse(text));}catch(e){console.warn('Parse failed, using fallback');callback(buildFallback());}
+  })
+  .catch(function(){
+    // GitHub Pages fallback — rich hardcoded synthesis per sector
+    callback(buildFallback());
+  });
+}
+
+// ═══════════════════════════════════════════
+// FALLBACK SYNTHESIS (runs on GitHub Pages)
+// ═══════════════════════════════════════════
+function buildFallback(){
+  var ind=selectedIndustry,v=userInputs,m=MACRO;
+  var lenses=[];
+  if(ind==='mfg'){
+    var ns=Math.round(v.stockDays*1.1),ca=Math.round(v.creditPct*v.opex/100),fh=(m.freightChange*0.3).toFixed(1),ar=Math.max(0,Math.round(v.cash-(v.cash*0.13)));
+    lenses=[
+      {name:'Unit Economics',status:v.margin<35?'HIGH':'WATCH',metrics:[{label:'Gross margin',value:v.margin+'%',direction:'neutral'},{label:'Freight cost add-on',value:'+'+fh+'%',direction:'up'},{label:'Raw material cost pressure',value:'Elevated',direction:'up'},{label:'Automation ROI signal',value:'Favourable',direction:'down'}],analysis:'Your '+v.margin+'% margin is under direct pressure from the freight surge (+'+m.freightChange+'% MoM) and SGD at a 14-month low against USD. Imported raw material costs are rising on two fronts simultaneously — every 1% freight rise adds ~0.3% to your cost per unit.',firstAction:'Lock in raw material contracts this week. Get supplier quotes from Malaysia/Thailand before further SGD weakening.'},
+      {name:'Scale Dynamics',status:'WATCH',metrics:[{label:'ASEAN export demand',value:'Solid',direction:'down'},{label:'US order pipeline',value:'Slowing',direction:'up'},{label:'EFS capex financing',value:'Easing',direction:'down'},{label:'Multi-shift utilisation',value:'Review',direction:'neutral'}],analysis:'ASEAN demand is your most reliable growth channel — prioritise it over USD-denominated exports while currency headwinds persist. EFS utilisation is up '+m.efsUtilisationUp+'% QoQ, signalling a window for capex financing before it closes.',firstAction:'Submit Enterprise Financing Scheme application before July. Pivot export focus to ASEAN trade lanes.'},
+      {name:'Macro Forces',status:'HIGH',metrics:[{label:'Global freight rates',value:'+'+m.freightChange+'% MoM',direction:'up'},{label:'SGD vs USD',value:'14-month high',direction:'up'},{label:'Red Sea delay',value:'+'+m.redSeaDelayDays+' days',direction:'up'},{label:'MAS policy stance',value:'Holding',direction:'neutral'}],analysis:'The most pressured macro environment for Singapore manufacturers in 18 months. Freight, currency, and supply chain are all moving against you simultaneously. The Red Sea rerouting is structural — build it into your delivery time assumptions for H2 2026.',firstAction:'Identify second-source suppliers in Malaysia or Thailand for your top 3 input materials. Factor '+m.redSeaDelayDays+'-day buffer into all H2 customer commitments.'},
+      {name:'Strategic Buffers',status:(v.cash>60&&v.stockDays>20)?'WATCH':'HIGH',metrics:[{label:'Cash runway',value:v.cash+' days',direction:'neutral'},{label:'Safety stock on hand',value:v.stockDays+' days',direction:'neutral'},{label:'Credit facility headroom',value:'S$'+ca.toLocaleString(),direction:'down'},{label:'Recommended safety stock',value:ns+' days',direction:'neutral'}],analysis:'Your buffers are your shock absorbers. At '+v.stockDays+' days of stock, a further supply disruption leaves limited margin. The EFS credit window closes December 2026 — optimal time to build buffers is now.',firstAction:'Increase safety stock from '+v.stockDays+' to '+ns+' days. Draw on credit facility to pre-fund inventory while EFS conditions remain easing.'}
+    ];
+    return {overallStatus:v.margin<35?'HIGH':'WATCH',firmArchetype:'Margin-Squeezed Operator',firmArchetypeDesc:'Revenue is holding but costs are rising faster than pricing power across freight, currency, and wage dimensions.',pulseSummary:'Cost pressure elevated · freight and currency headwinds active',pulseSignals:'SGD -'+Math.abs(m.sgdChange)+'% · Freight +'+m.freightChange+'% MoM · Red Sea +'+m.redSeaDelayDays+' days',bufferScenario:'If freight rises a further 15% and USD strengthens 2% more, your buffer compresses to <strong>'+ar+' days</strong>. Increase safety stock from <strong>'+v.stockDays+' to '+ns+' days</strong> while EFS window is open.',bufferStat1:{value:ar+' days',label:'Effective buffer after freight shock'},bufferStat2:{value:v.stockDays+' days',label:'Current raw material stock'},bufferStat3:{value:ns+' days',label:'Recommended safety stock'},bufferRecommend:'Draw on credit facility to pre-fund safety stock build before July. EFS window closes December 2026.',lenses:lenses};
+  } else if(ind==='tech'){
+    var am=Math.max(0,Math.round(v.cash-2)),ra=Math.round(v.arpu*1.12),rr=v.keyPersonPct>55?'HIGH':'MODERATE';
+    lenses=[
+      {name:'Unit Economics',status:v.margin>65?'STABLE':'WATCH',metrics:[{label:'Gross margin',value:v.margin+'%',direction:v.margin>65?'down':'neutral'},{label:'Monthly burn rate',value:'S$'+v.opex.toLocaleString(),direction:'neutral'},{label:'Avg revenue per client',value:'S$'+v.arpu.toLocaleString(),direction:'neutral'},{label:'VC liquidity signal',value:'Contracting',direction:'up'}],analysis:'With VC liquidity contracting globally, your '+v.margin+'% gross margin needs to demonstrate capital efficiency now. Your ARPU of S$'+v.arpu.toLocaleString()+' is your primary lever — pricing power in Singapore\'s B2B tech market remains resilient for proven ROI tools.',firstAction:'Build a cost-per-acquisition dashboard this week. If CAC payback exceeds 12 months, pause acquisition spend and focus on expansion revenue from existing clients.'},
+      {name:'Scale Dynamics',status:v.keyPersonPct>55?'HIGH':'WATCH',metrics:[{label:'Rainmaker concentration risk',value:rr,direction:v.keyPersonPct>55?'up':'neutral'},{label:'Marginal replication cost',value:'Near-zero',direction:'down'},{label:'ASEAN expansion signal',value:'Solid',direction:'down'},{label:'Regulatory compliance cost',value:'Rising',direction:'up'}],analysis:'Your '+v.keyPersonPct+'% revenue concentration in top performers is a key vulnerability. Scale economics are inherently favourable (near-zero marginal cost of replication) but growth ceiling is human capital, not capex. A single departure restructures your revenue model.',firstAction:'Map your top 5 revenue contributors. Build a 3-month loaded salary retention buffer for each. Begin ASEAN market entry scoping for Indonesia or Vietnam.'},
+      {name:'Macro Forces',status:'WATCH',metrics:[{label:'Global VC liquidity',value:'Contracting',direction:'up'},{label:'MAS digital stance',value:'Supportive',direction:'down'},{label:'AI governance costs',value:'Emerging',direction:'neutral'},{label:'Cross-border data compliance',value:'Tightening',direction:'up'}],analysis:'The global VC contraction is your primary macro headwind — it affects client budgets if you serve funded startups and your own fundraising environment. Singapore\'s supportive digital regulatory stance is the offsetting positive. AI governance compliance costs are an emerging expense line not yet priced into most SME models.',firstAction:'Budget for cross-border data compliance costs in your FY2027 model. If you serve VC-backed clients, build a 2-month revenue buffer for delayed renewals.'},
+      {name:'Strategic Buffers',status:v.cash<12?'HIGH':'STABLE',metrics:[{label:'Cash runway',value:v.cash+' months',direction:'neutral'},{label:'Effective runway (talent shock)',value:am+' months',direction:'neutral'},{label:'Rainmaker retention fund',value:'Build now',direction:'up'},{label:'Cyber insurance coverage',value:'Review',direction:'neutral'}],analysis:'Your strategic buffer is human capital and institutional knowledge — not inventory. With S$'+v.opex.toLocaleString()+' monthly burn and '+v.cash+' months runway, a 3-person departure event or cybersecurity incident is your primary scenario to plan for.',firstAction:'Establish a key talent retention reserve (3 months loaded cost per rainmaker). Obtain or review cybersecurity insurance — premiums are still reasonable before any incident history.'}
+    ];
+    return {overallStatus:'WATCH',firmArchetype:v.keyPersonPct>55?'Labour-Constrained Business':'Pricing-Power Defender',firmArchetypeDesc:v.keyPersonPct>55?'Revenue concentration in key performers creates structural vulnerability that limits scale options.':'Main challenge is preserving price discipline and margin quality in a competitive talent and client market.',pulseSummary:'VC liquidity contracting · talent risk elevated · ASEAN solid',pulseSignals:'VC liquidity contracting · MAS supportive · Compliance costs rising',bufferScenario:'With <strong>'+v.keyPersonPct+'% rainmaker concentration</strong> and a '+v.cash+'-month runway, a key talent departure could reduce monthly revenue by 15–20%. Your effective post-shock runway is <strong>'+am+' months</strong>.',bufferStat1:{value:am+' months',label:'Effective runway after talent shock'},bufferStat2:{value:rr,label:'Rainmaker concentration risk'},bufferStat3:{value:'S$'+ra,label:'ARPU target to offset wage pressure'},bufferRecommend:'Build a retention reserve of 3 months loaded cost per top performer before Q3 wage pressure peaks.',lenses:lenses};
+  } else if(ind==='electronics'){
+    var chinaExp=(v._exposure&&v._exposure.chinaexp)?v._exposure.chinaexp.score:1;
+    var ctrlRisk=(v._exposure&&v._exposure.exportcontrols)?v._exposure.exportcontrols.score:1;
+    var invRec=Math.round((v.inventoryDays||35)*1.15);
+    var cc=v.customerConc||55;
+    var archetype=chinaExp===0?'China-Exposed Trader':v.margin<30?'Margin-Squeezed Operator':'Freight-Exposed Operator';
+    var archetypeDesc=chinaExp===0?'Heavy exposure to China demand and export competition puts pricing power and order pipeline at risk.':v.margin<30?'Thin margins are squeezed by component pricing pressure, currency headwinds, and export competition.':'Freight and logistics disruption are materially affecting your supply chain cost and lead time assumptions.';
+    lenses=[
+      {name:'Unit Economics',status:v.margin<30?'HIGH':'WATCH',metrics:[{label:'Gross margin',value:(v.margin||0)+'%',direction:'neutral'},{label:'China export competition',value:'Elevated',direction:'up'},{label:'Component pricing pressure',value:'Rising',direction:'up'},{label:'SGD/USD impact on inputs',value:'+'+m.freightChange+'% cost add',direction:'up'}],analysis:'Your '+(v.margin||0)+'% margin faces a dual squeeze: China overcapacity drives export price competition in third markets, while SGD at a 14-month low raises imported component costs. AI infrastructure demand (data centres, advanced chips) is the offsetting opportunity for firms in that supply chain segment.',firstAction:'Map your customer revenue by market — identify accounts exposed to China-priced competition vs those benefiting from AI infrastructure demand. Protect the latter in your pricing model.'},
+      {name:'Scale Dynamics',status:cc>60?'HIGH':'WATCH',metrics:[{label:'Customer concentration (top 3)',value:cc+'%',direction:cc>60?'up':'neutral'},{label:'Export control compliance',value:ctrlRisk===0?'Direct impact':ctrlRisk===1?'Indirect':'Minimal',direction:ctrlRisk<2?'up':'neutral'},{label:'Inventory buffer',value:(v.inventoryDays||35)+' days',direction:'neutral'},{label:'Recommended buffer',value:invRec+' days',direction:'neutral'}],analysis:'Customer concentration of '+cc+'% in your top 3 accounts is a key fragility. US-China export controls are creating requalification costs for firms touching restricted technology, even indirectly. Singapore\'s position as regional HQ is an asset if compliance is managed proactively.',firstAction:'Begin supplier requalification for any components on US export control lists. Map customer base: China-linked vs AI-demand-driven revenue. Diversify toward the latter.'},
+      {name:'Macro Forces & Transmission',status:'HIGH',metrics:[{label:'China overcapacity',value:'Elevated',direction:'up'},{label:'US-China export controls',value:'Structural',direction:'up'},{label:'Semiconductor chokepoint',value:'Active',direction:'up'},{label:'ASEAN demand',value:'Solid',direction:'down'}],analysis:'Electronics GVC is under simultaneous pressure from China overcapacity (pushing down third-market pricing) and US export controls (raising compliance costs). Singapore\'s intermediate node role is both asset and risk — high-value logistics and HQ functions are resilient, but direct manufacturing faces margin pressure.',firstAction:'Commission a GVC exposure review with your supply chain team. Map single-source inputs and customers in restricted-access markets before Q3 planning.'},
+      {name:'Strategic Buffers & Operating Posture',status:((v.cash||90)>60&&(v.inventoryDays||35)>25)?'WATCH':'HIGH',metrics:[{label:'Cash runway',value:(v.cash||90)+' days',direction:'neutral'},{label:'Inventory buffer',value:(v.inventoryDays||35)+' days',direction:'neutral'},{label:'Recommended buffer',value:invRec+' days',direction:'neutral'},{label:'EFS financing',value:'Window open',direction:'down'}],analysis:'Your inventory buffer at '+(v.inventoryDays||35)+' days is your primary operating cushion. Given Red Sea delays adding '+m.redSeaDelayDays+' days to EU/US shipments and semiconductor chokepoint pressure, building to '+invRec+' days is a pragmatic hedge before H2.',firstAction:'Increase inventory buffer from '+(v.inventoryDays||35)+' to '+invRec+' days on your top 5 critical components. Draw on EFS credit while conditions remain easing.'}
+    ];
+    return {overallStatus:v.margin<30?'HIGH':'WATCH',firmArchetype:archetype,firmArchetypeDesc:archetypeDesc,pulseSummary:'China export pressure · semiconductor chokepoint · AI demand offsetting',pulseSignals:'China overcapacity elevated · Export controls structural · ASEAN solid',bufferScenario:'With <strong>'+(v.inventoryDays||35)+' days inventory</strong> and customer concentration at <strong>'+cc+'%</strong>, a customer deferral or supply disruption could compress cash flow materially. Target '+invRec+' days buffer.',bufferStat1:{value:(v.inventoryDays||35)+' days',label:'Current inventory buffer'},bufferStat2:{value:cc+'%',label:'Customer concentration (top 3)'},bufferStat3:{value:invRec+' days',label:'Recommended buffer target'},bufferRecommend:'Build inventory to '+invRec+' days on critical components. Map GVC exposure before Q3 planning. EFS window open.',lenses:lenses};
+
+  } else if(ind==='wholesale'){
+    var chinaWh=(v._exposure&&v._exposure.chinaexp)?v._exposure.chinaexp.score:1;
+    var invWh=v.inventoryDays||40;
+    var ar3=Math.max(0,Math.round((v.cash||50)*0.85));
+    var archetypeWh=chinaWh===0?'China-Exposed Trader':v.margin<18?'Margin-Squeezed Operator':'Freight-Exposed Operator';
+    var archetypeDescWh=chinaWh===0?'Sourcing or customer base is heavily China-linked, creating direct exposure to pricing competition and supply disruption.':v.margin<18?'Thin wholesale margins leave limited room to absorb freight, currency, or import cost increases.':'Freight and logistics disruption materially affect your supply chain cost and delivery commitments.';
+    lenses=[
+      {name:'Unit Economics',status:v.margin<18?'HIGH':'WATCH',metrics:[{label:'Gross margin',value:(v.margin||0)+'%',direction:'neutral'},{label:'Import freight impact',value:'+'+m.freightChange+'% MoM',direction:'up'},{label:'China sourcing exposure',value:chinaWh===0?'High':'Moderate',direction:chinaWh===0?'up':'neutral'},{label:'SGD vs USD',value:'14-month high',direction:'up'}],analysis:'Your '+(v.margin||0)+'% gross margin is being squeezed by '+m.freightChange+'% MoM freight rises and SGD weakness. China-linked sourcing '+(chinaWh===0?'creates direct exposure to pricing shifts and potential supply disruption':'adds moderate exposure to import cost and pricing changes')+'.',firstAction:'Review top 10 product lines by margin. For China-linked SKUs, model a 5% further cost increase. Identify which lines allow price increases without losing key accounts.'},
+      {name:'Scale Dynamics',status:'WATCH',metrics:[{label:'Inventory days',value:invWh+' days',direction:'neutral'},{label:'Customer order trends',value:(v._exposure&&v._exposure.delayorders)?v._exposure.delayorders.answer:'Monitor',direction:'neutral'},{label:'ASEAN trade demand',value:'Solid',direction:'down'},{label:'EFS financing window',value:'Open',direction:'down'}],analysis:'Inventory management is your primary scale lever. At '+invWh+' days buffer, you have moderate protection. ASEAN demand is solid — repositioning away from US-dependent channels toward ASEAN trade lanes reduces FX and trade policy risk.',firstAction:'Identify top 3 ASEAN trade opportunities. Map China-linked sourcing for US-bound clients and model rerouting risk before Q3.'},
+      {name:'Macro Forces & Transmission',status:'HIGH',metrics:[{label:'Global freight rates',value:'+'+m.freightChange+'% MoM',direction:'up'},{label:'SGD vs USD',value:'14-month high',direction:'up'},{label:'China export pressure',value:'Elevated',direction:'up'},{label:'Red Sea delay',value:'+'+m.redSeaDelayDays+' days',direction:'up'}],analysis:'Wholesale trade sits at the intersection of all three active pressures: freight costs, currency headwinds, and China export pricing competition. Red Sea rerouting adds '+m.redSeaDelayDays+' days to delivery commitments — build this into Q3 inventory planning and customer delivery terms.',firstAction:'Update delivery commitments to reflect current freight delays. Add a freight surcharge clause to Q3 contracts where possible.'},
+      {name:'Strategic Buffers & Operating Posture',status:(v.cash||50)>40?'WATCH':'HIGH',metrics:[{label:'Cash runway',value:(v.cash||50)+' days',direction:'neutral'},{label:'Adjusted buffer (freight shock)',value:ar3+' days',direction:'neutral'},{label:'Inventory buffer',value:invWh+' days',direction:'neutral'},{label:'EFS credit window',value:'Open',direction:'down'}],analysis:'Your primary buffer is cash runway and trade credit. With freight elevated and currency moving against importers, a further 10% cost spike compresses effective runway to approximately '+ar3+' days. The EFS window is open — review your credit facility now.',firstAction:'Apply for or review your EFS facility before July. Pre-finance inventory before further freight rises. Negotiate extended payment terms with key suppliers.'}
+    ];
+    return {overallStatus:v.margin<18?'HIGH':'WATCH',firmArchetype:archetypeWh,firmArchetypeDesc:archetypeDescWh,pulseSummary:'Freight and import cost pressure · China sourcing risk · ASEAN demand solid',pulseSignals:'Freight +'+m.freightChange+'% MoM · SGD 14-month low · China competition elevated',bufferScenario:'Your margin of <strong>'+(v.margin||0)+'%</strong> and '+(v.cash||50)+'-day runway are under pressure. A further freight spike reduces effective buffer to approximately <strong>'+ar3+' days</strong>.',bufferStat1:{value:(v.cash||50)+' days',label:'Current cash runway'},bufferStat2:{value:invWh+' days',label:'Inventory buffer'},bufferStat3:{value:ar3+' days',label:'Buffer after freight shock'},bufferRecommend:'Review EFS facility before July. Update delivery terms for Red Sea delay. Map China-linked sourcing risk.',lenses:lenses};
+
+  } else {
+    // Generic fallback for remaining sectors
+    var ar2=Math.max(0,Math.round((v.cash||0)*0.88));
+    lenses=[
+      {name:'Unit Economics',status:'WATCH',metrics:[{label:'Gross margin',value:(v.margin||0)+'%',direction:'neutral'},{label:'Monthly OpEx',value:'S$'+(v.opex||0).toLocaleString(),direction:'neutral'},{label:'Freight impact',value:'+'+m.freightChange+'% MoM',direction:'up'},{label:'Cost pressure',value:'Elevated',direction:'up'}],analysis:'Your '+v.margin+'% gross margin is operating in a high-cost environment. Global freight up '+m.freightChange+'% MoM and SGD weakness are creating simultaneous cost pressures across imported inputs. Review your pricing model before Q3.',firstAction:'Review your top 3 cost lines this week and identify where cost pass-through is possible via pricing or contract clauses.'},
+      {name:'Scale Dynamics',status:'WATCH',metrics:[{label:'ASEAN demand',value:'Solid',direction:'down'},{label:'EFS credit conditions',value:'Easing',direction:'down'},{label:'Supply chain delays',value:'+'+m.redSeaDelayDays+' days',direction:'up'},{label:'Labour availability',value:'Tight',direction:'up'}],analysis:'Growth through productivity and ASEAN regionalisation is your optimal path. Domestic labour constraints and supply chain delays are the primary scaling friction points. EFS utilisation up '+m.efsUtilisationUp+'% QoQ — a window for capex financing is open.',firstAction:'Identify one ASEAN market entry opportunity or productivity investment to assess before Q3. Submit EFS application if capex is planned for H2 2026.'},
+      {name:'Macro Forces',status:'HIGH',metrics:[{label:'Global freight',value:'+'+m.freightChange+'% MoM',direction:'up'},{label:'SGD vs USD',value:'14-month high',direction:'up'},{label:'MAS stance',value:'Holding',direction:'neutral'},{label:'Tourist arrivals',value:'+'+m.touristArrivals+'% vs 2019',direction:'down'}],analysis:'The macro environment is broadly elevated in cost pressure but selectively supportive in demand. Freight and currency are the key headwinds; tourist demand and easing credit are the tailwinds for relevant sectors.',firstAction:'Model the impact of a further 5% cost increase across your key input lines on your full-year margin before your next board review.'},
+      {name:'Strategic Buffers',status:'WATCH',metrics:[{label:'Cash runway',value:(v.cash||0)+' periods',direction:'neutral'},{label:'Adjusted buffer',value:ar2+' periods',direction:'neutral'},{label:'Supplier diversity',value:'Review',direction:'neutral'},{label:'Labour elasticity',value:'Tight',direction:'up'}],analysis:'In the current environment, supply chain and labour are your most likely shock vectors. Ensure your buffers address both — not just cash. Credit conditions are easing, making now a good time to build facility headroom.',firstAction:'Schedule a 60-minute buffer review with your finance lead before end of May. Map your top 3 shock scenarios and current exposure for each.'}
+    ];
+    return {overallStatus:'WATCH',firmArchetype:'Margin-Squeezed Operator',firmArchetypeDesc:'Operating in a compression cycle where macro stability coexists with persistent micro-level cost and margin pressure.',pulseSummary:'Cost pressure elevated · demand signals mixed · build buffers now',pulseSignals:'SGD -'+Math.abs(m.sgdChange)+'% · Freight +'+m.freightChange+'% MoM · MAS holding',bufferScenario:'Based on your firm profile, your effective buffer after a cost shock scenario is approximately <strong>'+ar2+' periods</strong>. Review your Lens 4 analysis below for your personalised action checklist.',bufferStat1:{value:(v.cash||0)+' periods',label:'Current cash runway'},bufferStat2:{value:(v.margin||0)+'%',label:'Gross margin (pre-shock)'},bufferStat3:{value:'HIGH',label:'Macro environment rating'},bufferRecommend:'Review your Strategic Buffers lens below for your sector-specific action checklist.',lenses:lenses};
+  }
+}
+
+// ═══════════════════════════════════════════
+// DASHBOARD RENDER
+// ═══════════════════════════════════════════
+function buildDashboard(){
+  var ind=selectedIndustry,label=INDUSTRY_LABELS[ind],s=synthesisCache;
+  var userName=currentUser?currentUser.firstName:'Your';
+  document.getElementById('navProfileLabel').textContent=currentUser.firstName+' · '+label;
+  document.getElementById('navDot').classList.remove('offline');
+
+  var status=s?s.overallStatus:'WATCH';
+  var pulseSummary=s?s.pulseSummary:'Cost pressure rising · demand softening';
+  var pulseSignals=s?s.pulseSignals:'SGD -0.8% · Freight +12% MoM · MAS holding';
+
+  var hdr='<div class="dash-header"><div class="dash-inner"><div class="dash-top">';
+  hdr+='<div class="dash-greeting"><div class="eyebrow-dash">FIRM INTELLIGENCE DASHBOARD</div>';
+  hdr+='<h1>'+userName+'\'s MacroLab Dashboard</h1>';
+  hdr+='<p>Industry: <strong style="color:white;">'+label+'</strong> &nbsp;·&nbsp; '+currentUser.company+' &nbsp;·&nbsp; Updated 20 May 2026</p>';
+  hdr+='<div class="ai-synthesis-badge"><span class="ai-badge-dot"></span> Firm Intelligence Report · unit economics × 47 macro signals</div>';
+  if(s && s.firmArchetype){hdr+='<div style="margin-top:10px;display:inline-flex;align-items:center;gap:8px;background:rgba(200,136,42,0.15);border:1px solid rgba(200,136,42,0.3);border-radius:6px;padding:6px 12px;"><span style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:0.1em;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-right:4px;">Firm Archetype ·</span><span style="font-size:13px;font-weight:600;color:#f0c060;">'+s.firmArchetype+'</span></div>';}
+  hdr+='</div>';
+  hdr+='<div class="macro-pulse"><div class="pulse-label">SINGAPORE MACRO PULSE</div>';
+  hdr+='<div class="pulse-status"><span class="pulse-badge">'+status+'</span><span class="pulse-desc">'+pulseSummary+'</span></div>';
+  hdr+='<div class="pulse-signals">'+pulseSignals+'</div></div>';
+  hdr+='</div></div></div>';
+  document.getElementById('dashHeader').innerHTML=hdr;
+  document.getElementById('dashSectionTitle').textContent='Your Four Decision Lenses — '+label;
+
+  renderBufferAlert(s);
+  if(s&&s.lenses&&s.lenses.length===4) renderLenses(s.lenses);
+}
+
+function renderBufferAlert(s){
+  var el=document.getElementById('bufferAlert');
+  if(!s){el.innerHTML='';return;}
+  var html='<div class="buffer-alert-header"><span class="buffer-icon">⚡</span>';
+  html+='<div style="flex:1;"><h3>Strategic Buffer Stress Test — Your Business</h3>';
+  html+='<div style="font-size:0.77rem;color:var(--slate);margin-top:0.2rem;font-family:\'DM Mono\',monospace;">Scenario: Freight +15% · SGD weakens 2% · PWM expansion Q3 2026</div></div>';
+  html+='<span class="status-badge badge-watch">WATCH</span></div>';
+  html+='<div class="buffer-scenario-text">'+(s.bufferScenario||'')+'</div>';
+  html+='<div class="buffer-stats">';
+  [s.bufferStat1,s.bufferStat2,s.bufferStat3].forEach(function(st){
+    if(st) html+='<div class="buffer-stat"><div class="buffer-stat-value">'+(st.value||'—')+'</div><div class="buffer-stat-label">'+(st.label||'')+'</div></div>';
+  });
+  html+='</div>';
+  html+='<div class="buffer-recommend"><strong>MacroLab Recommendation:</strong> '+(s.bufferRecommend||'See Lens 4 below for your full action checklist.')+'</div>';
+  el.innerHTML=html;
+}
+
+function renderLenses(lenses){
+  var grid=document.getElementById('lensGrid');
+  var html='';
+  lenses.forEach(function(lens,i){
+    var bc=lens.status==='HIGH'?'badge-high':lens.status==='STABLE'?'badge-stable':'badge-watch';
+    html+='<div class="lens-card"><div class="lens-top">';
+    html+='<div><div class="lens-number">LENS '+(i+1)+'</div><div class="lens-name">'+lens.name+'</div></div>';
+    html+='<span class="status-badge '+bc+'">'+lens.status+'</span></div>';
+    html+='<div class="lens-body"><div class="lens-metrics">';
+    (lens.metrics||[]).forEach(function(m){
+      html+='<div class="metric-row"><span class="metric-label">'+m.label+'</span><span class="metric-value '+(m.direction||'neutral')+'">'+m.value+'</span></div>';
+    });
+    html+='</div>';
+    html+='<div class="lens-analysis">'+(lens.analysis||'')+'</div>';
+    html+='<div class="first-action"><div class="first-action-label">FIRST ACTION</div><div class="first-action-text">'+(lens.firstAction||'')+'</div></div>';
+    html+='<span class="ai-tag">↗ Automation-supported · human-reviewed · MacroLab</span>';
+    html+='</div></div>';
+  });
+  grid.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════
+// REPORT ACTION FUNCTIONS
+// ═══════════════════════════════════════════
+function showActionMsg(msg, isError) {
+  var el = document.getElementById('reportActionMsg');
+  if (!el) return;
+  el.style.display = 'block';
+  el.style.color = isError ? '#c0392b' : 'var(--teal)';
+  el.textContent = msg;
+  setTimeout(function() { el.style.display = 'none'; }, 4000);
+}
+
+function downloadReportPDF() {
+  // Build a printable version of the current report
+  var reportTitle = document.getElementById('dashSectionTitle') ? document.getElementById('dashSectionTitle').textContent : 'MacroLab Firm Intelligence Report';
+  var headerHTML = document.getElementById('dashHeader') ? document.getElementById('dashHeader').innerHTML : '';
+  var bufferHTML = document.getElementById('bufferAlert') ? document.getElementById('bufferAlert').innerHTML : '';
+  var lensHTML = document.getElementById('lensGrid') ? document.getElementById('lensGrid').innerHTML : '';
+
+  var printWindow = window.open('', '_blank', 'width=900,height=700');
+  if (!printWindow) { showActionMsg('Allow pop-ups to download PDF, then try again.', true); return; }
+  printWindow.document.write(`<!DOCTYPE html><html><head>
+    <title>${reportTitle} · MacroLab Singapore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      body{font-family:'DM Sans',sans-serif;color:#0f1923;background:white;margin:0;padding:24px 32px;font-size:12px;}
+      h1,h2,h3{font-family:'Playfair Display',serif;} .lens-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+      .lens-card{border:1px solid #d4dde6;border-radius:8px;overflow:hidden;page-break-inside:avoid;}
+      .lens-top{padding:12px 14px 10px;border-bottom:1px solid #d4dde6;display:flex;justify-content:space-between;align-items:flex-start;background:#f7f9fb;}
+      .lens-number{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:#1a7a6e;margin-bottom:2px;}
+      .lens-name{font-size:13px;font-weight:700;color:#0f1923;} .lens-body{padding:12px 14px;}
+      .metric-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:11px;}
+      .metric-label{color:#4a6075;} .metric-value{font-weight:600;font-family:'DM Mono',monospace;font-size:10px;}
+      .lens-analysis{background:#f7f9fb;border:1px solid #d4dde6;border-radius:5px;padding:8px 10px;margin:8px 0;font-size:11px;color:#2e4057;line-height:1.55;}
+      .first-action{border-left:2px solid #1a7a6e;padding:6px 10px;background:#eef7f5;border-radius:0 5px 5px 0;}
+      .first-action-label{font-family:'DM Mono',monospace;font-size:8px;color:#1a7a6e;text-transform:uppercase;margin-bottom:2px;}
+      .first-action-text{font-size:11px;font-weight:500;color:#0f1923;}
+      .status-badge{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;}
+      .badge-high{background:#fdf0ee;color:#c0392b;border:1px solid #f5c6c0;}
+      .badge-watch{background:#fdf6e8;color:#c8882a;border:1px solid #f0dbb0;}
+      .badge-stable{background:#e8f5ed;color:#1a7a4a;border:1px solid #b8dfc5;}
+      .report-header{background:#0f1923;color:white;padding:20px 24px;margin:-24px -32px 20px;display:flex;justify-content:space-between;align-items:center;}
+      .report-logo{font-family:'DM Mono',monospace;font-size:14px;} .report-logo span{color:#22a394;}
+      .report-meta{font-size:10px;color:rgba(255,255,255,0.5);}
+      .buffer-section{background:#fffbf2;border:1.5px solid #f0dbb0;border-radius:8px;padding:14px 16px;margin-bottom:16px;}
+      .footer-note{margin-top:24px;padding-top:12px;border-top:1px solid #d4dde6;font-size:9px;color:#8a9bb0;font-family:'DM Mono',monospace;}
+      @media print{body{padding:16px 20px;} .lens-grid{grid-template-columns:1fr 1fr;}}
+    </style>
+  </head><body>
+    <div class="report-header">
+      <div class="report-logo">MacroLab<span>.sg</span> · Firm Intelligence Report</div>
+      <div class="report-meta">Private diagnostic · ${new Date().toLocaleDateString('en-SG',{day:'numeric',month:'long',year:'numeric'})}</div>
+    </div>
+    ${headerHTML}
+    <div class="buffer-section">${bufferHTML}</div>
+    <div class="lens-grid">${lensHTML}</div>
+    <div class="footer-note">This report is a private diagnostic for decision support only. MacroLab does not provide financial, legal, or investment advice. Firm-level data is not shared without explicit consent. © 2026 MacroLab Singapore</div>
+    <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`);
+  printWindow.document.close();
+  showActionMsg('Report opened in new window. Use File → Print to save as PDF.');
+}
+
+function saveThisReport() {
+  if (!synthesisCache || !currentUser) { showActionMsg('Generate your report first.', true); return; }
+  try {
+    var saves = JSON.parse(localStorage.getItem('ml_saved_reports') || '[]');
+    var report = {
+      date: new Date().toISOString(),
+      industry: selectedIndustry,
+      inputs: userInputs,
+      synthesis: synthesisCache,
+      company: currentUser.company
+    };
+    saves.unshift(report);
+    if (saves.length > 5) saves = saves.slice(0, 5); // keep last 5
+    localStorage.setItem('ml_saved_reports', JSON.stringify(saves));
+    showActionMsg('✓ Report saved. You can compare it with your next quarterly report.');
+  } catch(e) { showActionMsg('Could not save report to this browser.', true); }
+}
+
+function compareNextQuarter() {
+  var saves = [];
+  try { saves = JSON.parse(localStorage.getItem('ml_saved_reports') || '[]'); } catch(e) {}
+  if (saves.length === 0) {
+    showActionMsg('Save this report first — then regenerate in the next quarter to compare.');
+  } else {
+    var last = saves[0];
+    var lastDate = new Date(last.date).toLocaleDateString('en-SG', {day:'numeric',month:'short',year:'numeric'});
+    showActionMsg('✓ You have a saved report from ' + lastDate + '. Update your firm metrics and regenerate in Q3 to compare. MacroLab will flag changes in margin, scale, and exposure.');
+  }
+}
+
+function shareWithTAC() {
+  var anonEl = document.getElementById('consent-anon');
+  var firmEl = document.getElementById('consent-tac-firm');
+  var anonChecked = anonEl && anonEl.checked;
+  var firmChecked = firmEl && firmEl.checked;
+
+  if (anonChecked && firmChecked) {
+    showActionMsg('✓ Both anonymised sector insights AND your firm-level report are enabled for TAC sharing. Your firm name is included only in the firm-level share.');
+  } else if (anonChecked) {
+    showActionMsg('✓ Anonymised insight sharing enabled. Your aggregated sector pattern will be included in the next TAC Member Pulse. Your firm name and firm-level report are not shared.');
+  } else if (firmChecked) {
+    showActionMsg('✓ Firm-level report sharing with your affiliated TAC is enabled. Note: anonymised aggregation consent (checkbox 1) is currently off — update if you also want to contribute to the sector pulse.');
+  } else {
+    showActionMsg('Anonymised TAC sharing is currently off. Return to your firm profile and enable the consent checkboxes before sharing. Your firm-level report remains private.', true);
+  }
+}
+
+function requestAdvisory() {
+  var company = currentUser ? currentUser.company : 'your firm';
+  var industry = INDUSTRY_LABELS[selectedIndustry] || selectedIndustry;
+  var archetype = synthesisCache ? (synthesisCache.firmArchetype || '') : '';
+  var subject = encodeURIComponent('MacroLab Advisory Briefing Request — ' + company);
+  var body = encodeURIComponent('Hi MacroLab,\n\nI would like to request an advisory briefing.\n\nFirm: ' + company + '\nSector: ' + industry + (archetype ? '\nFirm archetype: ' + archetype : '') + '\n\nPlease contact me to arrange a session.\n\nRegards');
+  window.location.href = 'mailto:hello@macrolab.sg?subject=' + subject + '&body=' + body;
+}
+</script>
+</body>
+</html>
 

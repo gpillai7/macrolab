@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "echo 'static site'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  },
+  "devDependencies": {}
+}

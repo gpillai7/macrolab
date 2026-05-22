@@ -931,7 +931,18 @@ function buildSynthesisPrompt(){
   'Primary market: '+(v._market||'Singapore')+'\n'+
   'Unit economics:\n'+firmData+
   'Exposure signals (from firm\'s own answers):\n'+exposureData+'\n'+
-  '## SINGAPORE MACRO SIGNALS (week of 20 May 2026)\n'+
+  '## OUTPUT DISCIPLINE AND PRECISION RULES\n'+
+'1. Avoid false precision. Use exact numbers only when they are directly provided by the user input or explicitly included in the signal data. If a recommendation is based on judgement, heuristics, or scenario logic, express it as a range or directional posture.\n'+
+'2. Do not invent calculated figures. Do not create exact percentage impacts, exact buffer targets, exact cost increases, or exact financing impacts unless the calculation is explicitly shown or the number is provided.\n'+
+'3. Use ranges for operating recommendations. For example, say “move toward an 85-90 day buffer” rather than “increase to 86 days,” unless 86 is calculated from a stated formula.\n'+
+'4. Separate user inputs from MacroLab signal context. User inputs include firm metrics such as gross margin, employee count, inventory days, receivables days, customer concentration, labour cost ratio, and fixed cost ratio. MacroLab signal context includes sector pressure, China pressure, freight pressure, market pressure, labour pressure, and policy filter assumptions.\n'+
+'5. Every recommendation must explain why. Each first action must connect clearly to one firm-specific input and one MacroLab business pressure signal.\n'+
+'6. Keep the tone serious, calm, and decision-oriented. Avoid alarmist language. Avoid academic jargon. Avoid technical acronyms unless explained.\n'+
+'7. Do not present the output as financial, legal, investment, tax, or compliance advice. Frame all recommendations as management decision support.\n'+
+'8. Label uncertainty clearly. Use phrases such as “directionally,” “suggests,” “watch,” “review whether,” “stress-test,” “move toward,” “consider,” and “if confirmed by your internal data.”\n'+
+'9. Preserve MacroLab’s house style. Use the language of business pressure, margin squeeze, operating posture, policy filter, supply-chain exposure, and firm-level decision support.\n'+
+'10. Keep the report practical. The output must help a business leader decide what to monitor, protect, delay, accelerate, or change this quarter.\n\n'+
+    '## SINGAPORE MACRO SIGNALS (week of 20 May 2026)\n'+
   '- Global freight rates: +'+m.freightChange+'% MoM (Red Sea rerouting, +'+m.redSeaDelayDays+' days)\n'+
   '- SGD vs USD: '+m.sgdChange+'% (14-month high for USD strength)\n'+
   '- MAS monetary stance: '+m.masStance+'\n'+
